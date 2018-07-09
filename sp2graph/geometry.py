@@ -12,7 +12,8 @@ Function for reading carbon sp2 geometries and project into xy plane.
 import numpy as np
 import sp2graph.linalg_utils as lau
 
-__all__ = ['readCxyz']
+__all__ = ['readgeom']
+
 
 def readgeom(ifile):
     """
@@ -20,6 +21,7 @@ def readgeom(ifile):
     """
     V = readCs(ifile)
     V = xyprojA(V)
+    return V
 
 
 def readCs(ifile):
@@ -65,8 +67,9 @@ def tests():
         geoms = [f for f in listdir(gpath) if isfile(join(gpath, f))]
         for g in geoms:
             V = readCs(gpath+g)
-            assert not V == None
+            assert V.size > 0
         pass
+    treadCs()
 
 if __name__ == '__main__':
     tests()

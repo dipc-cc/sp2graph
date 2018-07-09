@@ -13,6 +13,7 @@ import numpy as np
 
 __all__ = ['unitA', 'closeV']
 
+
 def unitA(array):
     """ Returns the unit array """
     return array / np.linalg.norm(array)
@@ -39,12 +40,16 @@ def closeV(iv, V, rad):
 
 def tests():
     """ tests """
+    def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
+        return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
     def tunitA():
         for i in range(10):
             a = np.random.rand(3)
             ua = unitA(a)
-            assert np.linalg.norm(ua) == 1
+            assert isclose(np.linalg.norm(ua), 1.0)
         pass
+    tunitA()
 
 if __name__ == '__main__':
     tests()

@@ -14,7 +14,8 @@ import matplotlib.pyplot as plt
 
 __all__ = ['viewV', 'printAdj']
 
-def viewV(V, figname, sizex=4, sizey=10, dpi=150):
+
+def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
     """ Visualize the vertices (nodes) """
     fig, axs = plt.subplots(figsize=(sizex, sizey))
     for i in range(len(V)):
@@ -25,9 +26,12 @@ def viewV(V, figname, sizex=4, sizey=10, dpi=150):
     axs.set_xlabel('x [Ang]')
     axs.set_ylabel('y [Ang]')
     axs.set_aspect('equal')
-    plt.savefig(figname, dpi=dpi);
-    plt.clf();
-    plt.close(fig)
+    if figname:
+        plt.savefig(figname, dpi=dpi);
+        plt.clf();
+        plt.close(fig)
+    else:
+        plt.show()
 
 
 def printAdj(A):
@@ -35,8 +39,7 @@ def printAdj(A):
     print(' ', end='')
     for i in range(len(A)):
         print('%2d'%i, end='')
-    print('')
-    print(A)
+    print('\n', A, '\n')
 
 
 def tests():
@@ -46,6 +49,7 @@ def tests():
     def tviewV():
         V = np.zeros(shape=[1, 2], dtype=np.float32)
         viewV(V)
+    tviewV()
 
 if __name__ == '__main__':
     tests()

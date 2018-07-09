@@ -15,6 +15,7 @@ import sp2graph.linalg_utils as lau
 
 __all__ = ['adjacencyG', 'adjacencySelfIntG', 'revCMK']
 
+
 def adjacencyG(V):
     """
     Returns the adjacency matrix (which indicates if there
@@ -139,6 +140,7 @@ def revCMK(G, V):
 
 def reduceBandWidth(G, V):
     labell = revCMK(G, V)
+    nV = len(V)
     idx = np.array(range(nV), dtype=np.uint8)
     for i in range(nV):
         if idx[i] != labell[nV-1-i]:
