@@ -44,11 +44,13 @@ def tests():
         return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
     def tunitA():
-        for i in range(10):
+        i = 0
+        while i < 10:
             a = np.random.rand(3)
             ua = unitA(a)
-            assert isclose(np.linalg.norm(ua), 1.0)
-        pass
+            if not isclose(np.linalg.norm(ua), 1.0):
+                raise ValueError('Error at \'tunitA\'!')
+            i += 1
     tunitA()
 
 if __name__ == '__main__':

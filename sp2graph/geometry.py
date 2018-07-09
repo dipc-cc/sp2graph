@@ -30,11 +30,8 @@ def readCs(ifile):
     a (3,n) numpy array containing their coordinates.
     """
     f = open(ifile)
-    for l in f:
-        row = l.split()
-        nV = int(row[0])
-        next(f)
-        break
+    next(f)
+    next(f)
     V = np.empty(shape=[0, 3])
     for l in f:
         row = l.split()
@@ -67,8 +64,8 @@ def tests():
         geoms = [f for f in listdir(gpath) if isfile(join(gpath, f))]
         for g in geoms:
             V = readCs(gpath+g)
-            assert V.size > 0
-        pass
+            if not V.size > 0:
+                raise ValueError('Error at \'readCs\'!')
     treadCs()
 
 if __name__ == '__main__':
