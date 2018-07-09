@@ -41,12 +41,8 @@ def adjacencySelfIntG(V):
     with only two neighbours)
     """
     nV = len(V)
-    G = np.zeros(shape=[nV, nV], dtype=np.uint8)
+    G = adjacencyG(V):
     for i in range(nV):
-        # list nearest neighbours
-        idx = lau.closeV(i, V, 1.43)
-        # connect nearest neighbours
-        G[i, idx] = 1
         # put 1 in the diagonal when necessary
         G[i, i] = 3-len(idx)
     return G
