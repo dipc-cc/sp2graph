@@ -41,7 +41,7 @@ def adjacencySelfIntG(V):
     with only two neighbours)
     """
     nV = len(V)
-    G = adjacencyG(V):
+    G = adjacencyG(V)
     for i in range(nV):
         # put 1 in the diagonal when necessary
         G[i, i] = 3-len(idx)
