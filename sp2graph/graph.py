@@ -168,7 +168,6 @@ def allKekules(G, R, Q, DB):
     else:
         R = np.append(R, qval)
         neig = np.where(G[qval, :]==1)[0]
-        neig = np.sort(neig, axis=None)
         # remove from neig those already in R
         dup = np.where(np.isin(neig, R))
         neig = np.delete(neig, dup, 0)

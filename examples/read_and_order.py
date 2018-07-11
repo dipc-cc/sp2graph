@@ -9,18 +9,22 @@ syscoord = 'geometries/phenanthrene_rot.xyz'
 
 # read geometry, move to xy plane and assign the vertex array V
 V = sp2gge.readgeom(syscoord)
+nV = len(V)
+print(nV, '\n')
 print(V, '\n')
-
-# initial visualization
-sp2gvi.viewV(V, sizex=5, sizey=5)
 
 # create a graph representation and print the adjacency matrix on screen
 G = sp2ggr.adjacencyG(V)
-sp2gvi.printAdj(G)
+
+# initial visualization
+if nV < 200:
+    sp2gvi.viewV(V, sizex=5, sizey=5)
+    sp2gvi.printAdj(G)
 
 # aplly band width reduction and print the adjacency matrix on screen
 sp2ggr.reduceBandWidth(G, V)
-sp2gvi.printAdj(G)
 
 # visualization after ordering
-sp2gvi.viewV(V, sizex=5, sizey=5)
+if nV < 200:
+    sp2gvi.printAdj(G)
+    sp2gvi.viewV(V, sizex=5, sizey=5)

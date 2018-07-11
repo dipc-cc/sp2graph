@@ -18,9 +18,12 @@ __all__ = ['viewV', 'printAdj']
 def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
     """ Visualize the vertices (nodes) """
     fig, axs = plt.subplots(figsize=(sizex, sizey))
-    for i in range(len(V)):
-        axs.scatter(V[i, 0], V[i, 1], s=200, c='b', marker=r"$ {} $".format(str(i)), edgecolors='none')
-        axs.scatter(V[i, 0], V[i, 1], s=1000, c='b', alpha=.5)
+    nV = len(V)
+    for i in range(nV):
+        s = 5000/nV
+        axs.scatter(V[i, 0], V[i, 1], s=s, c='b', marker=r"$ {} $".format(str(i)), edgecolors='none')
+        s = 15000/nV
+        axs.scatter(V[i, 0], V[i, 1], s=s, c='b', alpha=.5)
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
