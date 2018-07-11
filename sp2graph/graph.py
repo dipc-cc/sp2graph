@@ -13,7 +13,7 @@ representation of carbon sp2 geometries.
 import numpy as np
 import sp2graph.linalg_utils as lau
 
-__all__ = ['adjacencyG', 'adjacencySelfIntG', 'revCMK']
+__all__ = ['adjacencyG', 'adjacencySelfIntG', 'revCMK', 'allKekules']
 
 
 def adjacencyG(V):
@@ -135,6 +135,10 @@ def revCMK(G, V):
 
 
 def reduceBandWidth(G, V):
+    """
+    Apply the labell order given by a band-width
+    reduction algorithm.
+    """
     labell = revCMK(G, V)
     nV = len(V)
     idx = np.array(range(nV), dtype=np.uint8)
@@ -143,6 +147,56 @@ def reduceBandWidth(G, V):
             j = np.where(idx == labell[nV-1-i])[0]
             swapV(G, V, i, int(j))
             idx[i], idx[j] = idx[j], idx[i]
+
+
+def allKekules(G, R, Q, DB):
+    """
+    Brute force algorithm that returns in DB all
+    possible Kekule structures (edges with double
+    bonds) from a given adjacency matrix G.
+    """
+    idx = len(Q)-1
+    if idx < 0:
+        # TO DO HERE:
+        # append solution to DB if not already there
+        print('R ', R)
+        return R
+    qval = Q[idx]
+    Q = np.delete(Q, idx, 0)
+    if qval in R:
+        return allKekules(G, R, Q, DB)
+    else:
+        R = np.append(R, qval)
+        neig = np.where(G[qval, :]==1)[0]
+        neig = np.sort(neig, axis=None)
+        # remove from neig those already in R
+        dup = np.where(np.isin(neig, R))
+        neig = np.delete(neig, dup, 0)
+        n_neig = len(neig)
+        if n_neig > 0:
+            dup = np.where(np.isin(Q, neig))[0]
+            if len(dup) > 0:
+                # remove from Q those that are also in neig
+                qdup = Q[dup]
+                Q = np.delete(Q, dup, 0)
+                dup = np.where(np.isin(neig, Q))
+                neig = np.delete(neig, dup, 0)
+                Q = np.append(Q, neig[::-1])
+                Q = np.append(Q, qdup)
+            else:
+                if n_neig > 1: # we have a bifurcation
+                    # OBS.: I think we can consider that we
+                    # have at most 2 neighbors here!!!
+                    for i in range(n_neig):
+                        Q = np.append(Q, np.roll(neig, i+1))
+                        if i == n_neig-1:
+                            return allKekules(G, R, Q, DB)
+                        else:
+                            foo = allKekules(G, R, Q, DB)
+                else:
+                    Q = np.append(Q, neig)
+                    return allKekules(G, R, Q, DB)
+        return allKekules(G, R, Q, DB)
 
 
 def tests():
