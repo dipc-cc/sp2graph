@@ -12,26 +12,27 @@ Given the `xyz` geometry of a planar carbon-based structure (sp2 hybridized), _s
    - allow for user defined constrains, such as to impose single or double bonds at specified connections and/or radicals
    - estimation of the most stable structure through first-neighbors tight-binding model
 
-## Methodology ##
+## Introduction ##
 
 ![anthracene](/doc/images/anthracene12_rot.png)
 
 ![phenanthrene](/doc/images/phenanthrene12_rot.png)
 
+## Methodology ##
 
-## Dependencies ##
+
+## Installation ##
 For _sp2graph_ installation the following packages are required:
 
    - numpy
 
-## Installation ##
-Manual installation of  is performed with the command
+Manual installation of  is performed with the command:
 
     python setup.py install --prefix=<prefix>
     # or
     python setup.py install --home=<my-python-home>
 
-One may also wish to set the following environment variables
+One may also wish to set the following environment variables:
 
     export PYTHONPATH=<my-python-home>/lib/<python-version>/site-packages
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<my-python-home>/lib
