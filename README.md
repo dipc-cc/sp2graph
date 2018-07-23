@@ -14,6 +14,9 @@ Given the `xyz` geometry of a planar carbon-based structure (sp2 hybridized), _s
 
 ## Methodology ##
 
+![anthracene](/doc/images/anthracene12_rot.png)
+
+![phenanthrene](/doc/images/phenanthrene12_rot.png)
 
 
 ## Dependencies ##
