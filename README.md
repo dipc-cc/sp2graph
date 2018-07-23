@@ -46,7 +46,7 @@ The sp2graph license is [LGPL][lgpl], please see the LICENSE file.
 <!---
 Links to external and internal sites.
 -->
-[logo]: https://github.com/dipc-cc/sp2graph/tree/master/doc/images/sp2graph_logo.png
+[logo]: /doc/images/sp2graph_logo.png
 [lgpl]: http://www.gnu.org/licenses/lgpl.html
 [issues]: https://github.com/dipc-cc/sp2graph/issues
 [pulls]: https://github.com/dipc-cc/sp2graph/pulls
