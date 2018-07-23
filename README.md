@@ -1,6 +1,6 @@
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-![GitHub Logo][logo]
+![sp2graph logo](/doc/images/sp2graph_logo.png "sp2graph code")
 
 The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
 
@@ -18,9 +18,9 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
 
 
 
-![anthracene](/doc/images/anthracene12_rot.png)
+![anthracene resonant structures](/doc/images/anthracene.png "anthracene")*Kekulé resonance structures of anthracene with the corresponding Clar sextets*{: .shadow}
 
-![phenanthrene](/doc/images/phenanthrene12_rot.png)
+![phenanthrene resonant structures](/doc/images/phenanthrene.png "phenanthrene")*Kekulé resonance structures of phenanthrene with the corresponding Clar sextets*{: .shadow}
 
 ## Methodology ##
 
@@ -54,7 +54,6 @@ The __sp2graph__ license is [LGPL][lgpl], please see the LICENSE file.
 <!---
 Links to external and internal sites.
 -->
-[logo]: /doc/images/sp2graph_logo.png
 [lgpl]: http://www.gnu.org/licenses/lgpl.html
 [issues]: https://github.com/dipc-cc/sp2graph/issues
 [pulls]: https://github.com/dipc-cc/sp2graph/pulls
