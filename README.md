@@ -44,9 +44,9 @@ One may also wish to set the following environment variables:
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<my-python-home>/lib
 
 ## Contributions, issues and bugs ##
-Contributions are highly appreciated.
+Contributions are highly appreciated!
 
-If you find any bug please form a [bug report/issue][issues]
+If you find any bug please form a [bug report/issue][issues].
 
 If you have a fix please consider adding a [pull request][pulls].
 
