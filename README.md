@@ -8,7 +8,7 @@ The goal of _sp2graph_ project is to provide tools for analyzing the bond-order 
 Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), __sp2graph__ aims to provide:
 
    - all possible Kekulé representations
-   - the most stable structure according to Clar's $\pi$-sextet theory
+   - the most stable structure according to Clar's &pi-sextet theory
    - allow for user defined initial constrains, by imposing:
       - single or double bonds at specified connections
       - radicals at specific sites
