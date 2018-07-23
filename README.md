@@ -5,14 +5,16 @@
 The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
 
 ## Objectives ##
-Given the `xyz` geometry of a planar carbon-based structure (sp2 hybridized), __sp2graph__ aims to provide:
+Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), __sp2graph__ aims to provide:
 
    - all possible Kekulé representations
-   - the most stable structure according to Clar's sextet theory
-   - allow for user defined constrains, such as to impose single or double bonds at specified connections and/or radicals
+   - the most stable structure according to Clar's $\pi$-sextet theory
+   - allow for user defined initial constrains: impose single or double bonds at specified connections and/or radicals at specific sites
    - estimation of the most stable structure through first-neighbors tight-binding model
 
 ## Introduction ##
+
+
 
 ![anthracene](/doc/images/anthracene12_rot.png)
 
@@ -40,7 +42,7 @@ One may also wish to set the following environment variables:
 ## Contributions, issues and bugs ##
 Contributions are highly appreciated.
 
-If you find any bugs please form a [bug report/issue][issues]
+If you find any bug please form a [bug report/issue][issues]
 
 If you have a fix please consider adding a [pull request][pulls].
 
