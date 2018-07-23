@@ -17,11 +17,12 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
 ## Introduction ##
 
 
+
 ![anthracene resonant structures](/doc/images/anthracene.png "anthracene")  
-**anthrace:** *Kekulé resonance structures with the corresponding Clar sextets*.
+**anthracene:** *Kekulé resonance structures with the corresponding Clar sextets*.
 
 ![phenanthrene resonant structures](/doc/images/phenanthrene.png "phenanthrene")  
-**phenanthrene:** *Kekulé resonance structures with the corresponding Clar sextets*
+**phenanthrene:** *Kekulé resonance structures with the corresponding Clar sextets*.
 
 ## Methodology ##
 
