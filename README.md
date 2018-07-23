@@ -4,21 +4,23 @@
 
 # sp2graph #
 
-The goal of sp2praph project is to provide tools for analysing the bond-order of sp2 carbon nanostructures.
+The goal of _sp2graph_ project is to provide tools for analysing the bond-order of sp2 carbon nanostructures. This is in particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
 
 ## Objectives ##
-Given a planar carbon-based structure (sp2 hydridized), sp2graph aims to provide:
+Given a planar carbon-based structure (sp2 hydridized), _sp2graph_ aims to provide:
 
    - all possible Kekulé representations
    - the most stable structure according to Clar's sextet theory
    - allow for user defined constrains, such as to impose single or double bonds at specified connections and/or radicals
+   - estimation of the most stable structure through first-neigbours tight-binding model
 
 ## Methodology ##
 
 
 
 ## Dependencies ##
-Before installation of Inelastica the following packages are required
+For _sp2graph_ installation the following packages are required:
+
    - numpy
 
 ## Installation ##
@@ -41,7 +43,7 @@ If you find any bugs please form a [bug report/issue][issues]
 If you have a fix please consider adding a [pull request][pulls].
 
 ## License ##
-The sp2graph license is [LGPL][lgpl], please see the LICENSE file.
+The _sp2graph_ license is [LGPL][lgpl], please see the LICENSE file.
 
 <!---
 Links to external and internal sites.
