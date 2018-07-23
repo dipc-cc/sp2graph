@@ -2,10 +2,10 @@
 
 ![GitHub Logo][logo]
 
-The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of sp2-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
+The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
 
 ## Objectives ##
-Given the `xyz` geometry of a planar carbon-based structure (sp2 hybridized), _sp2graph_ aims to provide:
+Given the `xyz` geometry of a planar carbon-based structure (sp2 hybridized), __sp2graph__ aims to provide:
 
    - all possible Kekulé representations
    - the most stable structure according to Clar's sextet theory
@@ -22,7 +22,7 @@ Given the `xyz` geometry of a planar carbon-based structure (sp2 hybridized), _s
 
 
 ## Installation ##
-For _sp2graph_ installation the following packages are required:
+For __sp2graph__ installation the following packages are required:
 
    - numpy
 
@@ -45,7 +45,7 @@ If you find any bugs please form a [bug report/issue][issues]
 If you have a fix please consider adding a [pull request][pulls].
 
 ## License ##
-The _sp2graph_ license is [LGPL][lgpl], please see the LICENSE file.
+The __sp2graph__ license is [LGPL][lgpl], please see the LICENSE file.
 
 <!---
 Links to external and internal sites.
