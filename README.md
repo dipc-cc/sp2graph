@@ -2,17 +2,15 @@
 
 ![GitHub Logo][logo]
 
-# sp2graph #
-
-The goal of _sp2graph_ project is to provide tools for analysing the bond-order of sp2 carbon nanostructures. This is in particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
+The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of sp2-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
 
 ## Objectives ##
-Given a planar carbon-based structure (sp2 hydridized), _sp2graph_ aims to provide:
+Given the `xyz` geometry of a planar carbon-based structure (sp2 hybridized), _sp2graph_ aims to provide:
 
    - all possible Kekulé representations
    - the most stable structure according to Clar's sextet theory
    - allow for user defined constrains, such as to impose single or double bonds at specified connections and/or radicals
-   - estimation of the most stable structure through first-neigbours tight-binding model
+   - estimation of the most stable structure through first-neighbors tight-binding model
 
 ## Methodology ##
 
