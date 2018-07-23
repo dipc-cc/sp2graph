@@ -9,7 +9,9 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
 
    - all possible Kekulé representations
    - the most stable structure according to Clar's $\pi$-sextet theory
-   - allow for user defined initial constrains: impose single or double bonds at specified connections and/or radicals at specific sites
+   - allow for user defined initial constrains, by imposing:
+      - single or double bonds at specified connections
+      - radicals at specific sites
    - estimation of the most stable structure through first-neighbors tight-binding model
 
 ## Introduction ##
