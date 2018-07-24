@@ -18,8 +18,13 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
 
 Carbon *sp<sup>2</sup>*-bonded structures, in particular polycyclic aromatic hydrocarbons (PAHs), are often represented graphically according to the Kekulé bond formulas, where the four valence electrons of a carbon can form single or double bonds with neighboring atoms (see figures bellow). In this representation only the carbon-carbon bonds are drawn, being carbon-hydrogen bonds typically omitted (i.e. carbons with only three bonds are implicitly assumed to make an extra bond with a hydrogen). Structures exhibiting a radical character, such as open-shell states, are usually marked with a dot next to the carbons containing unpaired &pi;-electrons.
 
+The Kekulé representation of any given *sp<sup>2</sup>* system is not unique. The benzene molecule C<sub>6</sub>H<sub>6</sub>, for example, has two possible representations as shown in the left side of the figure below. Therefore, the electronic structure of a system is given by a combination of all possible Kekulé bond formulas. For the benzene molecule the two complementary Kekulé structures form an aromatic &pi;-sextet (right side of the figure bellow), that represents the delocalization of the six &pi;-electrons.
+
 ![benzene resonant structures](/doc/images/benzene.png)  
 **benzene:** *Kekulé resonant structures (left) and the corresponding Clar sextet (right)*.
+
+
+
 
 ![anthracene resonant structures](/doc/images/anthracene.png)  
 **anthracene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
