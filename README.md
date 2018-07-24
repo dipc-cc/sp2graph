@@ -16,7 +16,7 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
 
 ## Introduction ##
 
-Carbon *sp<sup>2</sup>*-bonded structures, in particular polycyclic aromatic hydrocarbons (PAHs), are often represented grafically according to the Kekulé bond formulas, where the four valence electrons of a carbon can form single or double bonds with neigboring atoms (see figures bellow). 
+Carbon *sp<sup>2</sup>*-bonded structures, in particular polycyclic aromatic hydrocarbons (PAHs), are often represented graphically according to the Kekulé bond formulas, where the four valence electrons of a carbon can form single or double bonds with neighboring atoms (see figures bellow). In this representation only the carbon-carbon bonds are drawn, being carbon-hydrogen bonds typically omitted (i.e. carbons with only three bonds are implicitly assumed to make an extra bond with a hydrogen). Structures exhibiting a radical character, such as open-shell states, are usually marked with a dot next to the carbons representing an unpaired &pi;-electron.
 
 ![anthracene resonant structures](/doc/images/anthracene.png "anthracene")  
 **anthracene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
