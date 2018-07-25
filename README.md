@@ -44,7 +44,7 @@ The Kekulé diagrams shown in the figures above can be described mathematically 
 A simple method for representing a graph is by the so-called adjacency matrix *A* with dimensions *VxV*, and where the element *A<sub>ij</sub>* is nonzero only if there is an edge connecting from vertex *i* to *j*. For instance, the following Kekulé structure of the naphthalene molecule could be represent as:
 
 ![naphthalene Kekulé, graph and adjacency matrix representations](/doc/images/naphthalene_graph.png)  
-**Graph representation:** *From left to right, naphthalene Kekulé, graph and adjacency matrix representations*.
+**Graph representation:** *From left to right, a naphthalene Kekulé structure and respective graph and adjacency matrix representations*.
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
