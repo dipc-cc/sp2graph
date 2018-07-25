@@ -39,7 +39,7 @@ Although conceptually simple, apply the Clar's sextet to larger *sp<sup>2</sup>*
 
 ## Methodology ##
 
-The Kekulé diagrams shown in the figures above can be described mathematically by a graph *G(V,E)*, a fundamental combinatorial object defined by a set of vertices *V* and by a set of edges *E* connecting distinct vertex pairs.
+The Kekulé diagrams shown in the figures above can be described mathematically by a graph *G(V,E)*, a fundamental combinatorial object defined by a set of vertices *V* and by a set of edges *E* connecting distinct vertex pairs. In the present case the vertices are given by the carbon atoms and the edges by the chemical bonds among them. A simple method for representing a graph is by the so-called adjacency matrix *A* with dimensions *VxV*, and where the element *A<sub>ij</sub>* is nonzero only if there is an edge connecting from vertex *i* to *j*.
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
