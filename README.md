@@ -28,10 +28,13 @@ Aromatic sextets are also known as Clar's sextets since the formulation of the C
 ![anthracene resonant structures](/doc/images/anthracene.png)  
 **anthracene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
 
-For the phenanthrene, on the other hand, only one Clar structure can be found with two aromatic sextets (see image bellow). The Clar's rule can be further applied, in absence of radicals, to find the most stable structure among alternant PAHs [(Yeh and Chai, 2016)][Yeh2016], i.e. structures containing the same number of six-membered rings.
+For the phenanthrene, on the other hand, only one Clar structure can be found with two aromatic sextets (see image bellow). The Clar's rule can be further applied, in absence of radicals, to find the most stable structure among alternant PAHs [(Yeh and Chai, 2016)][Yeh2016], i.e. isomers containing the same number of six-membered rings. For instance, by comparing the Clar structures from anthracene and phenanthrene one would expect that later is a more stable molecule. Indeed this is in agreement with standard density functional theory calculations, where the phenanthrene is found to be more stable by 0.2 eV.
 
 ![phenanthrene resonant structures](/doc/images/phenanthrene.png)  
 **phenanthrene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
+
+Interestingly, by performing structural relaxations with simple reactive empirical bond order (REBO) potentials optimized for hydrocarbons [(Brenner et al, 2002)][Brenner2002] one would predict wrongly the total energy of anthracene and phenanthrene to be approximately equal, because the local bonding configurations of the carbon atoms are nearly identical. Therefore, this simple example illustrates the strength of the Clar's &pi;-sextet rule.
+
 
 ## Methodology ##
 
@@ -71,3 +74,4 @@ Links to external and internal sites.
 [Wassmann2010]: https://doi.org/10.1021/ja909234y
 [Sola2013]: https://doi.org/10.3389/fchem.2013.00022
 [Yeh2016]: https://doi.org/10.1038/srep30562
+[Brenner2002]: https://doi.org/10.1088/0953-8984/14/4/312
