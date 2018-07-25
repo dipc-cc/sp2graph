@@ -16,18 +16,20 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
 
 ## Introduction ##
 
-Carbon *sp<sup>2</sup>*-bonded structures, in particular polycyclic aromatic hydrocarbons (PAHs), are often represented graphically according to the Kekulé bond formulas, where the four valence electrons of a carbon can form single or double bonds with neighboring atoms (see figures bellow). In this representation only the carbon-carbon bonds are drawn, being carbon-hydrogen bonds typically omitted (i.e. carbons with only three bonds are implicitly assumed to make an extra bond with a hydrogen). Structures exhibiting a radical character, such as open-shell states, are usually marked with a dot next to the carbons containing unpaired &pi;-electrons.
+Carbon *sp<sup>2</sup>*-bonded structures, in particular polycyclic aromatic hydrocarbons (PAHs), are often represented graphically according to the Kekulé bond formulas, where the four valence electrons of a carbon can form single or double bonds with neighboring atoms (see figures bellow). In this representation only the carbon-carbon bonds are drawn, being carbon-hydrogen bonds typically omitted (i.e. carbons with only three bonds or less are implicitly assumed to make extra bonds with hydrogen atoms). Structures exhibiting a radical character, such as open-shell states, are usually marked with a dot next to the carbons containing unpaired &pi;-electrons.
 
-The Kekulé representation of any given *sp<sup>2</sup>* carbon-based system is not unique. The benzene molecule C<sub>6</sub>H<sub>6</sub>, for example, has two possible representations as shown in the left side of the figure below. Therefore, the electronic structure of a system is given by a combination of all possible Kekulé bond formulas. For the benzene molecule the two complementary Kekulé structures form an aromatic &pi;-sextet (right side of the figure bellow), that represents the delocalization of the six &pi;-electrons.
+The Kekulé representation of any given *sp<sup>2</sup>* carbon-based system is not unique. The benzene molecule C<sub>6</sub>H<sub>6</sub>, for example, has two possible representations as shown in the left side of the figure below. Therefore, the electronic structure of a system is given by a combination of all possible Kekulé bond formulas. For benzene the two complementary Kekulé structures form an aromatic &pi;-sextet (right side of the figure bellow), that represents the delocalization of the six &pi;-electrons.
 
 ![benzene resonant structures](/doc/images/benzene.png)  
 **benzene:** *Kekulé resonant structures (left) and the corresponding Clar sextet (right)*.
 
-Aromatic sextets are also known as Clar's sextets since the formulation of the Clar's &pi;-sextet rule which states that the representation with largest number of disjoint aromatic sextets (known as Clar's formula) is the most stable configuration and, therefore, the most representative for characterizing the system properties.
-
+Aromatic sextets are also known as Clar's sextets since the formulation of the Clar's &pi;-sextet rule which states that the representation with largest number of disjoint aromatic sextets (known as Clar's formula or structure) is the most stable configuration and, therefore, the most representative for characterizing the system properties. A given system can present different equivalent Clar's formulas, i.e. different representations having the same (largest) number of aromatic sextet's. In such case, the system is described by a superposition of all equivalent Clar's structures. A typical example is the anthracene molecule shown bellow, where a Clar's sextet can be found in one of the three rings.
 
 ![anthracene resonant structures](/doc/images/anthracene.png)  
 **anthracene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
+
+For the phenanthrene, on the other hand, only one Clar's structure can be found with two aromatic sextets (see image bellow).
+
 
 ![phenanthrene resonant structures](/doc/images/phenanthrene.png)  
 **phenanthrene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
