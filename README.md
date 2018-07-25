@@ -33,9 +33,9 @@ For the phenanthrene, on the other hand, only one Clar structure can be found wi
 ![phenanthrene resonant structures](/doc/images/phenanthrene.png)  
 **phenanthrene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
 
-Interestingly, by performing structural relaxations with simple reactive empirical bond order (REBO) potentials optimized for hydrocarbons [(Brenner et al, 2002)][Brenner2002] one would predict wrongly the total energy of anthracene and phenanthrene to be approximately equal, because the local bonding configurations of the carbon atoms are nearly identical. Therefore, this simple example illustrates the strength of the Clar's &pi;-sextet rule.
+Interestingly, by performing structural relaxations with simple reactive empirical bond order (REBO) potentials optimized for hydrocarbons [(Brenner et al, 2002)][Brenner2002] one would predict wrongly the total energy of anthracene and phenanthrene to be approximately equal, because the local bonding configurations of the carbon atoms are nearly identical. Therefore, this example, although simple, illustrates the strength of the Clar's &pi;-sextet rule.
 
-Although conceptually simple, apply the Clar's sextet to more larger *sp<sup>2</sup>* structures can be very rather complex. Furthermore, when drawing Clar structures to maximize the number of sextets, one may encounter configurations with carbon atoms with radical character. As a rule of thumb, three additional sextets need to be added to the Clar structure to compensate for the energy cost associated with creating two radicals [(Das and Wu, 2015)][Das2015]. For extended structures these rules leave many possibilities and thus call for a systematic and automated approach.
+Although conceptually simple, apply the Clar's sextet to larger *sp<sup>2</sup>* structures can be very rather complex. Furthermore, when drawing Clar structures to maximize the number of sextets, one may encounter configurations with carbon atoms with radical character. As a rule of thumb, three additional sextets need to be added to the Clar structure to compensate for the energy cost associated with creating two radicals [(Das and Wu, 2015)][Das2015]. For extended structures these rules leave many possibilities and thus call for a systematic and automated approach.
 
 ## Methodology ##
 
