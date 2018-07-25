@@ -20,7 +20,7 @@ def adjacencyG(V):
     """
     Returns the adjacency matrix (which indicates if there
     is an edge, 1, or not, 0, between two vertex) from the
-    first neighbours analylis from the vertices in V
+    first neighbours analysis from the vertices in V
     """
     nV = len(V)
     G = np.zeros(shape=[nV, nV], dtype=np.uint8)
@@ -36,7 +36,7 @@ def adjacencySelfIntG(V):
     """
     Returns the adjacency matrix (which indicates if there
     is an edge, 1, or not, 0, between two vertex) from the
-    first neighbours analylis from the vertices in V and
+    first neighbours analysis from the vertices in V and
     include "self-interaction" diagonal term (on elements
     with only two neighbours)
     """
