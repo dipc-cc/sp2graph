@@ -2,17 +2,17 @@
 
 ![sp2graph logo](/doc/images/sp2graph_logo.png "sp2graph code")
 
-The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning tunneling microscopy on graphene-based nanostructures synthesized on metallic surfaces.
+The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning probe microscopy on graphene-based nanostructures synthesized on metallic surfaces.
 
 ## Objectives ##
 Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), __sp2graph__ aims to provide:
 
    - all possible Kekulé representations
-   - the most stable structure according to Clar's &pi;-sextet theory
+   - the most stable Clar structure according to Clar's &pi;-sextet theory
    - allow for user defined initial constrains, by imposing:
       - single or double bonds at specified connections
       - radicals at specific sites
-   - estimation of the most stable structure through first-neighbors tight-binding model
+   - estimation of the most stable Kekulé structure through simple nearest-neighbor tight-binding model
 
 ## Introduction ##
 
@@ -32,6 +32,7 @@ For the phenanthrene, on the other hand, only one Clar structure can be found wi
 
 ![phenanthrene resonant structures](/doc/images/phenanthrene.png)  
 **phenanthrene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
+NB: There should be four Kekulé structures for the lower Clar structure with two sextets.
 
 Interestingly, by performing structural relaxations with simple reactive empirical bond order (REBO) potentials optimized for hydrocarbons [(Brenner et al, 2002)][Brenner2002] one would predict wrongly the total energy of anthracene and phenanthrene to be approximately equal, because the local bonding configurations of the carbon atoms are nearly identical. Therefore, this simple example illustrates the strength of the Clar's &pi;-sextet rule.
 
