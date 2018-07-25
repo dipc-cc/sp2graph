@@ -18,18 +18,17 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
 
 Carbon *sp<sup>2</sup>*-bonded structures, in particular polycyclic aromatic hydrocarbons (PAHs), are often represented graphically according to the Kekulé bond formulas, where the four valence electrons of a carbon can form single or double bonds with neighboring atoms (see figures bellow). In this representation only the carbon-carbon bonds are drawn, being carbon-hydrogen bonds typically omitted (i.e. carbons with only three bonds or less are implicitly assumed to make extra bonds with hydrogen atoms). Structures exhibiting a radical character, such as open-shell states, are usually marked with a dot next to the carbons containing unpaired &pi;-electrons.
 
-The Kekulé representation of any given *sp<sup>2</sup>* carbon-based system is not unique. The benzene molecule C<sub>6</sub>H<sub>6</sub>, for example, has two possible representations as shown in the left side of the figure below. Therefore, the electronic structure of a system is given by a combination of all possible Kekulé bond formulas. For benzene the two complementary Kekulé structures form an aromatic &pi;-sextet (right side of the figure bellow), that represents the delocalization of the six &pi;-electrons.
+The Kekulé representation of any given *sp<sup>2</sup>* carbon-based system is not unique. The benzene molecule C<sub>6</sub>H<sub>6</sub>, for example, has two possible representations as shown in the left side of the figure below. Therefore, the electronic structure of a system is given by a combination of all possible Kekulé bond formulas [(Wassmann et al, 2010)][Wassmann2010]. For benzene the two complementary Kekulé structures form an aromatic &pi;-sextet (right side of the figure bellow), that represents the delocalization of the six &pi;-electrons.
 
 ![benzene resonant structures](/doc/images/benzene.png)  
 **benzene:** *Kekulé resonant structures (left) and the corresponding Clar sextet (right)*.
 
-Aromatic sextets are also known as Clar's sextets since the formulation of the Clar's &pi;-sextet rule which states that the representation with largest number of disjoint aromatic sextets (known as Clar's formula or structure) is the most stable configuration and, therefore, the most representative for characterizing the system properties. A given system can present different equivalent Clar's formulas, i.e. different representations having the same (largest) number of aromatic sextet's. In such case, the system is described by a superposition of all equivalent Clar's structures. A typical example is the anthracene molecule shown bellow, where a Clar's sextet can be found in one of the three rings.
+Aromatic sextets are also known as Clar's sextets since the formulation of the Clar's &pi;-sextet rule which states that the representation with largest number of disjoint aromatic sextets (known as Clar's formula or structure) is the most stable configuration and, therefore, the most representative for characterizing the system properties [(Solà, 2013)][Sola2013]. A given system can present different equivalent Clar's formulas, i.e. different representations having the same (largest) number of aromatic sextet's. In such case, the system is described by a superposition of all equivalent Clar structures. A typical example is the anthracene molecule shown bellow, where a Clar's sextet can be found in one of the three rings.
 
 ![anthracene resonant structures](/doc/images/anthracene.png)  
 **anthracene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
 
-For the phenanthrene, on the other hand, only one Clar's structure can be found with two aromatic sextets (see image bellow).
-
+For the phenanthrene, on the other hand, only one Clar structure can be found with two aromatic sextets (see image bellow). The Clar's rule can be further applied, in absence of radicals, to find the most stable structure among alternant PAHs [(Yeh and Chai, 2016)][Yeh2016], i.e. structures containing the same number of six-membered rings.
 
 ![phenanthrene resonant structures](/doc/images/phenanthrene.png)  
 **phenanthrene:** *Kekulé resonant structures (left) with the corresponding Clar sextets (right)*.
@@ -69,3 +68,6 @@ Links to external and internal sites.
 [lgpl]: http://www.gnu.org/licenses/lgpl.html
 [issues]: https://github.com/dipc-cc/sp2graph/issues
 [pulls]: https://github.com/dipc-cc/sp2graph/pulls
+[Wassmann2010]: https://doi.org/10.1021/ja909234y
+[Sola2013]: https://doi.org/10.3389/fchem.2013.00022
+[Yeh2016]: https://doi.org/10.1038/srep30562
