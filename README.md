@@ -39,12 +39,15 @@ Although conceptually simple, apply the Clar's sextet to larger *sp<sup>2</sup>*
 
 ## Methodology ##
 
-The Kekulé diagrams shown in the figures above can be described mathematically by a graph *G(V,E)*, a fundamental combinatorial object defined by a set of vertices *V* and by a set of edges *E* connecting distinct vertex pairs. In the present case the vertices are given by the carbon atoms and the edges by the chemical bonds among them.
+The Kekulé diagrams shown in the figures above can be described mathematically by a graph *G(V,E)*, a fundamental combinatorial object defined by a set of vertices *V* and a set of edges *E* connecting distinct vertex pairs. In our case, the vertices are given by the carbon atoms and the edges by the chemical bonds among them.
 
-A simple method for representing a graph is by the so-called adjacency matrix *A* with dimensions *VxV*, and where the element *A<sub>ij</sub>* is nonzero only if there is an edge connecting from vertex *i* to *j*. For instance, the following Kekulé structure of the naphthalene molecule could be represent as:
+A simple method for representing a graph is the so-called adjacency matrix *A*, with dimensions *VxV* and where the element *A<sub>ij</sub>* is nonzero only if there is an edge connecting from vertex *i* to *j*. For instance, the following Kekulé structure of the naphthalene molecule could be represent as:
 
 ![naphthalene Kekulé, graph and adjacency matrix representations](/doc/images/naphthalene_graph.png)  
-**Graph representation:** *From left to right, a naphthalene Kekulé structure and respective graph and adjacency matrix representations*.
+**Graph representation:** *From left to right, a naphthalene Kekulé structure with respective graph and adjacency matrix representations*.
+
+In the adjacency matrix above, a double bond between vertices *i* and *j* is expressed by having *A<sub>ij</sub>=2*, a single bond as *A<sub>ij</sub>=1* and the absence of bond as *A<sub>ij</sub>=0*.
+
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
