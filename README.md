@@ -45,7 +45,7 @@ The Kekulé diagrams shown in the figures above can be described mathematically 
 A simple method for representing a graph is the so-called adjacency matrix *A*, with dimensions *VxV* and where the element *A<sub>ij</sub>* is nonzero only if there is an edge connecting from vertex *i* to *j*. For instance, the naphthalene molecule could be represent as:
 
 ![naphthalene molecule with graph and adjacency matrix representations](/doc/images/naphthalene_graph.png)  
-**Graph representation:** *A naphthalene molecule with respective graph and adjacency matrix representations*.
+**Graph representation of a *sp<sup>2</sup>* structure:** *A naphthalene molecule with respective graph and adjacency matrix representations*.
 
 In the adjacency matrix above, a carbon-carbon bond between vertices *i* and *j* is expressed by having *A<sub>ij</sub>*=1, while for the absence of bond as *A<sub>ij</sub>*=0. The graph of any *sp<sup>2</sup>* structure in general has a number of properties, to list a few:
 
@@ -53,11 +53,16 @@ In the adjacency matrix above, a carbon-carbon bond between vertices *i* and *j*
    - any vertex is connected to 2 or 3 other vertices (i.e., any vertex has 2 or 3 incident edges), which makes the adjacency matrix representation sparse;
    - any vertex belongs to at least one cycle or, in other words, a vertex will never be hanging alone from the graph since this would mean a *sp<sup>1</sup>*-hybridized carbon.
 
-More generally, given the set of `xyz` coordinates of a *sp<sup>2</sup>* structure, the set of vertex and edges can be uniquely defined. 
+More generally, given the set of `xyz` coordinates of a *sp<sup>2</sup>* structure, the set of vertex and edges can be uniquely defined. However, the adjacency matrix defined above contain no information about where are the single and double bonds. There are several ways to include such information, and a simple one would be to define *A<sub>ij</sub>*=2 if there is a double bond between vertices *i* and *j*. The edges containing a double bond are not uniquely defined, for the same reason a *sp<sup>2</sup>* system has different Kekulé structures. According to this definition, one possibility for the naphthalene molecule would be:
 
-<!---
-   - any vertex is connected to at least another vertex through a double bond, i.e., for any row *i* from the adjacency matrix there is one and only one element with *A<sub>ij</sub>*=2;
--->
+![naphthalene Kekulé structure with graph and adjacency matrix representations](/doc/images/naphthalene_kekule.png)  
+**Graph representation of a Kekulé structure:** *A naphthalene Kekulé structure with respective graph and adjacency matrix representations*.
+
+Therefore, in addition to the properties listed before one can include:
+
+   - any vertex is connected to at least another vertex through a double bond, i.e., for any row *i* from the adjacency matrix there is one and only one element with *A<sub>ij</sub>*=2.
+
+
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
