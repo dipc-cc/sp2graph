@@ -40,7 +40,7 @@ Although conceptually simple, apply the Clar's sextet to larger *sp<sup>2</sup>*
 
 ## Methodology ##
 
-### Graph representation of *sp<sup>2</sup>* structures ###
+### Graph representation of carbon-based *sp<sup>2</sup>* structures ###
 
 The Kekulé diagrams shown in the figures above can be described mathematically by a graph *G(V,E)*, a fundamental combinatorial object defined by a set of vertices *V* and a set of edges *E* connecting distinct vertex pairs. In our case, the vertices are given by the carbon atoms and the edges by the chemical bonds among them.
 
@@ -55,7 +55,7 @@ In the adjacency matrix above, a carbon-carbon bond between vertices *i* and *j*
    - any vertex is connected to 2 or 3 other vertices (i.e., any vertex has 2 or 3 incident edges), which makes the adjacency matrix representation sparse;
    - any vertex belongs to at least one cycle or, in other words, a vertex will never be hanging alone from the graph since this would mean a *sp<sup>1</sup>*-hybridized carbon.
 
-Note that given the set of `xyz` coordinates of a *sp<sup>2</sup>* structure, the set of vertex and edges can be uniquely defined. For instance, a carbon-carbon bond can be assigne to every two carbons with distance lower than 1.43 &Aring;. However, the adjacency matrix as defined above contains no information about where the single and double bonds are. There are several ways to include such information, and a simple one would be to define *A<sub>ij</sub>*=2 if there is a double bond between vertices *i* and *j*. The edges containing a double bond are not uniquely defined though, for the same reason a *sp<sup>2</sup>* system has different Kekulé structures. According to this definition, one possibility for the naphthalene molecule would be:
+Note that given the set of `xyz` coordinates of a *sp<sup>2</sup>* structure, the set of vertex and edges can be uniquely defined. For instance, a carbon-carbon bond can be assigned to every two carbons with distance lower than 1.43 &Aring;. However, the adjacency matrix as defined above contains no information about where the single and double bonds are. There are several ways to include such information, and a simple one would be to define *A<sub>ij</sub>*=2 if there is a double bond between vertices *i* and *j*. The edges containing a double bond are not uniquely defined though, for the same reason a *sp<sup>2</sup>* system has different Kekulé structures. According to this definition, one possibility for the naphthalene molecule would be:
 
 ![naphthalene Kekulé structure with graph and adjacency matrix representations](/doc/images/naphthalene_kekule.png)  
 **Graph representation of a Kekulé structure:** *A naphthalene Kekulé structure with respective graph and adjacency matrix representations*.
@@ -68,6 +68,9 @@ More generally, a Kekulé structure *K* could be represented by an unique adjace
 
 ![naphthalene Kekulé structure adjacency plus double bond representations](/doc/images/naphthalene_matrix.png)  
 **Graph of a Kekulé structure given by adjacency plus double bonds:** *Naphthalene Kekulé structure represented by an adjacency matrix added to a "double bond" matrix*.
+
+### All possible Kekulé structures ###
+
 
 
 ## Installation ##
