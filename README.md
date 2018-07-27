@@ -62,7 +62,7 @@ Therefore, in addition to the properties listed before one can include:
 
    - any vertex is connected to at least another vertex through a double bond, i.e., for any row *i* from the adjacency matrix there is one and only one element with *A<sub>ij</sub>*=2.
 
-More generally, a Kekulé structure *K* could be represented by an unique adjacency matrix *A* plus another matrix *B* that contains only information about the double bonds. In this way, for any row *i* from the "double-bond" matrix *B* there is one and only one element with *B<sub>ij</sub>*=1. For the naphthalene this translates to:
+More generally, a Kekulé structure *K* could be represented by an unique adjacency matrix *A* plus another matrix *B* that contains only information about the double bonds. In this way, for any row *i* from the "double-bond" matrix *B* there is one and only one element with *B<sub>ij</sub>*=1. For the naphthalene Kekulé structure above this translates to:
 
 ![naphthalene Kekulé structure adjacency plus double bond representations](/doc/images/naphthalene_matrix.png)  
 **Graph of a Kekulé structure given by adjacency plus double:** *Naphthalene Kekulé structure represented by an adjacency matrix added to a "double bond" matrix*.
