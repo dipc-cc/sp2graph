@@ -42,19 +42,22 @@ Although conceptually simple, apply the Clar's sextet to larger *sp<sup>2</sup>*
 
 The Kekulé diagrams shown in the figures above can be described mathematically by a graph *G(V,E)*, a fundamental combinatorial object defined by a set of vertices *V* and a set of edges *E* connecting distinct vertex pairs. In our case, the vertices are given by the carbon atoms and the edges by the chemical bonds among them.
 
-A simple method for representing a graph is the so-called adjacency matrix *A*, with dimensions *VxV* and where the element *A<sub>ij</sub>* is nonzero only if there is an edge connecting from vertex *i* to *j*. For instance, the following Kekulé structure of the naphthalene molecule could be represent as:
+A simple method for representing a graph is the so-called adjacency matrix *A*, with dimensions *VxV* and where the element *A<sub>ij</sub>* is nonzero only if there is an edge connecting from vertex *i* to *j*. For instance, the naphthalene molecule could be represent as:
 
-![naphthalene Kekulé, graph and adjacency matrix representations](/doc/images/naphthalene_graph.png)  
-**Graph representation:** *From left to right, a naphthalene Kekulé structure with respective graph and adjacency matrix representations*.
+![naphthalene molecule with graph and adjacency matrix representations](/doc/images/naphthalene_graph.png)  
+**Graph representation:** *A naphthalene molecule with respective graph and adjacency matrix representations*.
 
-In the adjacency matrix above, a double bond between vertices *i* and *j* is expressed by having *A<sub>ij</sub>*=2, a single bond as *A<sub>ij</sub>*=1 and the absence of bond as *A<sub>ij</sub>*=0. A graph of a *sp<sup>2</sup>* structure like this one for naphthalene has a number of properties, and here are few:
+In the adjacency matrix above, a carbon-carbon bond between vertices *i* and *j* is expressed by having *A<sub>ij</sub>*=1, while for the absence of bond as *A<sub>ij</sub>*=0. The graph of any *sp<sup>2</sup>* structure in general has a number of properties, to list a few:
 
    - it is an undirected graph, meaning that an edge is defined by a pair of distinct vertices independently of their order (*ij* or *ji*), which is expressed by the symmetry of the adjacency matrix;
-   - any vertex is connected to 2 or 3 other vertex (i.e., any vertex has 2 or 3 incident edges), which makes the adjacency matrix representation sparse;
+   - any vertex is connected to 2 or 3 other vertices (i.e., any vertex has 2 or 3 incident edges), which makes the adjacency matrix representation sparse;
+   - any vertex belongs to at least one cycle or, in other words, a vertex will never be hanging alone from the graph since this would mean a *sp<sup>1</sup>*-hybridized carbon.
+
+More generally, given the set of `xyz` coordinates of a *sp<sup>2</sup>* structure, the set of vertex and edges can be uniquely defined. 
+
+<!---
    - any vertex is connected to at least another vertex through a double bond, i.e., for any row *i* from the adjacency matrix there is one and only one element with *A<sub>ij</sub>*=2;
-   - any vertex belongs to at least one cycle or, in other words, a vertex will be never hanging alone from the graph since this would mean a *sp<sup>1</sup>*-hybridized carbon.
-
-
+-->
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
