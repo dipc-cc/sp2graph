@@ -69,14 +69,21 @@ More generally, a Kekulé structure *K* could be represented by an unique adjace
 ![naphthalene Kekulé structure adjacency plus double bond representations](/doc/images/naphthalene_matrix.png)  
 **Graph of a Kekulé structure given by adjacency plus double bonds:** *Naphthalene Kekulé structure represented by an adjacency matrix added to a "double bond" matrix*.
 
+<!---
+Somewhere we need to say that the adjacency matrix representation is only for didactic purposes, that what we are going to use is something more like a adjacency map abstract data structure
+-->
+
 ### All possible Kekulé structures ###
 
-
+<!---
+In order to find all possible Kekulé structures of a given *sp<sup>2</sup>* structure...
+Once the graph representation of a *sp<sup>2</sup>* structure is defined, 
+-->
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
 
-   - numpy
+   - NumPy
    - NetworkX
 
 Manual installation of  is performed with the command:
