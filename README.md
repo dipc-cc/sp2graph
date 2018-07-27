@@ -7,12 +7,12 @@ The goal of _sp2graph_ project is to provide tools for analyzing the bond-order 
 ## Objectives ##
 Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), __sp2graph__ aims to provide:
 
-   - all possible Kekulé representations
-   - the most stable Clar structure according to Clar's &pi;-sextet theory
-   - allow for user defined initial constrains, by imposing:
+   1. all possible Kekulé representations
+   2. the most stable Clar structure according to Clar's &pi;-sextet theory
+   3. allow for user defined initial constrains, by imposing:
       - single or double bonds at specified connections
       - radicals at specific sites
-   - estimation of the most stable Kekulé structure through simple nearest-neighbor tight-binding model
+   4. estimation of the most stable Kekulé structure through simple nearest-neighbor tight-binding model
 
 ## Introduction ##
 
@@ -49,10 +49,10 @@ A simple method for representing a graph is the so-called adjacency matrix *A*, 
 
 In the adjacency matrix above, a double bond between vertices *i* and *j* is expressed by having *A<sub>ij</sub>*=2, a single bond as *A<sub>ij</sub>*=1 and the absence of bond as *A<sub>ij</sub>*=0. A graph of a *sp<sup>2</sup>* structure like this one for naphthalene has a number of properties, and here are few:
 
-- it is an undirected graph, meaning that an edge is defined by a pair of distinct vertices independently of their order (*ij* or *ji*), which is expressed by the symmetry of the adjacency matrix;
-- any vertex is connected to 2 or 3 other vertex (i.e., any vertex has 2 or 3 incident edges), which makes the adjacency matrix representation sparse;
-- any vertex is connected to at least another vertex through a double bond, i.e., for any row *i* from the adjacency matrix there is one and only one element with *A<sub>ij</sub>*=2;
-- any vertex belongs to at least one cycle or, in other words, a vertex will be never hanging alone from the graph since this would mean a *sp<sup>1</sup>*-hybridized carbon.
+   - it is an undirected graph, meaning that an edge is defined by a pair of distinct vertices independently of their order (*ij* or *ji*), which is expressed by the symmetry of the adjacency matrix;
+   - any vertex is connected to 2 or 3 other vertex (i.e., any vertex has 2 or 3 incident edges), which makes the adjacency matrix representation sparse;
+   - any vertex is connected to at least another vertex through a double bond, i.e., for any row *i* from the adjacency matrix there is one and only one element with *A<sub>ij</sub>*=2;
+   - any vertex belongs to at least one cycle or, in other words, a vertex will be never hanging alone from the graph since this would mean a *sp<sup>1</sup>*-hybridized carbon.
 
 
 
