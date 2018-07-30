@@ -77,15 +77,15 @@ Somewhere we need to say that the adjacency matrix representation is only for di
 
 As a first attempt to solve the problem of finding all possible Kekulé structures of a given carbon *sp<sup>2</sup>* system, we develop a backtracking algorithm  that resembles a combination of the well known *depth-first search* algorithm for visiting all vertex of one Kekulé structure together with a *depth-first search* -like algorithm for walking through the different Kekulé structures. In this procedure we keep tracking of the visited vertices stored in a list *K* and a FIFO (*First In First Out*) queue *Q* for the neighbors of the vertices under analysis. Starting from vertex with lowest degree (in our case any vertex has degree 2 or 3) and lowest index in *Q*:
 
-      - if *Q* is empty, then *K* contains a possible Kekulé structure;
-      - else:
-         - unqueue the last element *l* of *Q* and,
-            - if *l* is already in *K*, then go to the first step;
-            - else:
-               - append *l* to *K*;
-               - get a list *n* from all neighbors from *l* that are not yet in *K*;
-               - if the size of *n* is 1, then append to *Q* and go to the first step;
-               - else there are two possible ways to assign a double bond, so we append the neighbors to *Q* rolling their order and go back to the first step in each case;
+   -- if *Q* is empty, then *K* contains a possible Kekulé structure;
+   - else:
+      - unqueue the last element *l* of *Q* and,
+         - if *l* is already in *K*, then go to the first step;
+         - else:
+            - append *l* to *K*;
+            - get a list *n* from all neighbors from *l* that are not yet in *K*;
+            - if the size of *n* is 1, then append to *Q* and go to the first step;
+            - else there are two possible ways to assign a double bond, so we append the neighbors to *Q* rolling their order and go back to the first step in each case;
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
