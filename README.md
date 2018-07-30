@@ -79,12 +79,12 @@ As a first attempt to solve the problem of finding all possible Kekulé structur
 
    - if *Q* is empty, then *K* contains a possible Kekulé structure;
    - else:
-      - unqueue the last element 'l' of *Q* and,
-         - if 'l' is already in *K* we go to the first step;
+      - unqueue the last element *l* of *Q* and,
+         - if *l* is already in *K* we go to the first step;
          - else:
-            - append 'l' to 'K';
-            - append the neighbors 'n' from 'l' to *Q* that are not yet in 'K';
-            - if the size of 'n' is 1, then append to *Q* and go to the first step;
+            - append *l* to *K*;
+            - append the neighbors *n* from *l* to *Q* that are not yet in *K*;
+            - if the size of *n* is 1, then append to *Q* and go to the first step;
             - else there are two possible ways to assign a double bond, so we append the neighbors to *Q* rolling their order and go back to the first step in each case;
 
 ## Installation ##
