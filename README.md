@@ -75,7 +75,7 @@ Somewhere we need to say that the adjacency matrix representation is only for di
 
 ### All possible Kekulé structures ###
 
-As a first attempt to solve the problem of finding all possible Kekulé structures of a given carbon *sp<sup>2</sup>* system, we develop a backtracking algorithm  that resembles a combination of the well known *depth-first search* algorithm for visiting all vertex of one Kekulé structure together with a *depth-first search* -like algorithm for walking through the different Kekulé structures. In this procedure we keep tracking of the visited vertices stored in a list *K* and a FIFO (*First In First Out*) queue *Q* for the neighbors of the vertices under analysis. Starting from vertex with lowest degree (in our case any vertex has degree 2 or 3) and lowest index in *Q*:
+As a first attempt to solve the problem of finding all possible Kekulé structures of a given carbon *sp<sup>2</sup>* system, we develop a backtracking algorithm  that resembles a combination of the well known *depth-first search* algorithm for visiting all vertex of one Kekulé structure together with a *depth-first search* -like algorithm for walking through the different Kekulé structures. In this procedure we keep tracking of the visited vertices stored in a list *K* and a FIFO (*First In First Out*) queue *Q* for the neighbors of the vertices under analysis. It starts by insetting in *Q* the vertex with lowest degree (in our case any vertex has degree 2 or 3) and lowest index:
 
  * if *Q* is empty, then *K* contains a possible Kekulé structure;
  * else:
@@ -87,7 +87,7 @@ As a first attempt to solve the problem of finding all possible Kekulé structur
        * if the size of *n* is 1, then append to *Q* and go to the first step;
        * else there are two possible ways to assign a double bond, so we append the neighbors to *Q* rolling their order and go back to the first step in each case;
 
-There are several problems with this approach. First that the same Kekulé structure can be found more than one time, so at the point where one possible structure is found one has to check if a similar one has not been found before.
+However, there are several problems with this approach. First that the same Kekulé structure can be found more than one time. Therefore, at the point where one possible structure is found one has to check if a similar one has not been found before. The ideal situation would be to find all possible Kekulé structures by passing through all vertices just once.
 
 ## Installation ##
 For __sp2graph__ installation the following packages are required:
