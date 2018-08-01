@@ -52,6 +52,7 @@ A simple method for representing a graph is the so-called adjacency matrix *A*, 
 In the adjacency matrix above, a carbon-carbon bond between vertices *i* and *j* is expressed by having *A<sub>ij</sub>*=1, while for the absence of bond as *A<sub>ij</sub>*=0. The graph of any *sp<sup>2</sup>* structure in general has a number of properties, to list a few:
 
    - it is an undirected graph, meaning that an edge is defined by a pair of distinct vertices independently of their order (*ij* or *ji*), which is expressed by the symmetry of the adjacency matrix;
+   - it is a connected graph, i.e., for any pair of distinct vertices there is always a path between them;
    - any vertex is connected to 2 or 3 other vertices (i.e., any vertex has 2 or 3 incident edges), which makes the adjacency matrix representation sparse;
    - any vertex belongs to at least one cycle or, in other words, a vertex will never be hanging alone from the graph since this would mean a *sp<sup>1</sup>*-hybridized carbon.
 
