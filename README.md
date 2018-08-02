@@ -2,7 +2,12 @@
 
 ![sp2graph logo](/doc/images/sp2graph_logo.png "sp2graph code")
 
-The goal of _sp2graph_ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures. This is particular interesting for the interpretation of recent experiments performed with scanning probe microscopy on graphene-based nanostructures synthesized on metallic surfaces.
+## About ##
+
+The goal of __sp2graph__ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures.
+This is particular interesting for the interpretation of recent experiments performed with scanning probe microscopy on graphene-based nanostructures synthesized on metallic surfaces.
+
+__sp2graph__ was initiated by Pedro Brandimarte and Thomas Frederiksen at DIPC in June 2018.
 
 ## Objectives ##
 Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), __sp2graph__ aims to provide:
@@ -90,13 +95,15 @@ As a first attempt to solve the problem of finding all possible Kekulé structur
 
 However, there are several problems with this approach. First that the same Kekulé structure can be found more than one time. Therefore, at the point where one possible structure is found one has to check if a similar one has not been found before. The ideal situation would be to find all possible Kekulé structures by passing through all vertices just once.
 
-## Installation ##
-For __sp2graph__ installation the following packages are required:
+## Dependencies ##
+The __sp2graph__ installation the following packages are required:
 
    - NumPy
    - NetworkX
 
-Manual installation of  is performed with the command:
+## Installation ##
+
+Manual installation is performed with the command:
 
     python setup.py install --prefix=<prefix>
     # or
@@ -108,6 +115,7 @@ One may also wish to set the following environment variables:
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<my-python-home>/lib
 
 ## Contributions, issues and bugs ##
+
 Contributions are highly appreciated!
 
 If you find any bug please form a [bug report/issue][issues].
