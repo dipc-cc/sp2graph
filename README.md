@@ -123,12 +123,12 @@ If you find any bug please form a [bug report/issue][issues].
 If you have a fix please consider adding a [pull request][pulls].
 
 ## License ##
-The __sp2graph__ license is [LGPL][lgpl], please see the LICENSE file.
+The __sp2graph__ license is [GPLv3][gpl], please see the LICENSE file.
 
 <!---
 Links to external and internal sites.
 -->
-[lgpl]: http://www.gnu.org/licenses/lgpl.html
+[gpl]: http://www.gnu.org/licenses/gpl.html
 [issues]: https://github.com/dipc-cc/sp2graph/issues
 [pulls]: https://github.com/dipc-cc/sp2graph/pulls
 [Wassmann2010]: https://doi.org/10.1021/ja909234y
