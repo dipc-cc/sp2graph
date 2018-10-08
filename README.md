@@ -17,7 +17,6 @@ Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hy
    3. allow for user defined initial constrains, by imposing:
       - single or double bonds at specified connections
       - radicals at specific sites
-   4. estimation of the most stable Kekulé structure through simple nearest-neighbor tight-binding model
 
 ## Introduction ##
 
