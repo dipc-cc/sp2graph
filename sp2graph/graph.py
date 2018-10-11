@@ -149,18 +149,54 @@ def reduceBandWidth(G, V):
             idx[i], idx[j] = idx[j], idx[i]
 
 
+def reorderResult(R):
+    """
+    Order a double-bonds list to allow for straight
+    comparison among other(s) double-bonds lists.
+    """
+    DB = np.empty(shape=[0, 0], dtype=np.uint8)
+    for i in range(0, len(R), 2):
+        if R[i] > R[i+1]:
+            foo = R[i]
+            R[i] = R[i+1]
+            R[i+1] = foo
+        if np.all(DB==0):
+            DB = [[R[i], R[i+1]]]
+        else:
+            DB = np.append(DB, [[R[i], R[i+1]]], axis=0)
+    DB = np.sort(DB, axis=0)
+    return DB
+
+
+def insertResult(idb, gdb):
+    """
+    Insert a double-bonds list to the final
+    list if not already there.
+    """
+    for i in range(len(gdb)):
+        if np.array_equal(gdb[i], idb):
+            return gdb
+    gdb = np.append(gdb, [idb], axis=0)
+    return gdb
+
+
 def allKekules(G, R, Q, DB):
     """
     Brute force algorithm that returns in DB all
     possible Kekule structures (edges with double
     bonds) from a given adjacency matrix G.
     """
+    global gdb
     idx = len(Q)-1
     if idx < 0:
-        # TO DO HERE:
         # append solution to DB if not already there
-        print('R ', R)
-        return R
+        idb = reorderResult(R)
+        if 'gdb' in globals():
+            gdb = insertResult(idb, gdb)
+        else:
+            gdb = [idb]
+        DB = gdb
+        return DB
     qval = Q[idx]
     Q = np.delete(Q, idx, 0)
     if qval in R:

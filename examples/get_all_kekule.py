@@ -6,7 +6,7 @@ import sp2graph.visual as sp2gvi
 import sp2graph.graph as sp2ggr
 import numpy as np
 
-syscoord = 'geometries/triangulene.xyz'
+syscoord = 'geometries/phenanthrene.xyz'
 
 # read geometry, move to xy plane and assign the vertex array V
 V = sp2gge.readgeom(syscoord)
@@ -39,4 +39,5 @@ ini = np.argmin(sp2ggr.degreeV(V), 0)
 Q = np.append(Q, ini)
 
 # calculate all possible Kekule structures (in DB)
-R = sp2ggr.allKekules(G, R, Q, DB)
+DB = sp2ggr.allKekules(G, R, Q, DB)
+print('DB ', DB)
