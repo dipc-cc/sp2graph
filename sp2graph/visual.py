@@ -11,8 +11,10 @@ Visualisation of the graph (carbon sp2 structures)
 
 from __future__ import print_function
 import matplotlib.pyplot as plt
+import numpy as np
+import sp2graph.linalg_utils as lau
 
-__all__ = ['viewV', 'printAdj']
+__all__ = ['viewV', 'viewKekule', 'printAdj']
 
 
 def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
@@ -24,6 +26,36 @@ def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
         axs.scatter(V[i, 0], V[i, 1], s=s, c='b', marker=r"$ {} $".format(str(i)), edgecolors='none')
         s = 15000/nV
         axs.scatter(V[i, 0], V[i, 1], s=s, c='b', alpha=.5)
+    axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
+    axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
+    axs.set_xlabel('x [Ang]')
+    axs.set_ylabel('y [Ang]')
+    axs.set_aspect('equal')
+    if figname:
+        plt.savefig(figname, dpi=dpi);
+        plt.clf();
+        plt.close(fig)
+    else:
+        plt.show()
+
+
+def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150):
+    """
+    Visualize a single Kekule representation with vertices
+    coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
+    """
+    fig, axs = plt.subplots(figsize=(sizex, sizey))
+    nA = len(A)
+    nDB = len(DB)
+    for i in range(nA):
+        idx = np.transpose(np.nonzero(A[i]))
+        for j in range(len(idx)):
+            axs.plot((V[i, 0], V[idx[j], 0]),
+                     (V[i, 1], V[idx[j], 1]), c='k', ls='-', lw=1.5)
+    for i in range(nDB):
+        par = lau.parallel(V[DB[i, 0]], V[DB[i, 1]])
+        axs.plot((par[0][0], par[1][0]),
+                 (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')

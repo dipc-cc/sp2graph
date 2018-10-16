@@ -4,9 +4,10 @@ from __future__ import print_function
 import sp2graph.geometry as sp2gge
 import sp2graph.visual as sp2gvi
 import sp2graph.graph as sp2ggr
+import sp2graph.linalg_utils as sp2ggla
 import numpy as np
 
-syscoord = 'geometries/phenanthrene.xyz'
+syscoord = 'geometries/anthracene.xyz'
 
 # read geometry, move to xy plane and assign the vertex array V
 V = sp2gge.readgeom(syscoord)
@@ -40,4 +41,7 @@ Q = np.append(Q, ini)
 
 # calculate all possible Kekule structures (in DB)
 DB = sp2ggr.allKekules(G, R, Q, DB)
-print('DB ', DB)
+
+# visualization of all Kekule structures found
+for i in range(len(DB)):
+    sp2gvi.viewKekule(V, G, DB[i], sizex=5, sizey=5)

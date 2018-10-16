@@ -11,7 +11,7 @@ Simple linear algebra functions.
 
 import numpy as np
 
-__all__ = ['unitA', 'closeV']
+__all__ = ['unitA', 'closeV', 'parallel']
 
 
 def unitA(array):
@@ -36,6 +36,20 @@ def closeV(iv, V, rad):
         if np.linalg.norm(V[i]-V[iv]) < rad:
             idx = np.append(idx, [[i]])
     return idx
+
+
+def parallel(pt1, pt2):
+    """
+    Returns a pair of points in R^2 belonging to a line
+    parallel to the one defined by the provided points.
+    """
+    theta = angleA(pt2-pt1, [1., 0.])
+    parpt1 = (pt1[0] + 0.2*np.cos(theta), pt1[1] + 0.2*np.sin(theta))
+    parpt2 = (pt2[0] - 0.2*np.cos(theta), pt2[1] - 0.2*np.sin(theta))
+    theta = theta - np.pi/2
+    parpt1 = (parpt1[0] - 0.25*np.cos(theta), parpt1[1] - 0.25*np.sin(theta))
+    parpt2 = (parpt2[0] - 0.25*np.cos(theta), parpt2[1] - 0.25*np.sin(theta))
+    return parpt1, parpt2
 
 
 def tests():
