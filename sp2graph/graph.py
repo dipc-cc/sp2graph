@@ -190,11 +190,12 @@ def allKekules(G, R, Q, DB):
     idx = len(Q)-1
     if idx < 0:
         # append solution to DB if not already there
-        idb = reorderResult(R)
-        if 'gdb' in globals():
-            gdb = insertResult(idb, gdb)
-        else:
-            gdb = [idb]
+        if len(R) == len(G):
+            idb = reorderResult(R)
+            if 'gdb' in globals():
+                gdb = insertResult(idb, gdb)
+            else:
+                gdb = [idb]
         DB = gdb
         return DB
     qval = Q[idx]
@@ -202,6 +203,10 @@ def allKekules(G, R, Q, DB):
     if qval in R:
         return allKekules(G, R, Q, DB)
     else:
+        # we have to check whether make sense to continue
+        if len(R)%2 != 0 and np.isin(qval, np.where(G[R[-1], :]==1)[0]) == False:
+            Q = []
+            return allKekules(G, R, Q, DB)
         R = np.append(R, qval)
         neig = np.where(G[qval, :]==1)[0]
         # remove from neig those already in R
