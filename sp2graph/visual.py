@@ -39,7 +39,7 @@ def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
         plt.show()
 
 
-def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150):
+def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
@@ -56,6 +56,9 @@ def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150):
         par = lau.parallel(V[DB[i, 0]], V[DB[i, 1]])
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+    if annotate:
+        for i in range(nA):
+            axs.annotate(i, (V[i, 0], V[i, 1]))
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
