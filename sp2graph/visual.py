@@ -32,8 +32,8 @@ def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
     axs.set_ylabel('y [Ang]')
     axs.set_aspect('equal')
     if figname:
-        plt.savefig(figname, dpi=dpi);
-        plt.clf();
+        plt.savefig(figname, dpi=dpi)
+        plt.clf()
         plt.close(fig)
     else:
         plt.show()
@@ -62,8 +62,8 @@ def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150):
     axs.set_ylabel('y [Ang]')
     axs.set_aspect('equal')
     if figname:
-        plt.savefig(figname, dpi=dpi);
-        plt.clf();
+        plt.savefig(figname, dpi=dpi)
+        plt.clf()
         plt.close(fig)
     else:
         plt.show()
