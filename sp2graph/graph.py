@@ -164,7 +164,7 @@ def reorderResult(R):
             DB = [[R[i], R[i+1]]]
         else:
             DB = np.append(DB, [[R[i], R[i+1]]], axis=0)
-    DB = np.sort(DB, axis=0)
+    DB = DB[DB[:, 0].argsort()]
     return DB
 
 
