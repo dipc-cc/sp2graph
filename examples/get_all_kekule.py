@@ -6,8 +6,10 @@ import sp2graph.visual as sp2gvi
 import sp2graph.graph as sp2ggr
 import sp2graph.linalg_utils as sp2ggla
 import numpy as np
+import sys
 
-syscoord = 'geometries/anthracene.xyz'
+#syscoord = 'geometries/anthracene.xyz'
+syscoord = sys.argv[1]
 
 # read geometry, move to xy plane and assign the vertex array V
 V = sp2gge.readgeom(syscoord)
