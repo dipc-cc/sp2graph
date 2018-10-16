@@ -25,7 +25,7 @@ if nV < 100:
     sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
 
-# aplly band width reduction and print the adjacency matrix on screen
+# apply band width reduction and print the adjacency matrix on screen
 sp2ggr.reduceBandWidth(G, V)
 
 # visualization after ordering
