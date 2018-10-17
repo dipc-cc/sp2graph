@@ -183,8 +183,8 @@ def insertResult(idb, gdb):
 def allKekules(G, R, Q, DB):
     """
     Brute force algorithm that returns in DB all
-    possible Kekule structures (edges with double
-    bonds) from a given adjacency matrix G.
+    possible Kekule structures (i.e., edges with
+    double bonds) from a given adjacency matrix G.
     """
     global gdb
     idx = len(Q)-1
@@ -196,7 +196,8 @@ def allKekules(G, R, Q, DB):
                 gdb = insertResult(idb, gdb)
             else:
                 gdb = [idb]
-        DB = gdb
+        if 'gdb' in globals():
+            DB = gdb
         return DB
     qval = Q[idx]
     Q = np.delete(Q, idx, 0)
