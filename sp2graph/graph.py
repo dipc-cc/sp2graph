@@ -219,23 +219,20 @@ def allKekules(G, R, Q, DB):
                 # remove from Q those that are also in neig
                 qdup = Q[dup]
                 Q = np.delete(Q, dup, 0)
-                dup = np.where(np.isin(neig, Q))
-                neig = np.delete(neig, dup, 0)
-                Q = np.append(Q, neig[::-1])
-                Q = np.append(Q, qdup)
+                dup = np.where(np.isin(neig, qdup))
+            if n_neig > 1: # we have a bifurcation
+                # OBS.: I think we can consider that we
+                # have at most 2 neighbors here!!!
+                cpQ = Q
+                for i in range(n_neig):
+                    Q = np.append(cpQ, np.roll(neig, i+1))
+                    if i == n_neig-1:
+                        return allKekules(G, R, Q, DB)
+                    else:
+                        foo = allKekules(G, R, Q, DB)
             else:
-                if n_neig > 1: # we have a bifurcation
-                    # OBS.: I think we can consider that we
-                    # have at most 2 neighbors here!!!
-                    for i in range(n_neig):
-                        Q = np.append(Q, np.roll(neig, i+1))
-                        if i == n_neig-1:
-                            return allKekules(G, R, Q, DB)
-                        else:
-                            foo = allKekules(G, R, Q, DB)
-                else:
-                    Q = np.append(Q, neig)
-                    return allKekules(G, R, Q, DB)
+                Q = np.append(Q, neig)
+                return allKekules(G, R, Q, DB)
         return allKekules(G, R, Q, DB)
 
 
