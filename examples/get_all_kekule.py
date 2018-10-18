@@ -5,7 +5,6 @@ import sp2graph.geometry as sp2gge
 import sp2graph.visual as sp2gvi
 import sp2graph.graph as sp2ggr
 import sp2graph.linalg_utils as sp2ggla
-import numpy as np
 import sys
 
 #syscoord = 'geometries/anthracene.xyz'
@@ -33,17 +32,13 @@ if nV < 100:
     sp2gvi.printAdj(G)
     sp2gvi.viewV(V, sizex=5, sizey=5)
 
-R = np.empty(shape=[0], dtype=np.uint8)
-Q = np.empty(shape=[0], dtype=np.uint8)
-DB = np.empty(shape=[0, 0], dtype=np.uint8)
-
-# start searching from the first vertex with lower degree
-ini = np.argmin(sp2ggr.degreeV(V), 0)
-Q = np.append(Q, ini)
-
 # calculate all possible Kekule structures (in DB)
-DB = sp2ggr.allKekules(G, R, Q, DB)
+iniV = 0 # starting vertex
+DB = sp2ggr.allKekules(G, iniV)
 
 # visualization of all Kekule structures found
 for i in range(len(DB)):
     sp2gvi.viewKekule(V, G, DB[i], sizex=5, sizey=5)
+
+# visualization of the averaged bond order
+sp2gvi.viewBondOrderAverage(V, G, DB, sizex=7, sizey=5)

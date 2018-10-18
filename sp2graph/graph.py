@@ -180,17 +180,22 @@ def insertResult(idb, gdb):
     return gdb
 
 
-def allKekules(G, R, Q, DB):
+def bfKekules(G, R, Q, DB):
     """
     Brute force algorithm that returns in DB all
     possible Kekule structures (i.e., edges with
     double bonds) from a given adjacency matrix G.
     """
+
+    # TO DO: get rid off this global variable
     global gdb
+
+    # Recursion base: when the queue is empty a search has finished
     idx = len(Q)-1
     if idx < 0:
-        # append solution to DB if not already there
+        # a validy solution has the dimension of the graph
         if len(R) == len(G):
+            # append solution to DB if not already there
             idb = reorderResult(R)
             if 'gdb' in globals():
                 gdb = insertResult(idb, gdb)
@@ -199,42 +204,64 @@ def allKekules(G, R, Q, DB):
         if 'gdb' in globals():
             DB = gdb
         return DB
+
+    # unqueue the last element (LIFO)
     qval = Q[idx]
     Q = np.delete(Q, idx, 0)
-    if qval in R:
-        return allKekules(G, R, Q, DB)
-    else:
-        # we have to check whether make sense to continue
-        if len(R)%2 != 0 and np.isin(qval, np.where(G[R[-1], :]==1)[0]) == False:
-            Q = []
-            return allKekules(G, R, Q, DB)
-        R = np.append(R, qval)
-        neig = np.where(G[qval, :]==1)[0]
-        # remove from neig those already in R
-        dup = np.where(np.isin(neig, R))
-        neig = np.delete(neig, dup, 0)
-        n_neig = len(neig)
-        if n_neig > 0:
-            dup = np.where(np.isin(Q, neig))[0]
-            if len(dup) > 0:
-                # remove from Q those that are also in neig
-                qdup = Q[dup]
-                Q = np.delete(Q, dup, 0)
-                dup = np.where(np.isin(neig, qdup))
-            if n_neig > 1: # we have a bifurcation
-                # OBS.: I think we can consider that we
-                # have at most 2 neighbors here!!!
-                cpQ = Q
-                for i in range(n_neig):
-                    Q = np.append(cpQ, np.roll(neig, i+1))
-                    if i == n_neig-1:
-                        return allKekules(G, R, Q, DB)
-                    else:
-                        foo = allKekules(G, R, Q, DB)
-            else:
-                Q = np.append(Q, neig)
-                return allKekules(G, R, Q, DB)
-        return allKekules(G, R, Q, DB)
+
+    # when the result array 'R' contains an even number of
+    # elements, check whether the unqueued vertex in 'qval'
+    # is a valid neigbohr from the the last element on 'R'
+    if len(R)%2 != 0 and np.isin(qval, np.where(G[R[-1], :]==1)[0]) == False:
+        Q = [] # this will stop the search on this branch
+        return bfKekules(G, R, Q, DB)
+
+    # append unqueued vertex and analyse its neighbors
+    R = np.append(R, qval)
+    neig = np.where(G[qval, :]==1)[0]
+    # remove from neig those already in R
+    dup = np.where(np.isin(neig, R))
+    neig = np.delete(neig, dup, 0)
+    n_neig = len(neig)
+    if n_neig > 0:
+        # remove from Q those that are also in neig
+        dup = np.where(np.isin(Q, neig))[0]
+        if len(dup) > 0:
+            qdup = Q[dup]
+            Q = np.delete(Q, dup, 0)
+            dup = np.where(np.isin(neig, qdup))
+
+        if n_neig == 1:
+            Q = np.append(Q, neig)
+            return bfKekules(G, R, Q, DB)
+
+        else: # we have a bifurcation
+            cpQ = Q
+            for i in range(n_neig):
+                Q = np.append(cpQ, np.roll(neig, i+1))
+                if i == n_neig-1:
+                    return bfKekules(G, R, Q, DB)
+                else:
+                    foo = bfKekules(G, R, Q, DB)
+    return bfKekules(G, R, Q, DB)
+
+
+def allKekules(G, iniV):
+    """
+    Interface for calling recursive function returning
+    all Kekule structures
+    """
+
+    if 'gdb' in globals():
+        del globals()['gdb']
+
+    R = np.empty(shape=[0], dtype=np.uint8)
+    Q = np.empty(shape=[0], dtype=np.uint8)
+    DB = np.empty(shape=[0, 0], dtype=np.uint8)
+
+    # queue the starting vertex
+    Q = np.append(Q, iniV)
+    return bfKekules(G, R, Q, DB)
 
 
 def tests():

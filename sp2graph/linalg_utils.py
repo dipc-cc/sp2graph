@@ -11,7 +11,7 @@ Simple linear algebra functions.
 
 import numpy as np
 
-__all__ = ['unitA', 'closeV', 'parallel']
+__all__ = ['unitA', 'closeV', 'parallel', 'findClosest']
 
 
 def unitA(array):
@@ -50,6 +50,16 @@ def parallel(pt1, pt2):
     parpt1 = (parpt1[0] - 0.25*np.cos(theta), parpt1[1] - 0.25*np.sin(theta))
     parpt2 = (parpt2[0] - 0.25*np.cos(theta), parpt2[1] - 0.25*np.sin(theta))
     return parpt1, parpt2
+
+
+def findClosest(array, value):
+    """
+    Returns the element index from 'array'
+    that is closer to 'value'.
+    """
+    array = np.asarray(array)
+    idx = np.searchsorted(array, value)
+    return idx
 
 
 def tests():

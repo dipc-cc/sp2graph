@@ -72,6 +72,58 @@ def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False
         plt.show()
 
 
+def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+    """
+    Visualize a single Kekule representation with vertices
+    coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
+    """
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+    fig, axs = plt.subplots(figsize=(sizex, sizey))
+    nA = len(A)
+    nDB = len(DB)
+    avg = nDB*A.astype(dtype=np.float16)
+    for i in range(nDB):
+        for j in range(DB.shape[1]):
+            t = tuple(DB[i, j])
+            avg[t] += 1.
+            avg[t[::-1]] += 1.
+    if nDB > 0:
+        avg /= nDB
+
+    # set colormap and colorbar
+    cmap = plt.get_cmap('RdBu')
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
+    sm.set_array([])
+    divider = make_axes_locatable(axs)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(sm, label='averaged bond order', cax=cax)
+
+    if annotate:
+        for i in range(nA):
+            axs.annotate(i, (V[i, 0], V[i, 1]))
+    for i in range(nA):
+        idx = np.transpose(np.nonzero(A[i]))
+        for j in range(len(idx)):
+            color = cmap(float(avg[i, idx[j]]-1.))
+            lwidth = 9.*avg[i, idx[j]]-8. # remormalize from 1 to 10
+            axs.plot((V[i, 0], V[idx[j], 0]),
+                     (V[i, 1], V[idx[j], 1]),
+                     c=color, ls='-', lw=lwidth)
+    axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
+    axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
+    axs.set_xlabel('x [Ang]')
+    axs.set_ylabel('y [Ang]')
+    axs.set_aspect('equal')
+    axs.patch.set_facecolor("black")
+    if figname:
+        plt.savefig(figname, dpi=dpi)
+        plt.clf()
+        plt.close(fig)
+    else:
+        plt.show()
+
+
 def printAdj(A):
     """ Print out the adjacency matrix """
     print(' ', end='')
