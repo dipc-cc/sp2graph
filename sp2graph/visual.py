@@ -14,7 +14,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sp2graph.linalg_utils as lau
 
-__all__ = ['viewV', 'viewKekule', 'printAdj']
+__all__ = ['viewV', 'viewKekule', 'viewKekuleGrid',
+           'viewBondOrderAverage', 'printAdj']
 
 
 def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
@@ -72,6 +73,57 @@ def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False
         plt.show()
 
 
+def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+    """
+    Visualize a single Kekule representation with vertices
+    coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
+    """
+    nA = len(A)
+    nKek = len(DB)
+    nDB = DB.shape[1]
+
+    # define the grid for ploting the figures
+    molsize = max(V[:, 0]) - min(V[:, 0]) + 4.
+    cols = int(40//molsize)
+    rows = nKek/cols + nKek%cols
+
+    fig = plt.figure()
+    fig.set_size_inches(sizex, sizey)
+    for idb in range(nKek):
+
+        plt.subplot2grid((rows, cols), (idb/cols, idb%cols))
+        for i in range(nA):
+            idx = np.transpose(np.nonzero(A[i]))
+            for j in range(len(idx)):
+                plt.plot((V[i, 0], V[idx[j], 0]),
+                         (V[i, 1], V[idx[j], 1]), c='k', ls='-', lw=1.5)
+        kek = DB[idb]
+        for i in range(nDB):
+            par = lau.parallel(V[kek[i, 0]], V[kek[i, 1]])
+            plt.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+        if annotate:
+            for i in range(nA):
+                plt.annotate(i, (V[i, 0], V[i, 1]))
+
+        if idb%cols == 0:
+            plt.ylabel('y [Ang]')
+        else:
+            plt.ylabel('')
+            plt.tick_params(labelleft='off')
+        plt.xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
+        plt.ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
+        plt.xlabel('x [Ang]')
+        plt.gca().set_aspect(1)
+
+    if figname:
+        plt.savefig(figname, dpi=dpi)
+        plt.clf()
+        plt.close(fig)
+    else:
+        plt.show()
+
+
 def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
@@ -97,7 +149,8 @@ def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, anno
     sm.set_array([])
     divider = make_axes_locatable(axs)
     cax = divider.append_axes("right", size="5%", pad=0.05)
-    plt.colorbar(sm, label='averaged bond order', cax=cax)
+    ticks = (1.00, 1.25, 1.5, 1.75, 2.00);
+    plt.colorbar(sm, label='averaged bond order', cax=cax, ticks=ticks)
 
     if annotate:
         for i in range(nA):

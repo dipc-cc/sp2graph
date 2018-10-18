@@ -32,13 +32,14 @@ if nV < 100:
     sp2gvi.printAdj(G)
     sp2gvi.viewV(V, sizex=5, sizey=5)
 
-# calculate all possible Kekule structures (in DB)
+# calculate all possible Kekule structures (in Kek)
 iniV = 0 # starting vertex
-DB = sp2ggr.allKekules(G, iniV)
+Kek = sp2ggr.allKekules(G, iniV)
 
 # visualization of all Kekule structures found
-for i in range(len(DB)):
-    sp2gvi.viewKekule(V, G, DB[i], sizex=5, sizey=5)
+#sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6, figname='kekules.pdf')
+for i in range(len(Kek)):
+    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5)
 
 # visualization of the averaged bond order
-sp2gvi.viewBondOrderAverage(V, G, DB, sizex=7, sizey=5)
+sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5)
