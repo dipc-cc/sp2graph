@@ -1,2 +1,4 @@
 build
 *.pyc
+doc/api-gen
+doc/latest

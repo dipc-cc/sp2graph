@@ -3,7 +3,7 @@
 :mod:`sp2graph.visual`
 ===================================
 
-Visualisation of the graph (carbon sp2 structures)
+Visualisation and ploting functions.
 
 .. currentmodule:: sp2graph.visual
 

@@ -4,19 +4,22 @@
 
 ## About ##
 
-The goal of __sp2graph__ project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures.
+The goal of [__sp2graph__][docs] project is to provide tools for analyzing the bond-order of *sp<sup>2</sup>*-hybridized carbon nanostructures.
 This is particular interesting for the interpretation of recent experiments performed with scanning probe microscopy on graphene-based nanostructures synthesized on metallic surfaces.
 
-__sp2graph__ was initiated by Pedro Brandimarte and Thomas Frederiksen at DIPC in June 2018.
+[__sp2graph__][docs] was initiated by Pedro Brandimarte and Thomas Frederiksen at DIPC in June 2018.
+
+API documentation at [__sp2graph__][docs]
 
 ## Objectives ##
-Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), __sp2graph__ aims to provide:
+Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), [__sp2graph__][docs] aims to provide:
 
    1. all possible Kekulé representations
    2. the most stable Clar structure according to Clar's &pi;-sextet theory
    3. allow for user defined initial constrains, by imposing:
       - single or double bonds at specified connections
       - radicals at specific sites
+   4. estimation of the most stable Kekulé structure through simple nearest-neighbor tight-binding model
 
 ## Introduction ##
 
@@ -95,10 +98,10 @@ As a first attempt to solve the problem of finding all possible Kekulé structur
 However, there are several problems with this approach. First that the same Kekulé structure can be found more than one time. Therefore, at the point where one possible structure is found one has to check if a similar one has not been found before. The ideal situation would be to find all possible Kekulé structures by passing through all vertices just once.
 
 ## Dependencies ##
-The __sp2graph__ installation the following packages are required:
+The [__sp2graph__][docs] installation the following packages are required:
 
    - NumPy
-   - NetworkX
+   - Matplotlib
 
 ## Installation ##
 
@@ -122,7 +125,7 @@ If you find any bug please form a [bug report/issue][issues].
 If you have a fix please consider adding a [pull request][pulls].
 
 ## License ##
-The __sp2graph__ license is [GPLv3][gpl], please see the LICENSE file.
+The [__sp2graph__][docs] license is [GPLv3][gpl], please see the LICENSE file.
 
 <!---
 Links to external and internal sites.
@@ -130,6 +133,7 @@ Links to external and internal sites.
 [gpl]: http://www.gnu.org/licenses/gpl.html
 [issues]: https://github.com/dipc-cc/sp2graph/issues
 [pulls]: https://github.com/dipc-cc/sp2graph/pulls
+[docs]: https://github.com/dipc-cc/sp2graph-docs/latest/index.html
 [Wassmann2010]: https://doi.org/10.1021/ja909234y
 [Sola2013]: https://doi.org/10.3389/fchem.2013.00022
 [Yeh2016]: https://doi.org/10.1038/srep30562

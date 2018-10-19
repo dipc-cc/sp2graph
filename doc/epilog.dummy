@@ -1,0 +1,12 @@
+.. Internal links:
+.. _sp2graph: https://github.com/dipc-cc/sp2graph
+.. _pr: https://github.com/dipc-cc/sp2graph/pulls
+.. _issue: https://github.com/dipc-cc/sp2graph/issues
+.. _wiki: https://github.com/dipc-cc/sp2graph/wiki
+.. _docs: https://github.com/dipc-cc/sp2graph-docs/latest/index.html
+.. _releases: https://github.com/dipc-cc/sp2graph/releases
+
+.. These are external links:
+.. _Python: https://www.python.org/
+.. _NumPy: http://www.numpy.org/
+.. _Matplotlib: https://matplotlib.org/
