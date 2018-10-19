@@ -133,7 +133,7 @@ Links to external and internal sites.
 [gpl]: http://www.gnu.org/licenses/gpl.html
 [issues]: https://github.com/dipc-cc/sp2graph/issues
 [pulls]: https://github.com/dipc-cc/sp2graph/pulls
-[docs]: https://github.com/dipc-cc/sp2graph-docs/index.html
+[docs]: https://github.com/dipc-cc/sp2graph-docs/blob/master/index.html
 [Wassmann2010]: https://doi.org/10.1021/ja909234y
 [Sola2013]: https://doi.org/10.3389/fchem.2013.00022
 [Yeh2016]: https://doi.org/10.1038/srep30562
