@@ -15,7 +15,7 @@ import numpy as np
 import sp2graph.linalg_utils as lau
 
 __all__ = ['viewV', 'viewKekule', 'viewKekuleGrid',
-           'viewBondOrderAverage', 'printAdj']
+           'viewBondOrderAverage', 'viewTBBondOrder', 'printAdj']
 
 
 def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
@@ -159,10 +159,61 @@ def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, anno
         idx = np.transpose(np.nonzero(A[i]))
         for j in range(len(idx)):
             color = cmap(float(avg[i, idx[j]]-1.))
-            lwidth = 9.*avg[i, idx[j]]-8. # remormalize from 1 to 10
+            lwidth = 9.*avg[i, idx[j]] - 8. # remormalize to [1,10]
             axs.plot((V[i, 0], V[idx[j], 0]),
                      (V[i, 1], V[idx[j], 1]),
                      c=color, ls='-', lw=lwidth)
+    axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
+    axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
+    axs.set_xlabel('x [Ang]')
+    axs.set_ylabel('y [Ang]')
+    axs.set_aspect('equal')
+    axs.patch.set_facecolor("black")
+    if figname:
+        plt.savefig(figname, dpi=dpi)
+        plt.clf()
+        plt.close(fig)
+    else:
+        plt.show()
+
+
+def viewTBBondOrder(V, TB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+    """
+    Visualize the bond order estimated from tight-binding approach.
+    """
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+    fig, axs = plt.subplots(figsize=(sizex, sizey))
+    nTB = len(TB)
+
+    # set colormap and colorbar
+    cmap = plt.get_cmap('RdBu')
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
+    sm.set_array([])
+    divider = make_axes_locatable(axs)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    ticks = (1.00, 1.25, 1.5, 1.75, 2.00);
+    plt.colorbar(sm, label='tight-binding bond order', cax=cax, ticks=ticks)
+
+    # renormalize TB values to [1,2] interval
+    vmin = np.min(TB[np.nonzero(TB)])
+    vmax = np.max(TB)
+    coef = 1./(vmax - vmin)
+    TB *= coef
+    coef = (vmax - 2.*vmin)*coef
+    TB[np.nonzero(TB)] += coef
+
+    if annotate:
+        for i in range(nTB):
+            axs.annotate(i, (V[i, 0], V[i, 1]))
+    for i in range(nTB):
+        idx = np.transpose(np.nonzero(TB[i]))
+        for j in range(len(idx)):
+            color = cmap(float(TB[i, idx[j]]-1))
+            lrenorm = 9.*TB[i, idx[j]] - 8. # remormalize to [1,10]
+            axs.plot((V[i, 0], V[idx[j], 0]),
+                     (V[i, 1], V[idx[j], 1]),
+                     c=color, ls='-', lw=lrenorm)
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
