@@ -12,6 +12,7 @@ representation of carbon sp2 geometries.
 
 import numpy as np
 import sp2graph.linalg_utils as lau
+import sys
 
 __all__ = ['adjacencyG', 'adjacencySelfIntG', 'revCMK', 'allKekules']
 
@@ -201,6 +202,15 @@ def bfKekules(G, R, Q, DB):
                 gdb = insertResult(idb, gdb)
             else:
                 gdb = [idb]
+            DB = gdb
+            return DB
+        else:
+            print('we need to continue from other point')
+            # queue another vertex and remove following 3 lines
+            if 'gdb' in globals():
+                DB = gdb
+            return DB
+    elif Q[0] == -1:
         if 'gdb' in globals():
             DB = gdb
         return DB
@@ -213,7 +223,7 @@ def bfKekules(G, R, Q, DB):
     # elements, check whether the unqueued vertex in 'qval'
     # is a valid neigbohr from the the last element on 'R'
     if len(R)%2 != 0 and np.isin(qval, np.where(G[R[-1], :]==1)[0]) == False:
-        Q = [] # this will stop the search on this branch
+        Q = [-1] # this will stop the search on this branch
         return bfKekules(G, R, Q, DB)
 
     # append unqueued vertex and analyse its neighbors
@@ -246,7 +256,39 @@ def bfKekules(G, R, Q, DB):
     return bfKekules(G, R, Q, DB)
 
 
-def allKekules(G, iniV):
+def checkDBlist(G, iniV, DB):
+    """
+    Check consistency of double bond list
+    """
+    nDB = len(DB)
+    DBt = np.transpose(DB)
+    if DBt.shape[0] != 2:
+        sys.exit('ERROR: constrained double bonds list has to be tuples!')
+    if len(DB.shape) == 1:
+        idx = DB[0]
+        neig = np.where(G[idx, :]==1)[0]
+        if np.isin(DB[1], neig) == False:
+            sys.exit('ERROR: vertices %d and %d are not neighbors!'\
+                     %(DB[0], DB[1]))
+    else:
+        for i in range(nDB):
+            idx = DB[i, 0]
+            neig = np.where(G[idx, :]==1)[0]
+            if np.isin(DB[i, 1], neig) == False:
+                sys.exit('ERROR: vertices %d and %d are not neighbors!'\
+                         %(DB[i, 0], DB[i, 1]))
+            if np.any(np.isin(DB[i], DB[0:i])):
+                sys.exit('ERROR: double bonds at adjacent edges are not allowed!')
+        if np.isin(iniV, DB):
+            for i in range(len(G)):
+                if np.isin(i, DB) == False:
+                    iniV = i
+                    print ('WARNING: initial vertex changed to %d.'%(iniV))
+                    break
+    return iniV
+
+
+def allKekules(G, iniV, C=None):
     """
     Interface for calling recursive function returning
     all Kekule structures
@@ -259,9 +301,15 @@ def allKekules(G, iniV):
     Q = np.empty(shape=[0], dtype=np.uint8)
     DB = np.empty(shape=[0, 0], dtype=np.uint8)
 
-    # queue the starting vertex
-    Q = np.append(Q, iniV)
-    return bfKekules(G, R, Q, DB)
+    if C: # constrained search
+        C = np.array(C, dtype=np.uint8)
+        iniV = checkDBlist(G, iniV, C)
+        R = C.flatten()        
+        Q = np.append(Q, iniV) # queue the starting vertex
+        return bfKekules(G, R, Q, DB)
+    else:
+        Q = np.append(Q, iniV) # queue the starting vertex
+        return bfKekules(G, R, Q, DB)
 
 
 def tests():

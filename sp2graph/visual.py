@@ -80,6 +80,7 @@ def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=F
     """
     nA = len(A)
     nKek = len(DB)
+    DB = np.array(DB, dtype=np.uint8)
     nDB = DB.shape[1]
 
     # define the grid for ploting the figures
@@ -135,6 +136,11 @@ def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, anno
     nA = len(A)
     nDB = len(DB)
     avg = nDB*A.astype(dtype=np.float16)
+    DB = np.array(DB, dtype=np.uint8)
+
+    if len(DB.flatten()) == 0:
+        print('WARNING: no Kekule strucutre to average!')
+        return
     for i in range(nDB):
         for j in range(DB.shape[1]):
             t = tuple(DB[i, j])
