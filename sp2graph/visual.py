@@ -125,10 +125,11 @@ def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=F
         plt.show()
 
 
-def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+def viewBondOrderAverage(V, A, DB, C=None, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
+    Constrained bonds 'C' are shown with usual Kekule representation.
     """
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -149,6 +150,14 @@ def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, anno
     if nDB > 0:
         avg /= nDB
 
+    # constrained double bonds
+    if C:
+        C = np.array(C, dtype=np.uint8)
+        allC = C.flatten()
+    else:
+        C = np.empty(shape=[0, 0], dtype=np.uint8)
+        allC = np.empty(shape=[0], dtype=np.uint8)
+
     # set colormap and colorbar
     cmap = plt.get_cmap('RdBu')
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
@@ -161,13 +170,33 @@ def viewBondOrderAverage(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, anno
     if annotate:
         for i in range(nA):
             axs.annotate(i, (V[i, 0], V[i, 1]))
-    for i in range(nA):
-        idx = np.transpose(np.nonzero(A[i]))
+    # single bond around all constrained vertices
+    for i in range(len(allC)):
+        ic = allC[i] # constrained vertex
+        idx = np.transpose(np.nonzero(A[ic]))
         for j in range(len(idx)):
-            color = cmap(float(avg[i, idx[j]]-1.))
-            lwidth = 9.*avg[i, idx[j]] - 8. # remormalize to [1,10]
-            axs.plot((V[i, 0], V[idx[j], 0]),
-                     (V[i, 1], V[idx[j], 1]),
+            axs.plot((V[ic, 0], V[idx[j], 0]),
+                     (V[ic, 1], V[idx[j], 1]), c='g', ls='-', lw=1.5)
+    # constrained double bonds
+    for i in range(len(C)):
+        par = lau.parallel(V[C[i, 0]], V[C[i, 1]])
+        axs.plot((par[0][0], par[1][0]),
+                 (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+    # plot averaged of unconstrained only
+    Auc = np.delete(A, allC, axis=0)
+    for i in range(len(allC)):
+        Auc[:, i] = 0
+    # get indexes of unconstrained vertices
+    allV = np.arange(len(A))
+    unc = np.where(np.isin(allV, allC, invert=True))[0]
+    for i in range(len(Auc)):
+        idx = np.transpose(np.nonzero(Auc[i]))
+        iunc = unc[i] # unconstrained vertex
+        for j in range(len(idx)):
+            color = cmap(float(avg[iunc, idx[j]]-1.))
+            lwidth = 9.*avg[iunc, idx[j]] - 8. # remormalize to [1,10]
+            axs.plot((V[iunc, 0], V[idx[j], 0]),
+                     (V[iunc, 1], V[idx[j], 1]),
                      c=color, ls='-', lw=lwidth)
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
