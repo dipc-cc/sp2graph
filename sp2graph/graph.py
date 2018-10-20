@@ -205,11 +205,10 @@ def bfKekules(G, R, Q, DB):
             DB = gdb
             return DB
         else:
-            print('we need to continue from other point')
-            # queue another vertex and remove following 3 lines
-            if 'gdb' in globals():
-                DB = gdb
-            return DB
+            allV = np.arange(len(G))
+            aux = np.where(np.isin(allV, R, invert=True))
+            Q = np.append(Q, aux[0])
+            return bfKekules(G, R, Q, DB)
     elif Q[0] == -1:
         if 'gdb' in globals():
             DB = gdb
@@ -304,7 +303,7 @@ def allKekules(G, iniV, C=None):
     if C: # constrained search
         C = np.array(C, dtype=np.uint8)
         iniV = checkDBlist(G, iniV, C)
-        R = C.flatten()        
+        R = C.flatten()
         Q = np.append(Q, iniV) # queue the starting vertex
         return bfKekules(G, R, Q, DB)
     else:
