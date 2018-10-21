@@ -9,7 +9,7 @@ This is particular interesting for the interpretation of recent experiments perf
 
 [__sp2graph__][docs] was initiated by Pedro Brandimarte and Thomas Frederiksen at DIPC in June 2018.
 
-API documentation at [__sp2graph__][docs]
+API documentation is available at [__sp2graph__][docs].
 
 ## Objectives ##
 Given the `xyz` geometry of a planar carbon-based structure (*sp<sup>2</sup>*-hybridized), [__sp2graph__][docs] aims to provide:
@@ -98,7 +98,7 @@ As a first attempt to solve the problem of finding all possible Kekulé structur
 However, there are several problems with this approach. First that the same Kekulé structure can be found more than one time. Therefore, at the point where one possible structure is found one has to check if a similar one has not been found before. The ideal situation would be to find all possible Kekulé structures by passing through all vertices just once.
 
 ## Dependencies ##
-The [__sp2graph__][docs] installation the following packages are required:
+To install [__sp2graph__][docs] the following packages are required:
 
    - NumPy
    - Matplotlib
