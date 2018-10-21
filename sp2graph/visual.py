@@ -106,7 +106,7 @@ def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=F
         if annotate:
             for i in range(nA):
                 plt.annotate(i, (V[i, 0], V[i, 1]))
-
+        """
         if idb%cols == 0:
             plt.ylabel('y [Ang]')
         else:
@@ -115,6 +115,10 @@ def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=F
         plt.xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
         plt.ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
         plt.xlabel('x [Ang]')
+        """
+        plt.box(False)
+        plt.axis('off')
+        plt.title('#%i (%i)'%(idb+1, nKek))
         plt.gca().set_aspect(1)
 
     if figname:
@@ -169,7 +173,7 @@ def viewBondOrderAverage(V, A, DB, C=None, figname=None, sizex=5, sizey=5, dpi=1
 
     if annotate:
         for i in range(nA):
-            axs.annotate(i, (V[i, 0], V[i, 1]))
+            axs.annotate(i, (V[i, 0], V[i, 1]), color='w')
     # single bond around all constrained vertices
     for i in range(len(allC)):
         ic = allC[i] # constrained vertex

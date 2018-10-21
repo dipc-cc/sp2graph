@@ -20,7 +20,7 @@ G = sp2ggr.adjacencyG(V)
 
 # initial visualization
 if nV < 100:
-    sp2gvi.viewV(V, sizex=5, sizey=5)
+    #sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
 
 # apply band width reduction and print the adjacency matrix on screen
@@ -28,16 +28,16 @@ sp2ggr.reduceBandWidth(G, V)
 
 # visualization after ordering
 if nV < 100:
+    #sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
-    sp2gvi.viewV(V, sizex=5, sizey=5)
 
 # calculate all possible Kekule structures (in Kek)
 Kek = sp2ggr.allKekules(G, 0)
 
 # visualization of all Kekule structures found
-#sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6, figname='kekules.pdf')
+sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6, figname='kekules.pdf')
 #for i in range(len(Kek)):
-#    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5)
+#    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5, annotate=True)
 
 # visualization of the averaged bond order
-sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5)
+sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5, annotate=True)
