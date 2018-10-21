@@ -25,8 +25,8 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(_this_dir)))
 # -- Project information -----------------------------------------------------
 
 project = u'sp2graph'
-author = u'initiated by Pedro Brandimarte and Thomas Frederiksen'
-copyright = author + u', in 2018'
+author = u'Pedro Brandimarte and Thomas Frederiksen'
+copyright = author + u', 2018'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
