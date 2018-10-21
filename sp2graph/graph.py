@@ -181,11 +181,11 @@ def insertResult(idb, gdb):
     return gdb
 
 
-def bfKekules(G, R, Q, DB):
+def bfKekules(G, R, Q, DB, rad=None):
     """
-    Brute force algorithm that returns in DB all
-    possible Kekule structures (i.e., edges with
-    double bonds) from a given adjacency matrix G.
+    Brute force algorithm that returns in DB all possible Kekule
+    structures (i.e., edges with double bonds) from a given adjacency
+    matrix G. Vertices with radicals can be provided at 'rad'.
     """
 
     # TO DO: get rid off this global variable
@@ -195,7 +195,7 @@ def bfKekules(G, R, Q, DB):
     idx = len(Q)-1
     if idx < 0:
         # a validy solution has the dimension of the graph
-        if len(R) == len(G):
+        if len(R) == len(G)-len(rad):
             # append solution to DB if not already there
             idb = reorderResult(R)
             if 'gdb' in globals():
@@ -208,7 +208,7 @@ def bfKekules(G, R, Q, DB):
             allV = np.arange(len(G))
             aux = np.where(np.isin(allV, R, invert=True))
             Q = np.append(Q, aux[0])
-            return bfKekules(G, R, Q, DB)
+            return bfKekules(G, R, Q, DB, rad)
     elif Q[0] == -1:
         if 'gdb' in globals():
             DB = gdb
@@ -223,7 +223,7 @@ def bfKekules(G, R, Q, DB):
     # is a valid neigbohr from the the last element on 'R'
     if len(R)%2 != 0 and np.isin(qval, np.where(G[R[-1], :]==1)[0]) == False:
         Q = [-1] # this will stop the search on this branch
-        return bfKekules(G, R, Q, DB)
+        return bfKekules(G, R, Q, DB, rad)
 
     # append unqueued vertex and analyse its neighbors
     R = np.append(R, qval)
@@ -231,6 +231,10 @@ def bfKekules(G, R, Q, DB):
     # remove from neig those already in R
     dup = np.where(np.isin(neig, R))
     neig = np.delete(neig, dup, 0)
+    if rad.size:
+        # remove from neig vertices with radicals
+        dup = np.where(np.isin(neig, rad))
+        neig = np.delete(neig, dup, 0)
     n_neig = len(neig)
     if n_neig > 0:
         # remove from Q those that are also in neig
@@ -242,17 +246,16 @@ def bfKekules(G, R, Q, DB):
 
         if n_neig == 1:
             Q = np.append(Q, neig)
-            return bfKekules(G, R, Q, DB)
-
+            return bfKekules(G, R, Q, DB, rad)
         else: # we have a bifurcation
             cpQ = Q
             for i in range(n_neig):
                 Q = np.append(cpQ, np.roll(neig, i+1))
                 if i == n_neig-1:
-                    return bfKekules(G, R, Q, DB)
+                    return bfKekules(G, R, Q, DB, rad)
                 else:
-                    foo = bfKekules(G, R, Q, DB)
-    return bfKekules(G, R, Q, DB)
+                    foo = bfKekules(G, R, Q, DB, rad)
+    return bfKekules(G, R, Q, DB, rad)
 
 
 def checkDBlist(G, iniV, DB):
@@ -287,7 +290,30 @@ def checkDBlist(G, iniV, DB):
     return iniV
 
 
-def allKekules(G, iniV, C=None):
+def checkRadlist(G, iniV, C, rad):
+    """
+    Check consistency of radicals list.
+    """
+    if C.size:
+        if np.any(np.isin(rad, C)):
+            sys.exit('ERROR: a vertex assigned as radical cannot belong to the constrained double bonds list!')
+    if np.isin(iniV, rad):
+        allV = np.arange(len(G))
+        if C.size:
+            allC = C.flatten()
+            unc = np.where(np.isin(allV, allC, invert=True))[0]
+            if np.any(np.isin(unc, rad)):
+                nonrad = np.where(np.isin(unc, rad, invert=True))[0]
+                iniV = nonrad[0]
+                print ('WARNING: initial vertex changed to %d.'%(iniV))
+        else:
+            nonrad = np.where(np.isin(allV, rad, invert=True))[0]
+            iniV = nonrad[0]
+            print ('WARNING: initial vertex changed to %d.'%(iniV))
+    return iniV
+
+
+def allKekules(G, iniV, C=None, rad=None):
     """
     Interface for calling recursive function returning
     all Kekule structures
@@ -304,11 +330,17 @@ def allKekules(G, iniV, C=None):
         C = np.array(C, dtype=np.uint8)
         iniV = checkDBlist(G, iniV, C)
         R = C.flatten()
-        Q = np.append(Q, iniV) # queue the starting vertex
-        return bfKekules(G, R, Q, DB)
     else:
-        Q = np.append(Q, iniV) # queue the starting vertex
-        return bfKekules(G, R, Q, DB)
+        C = np.empty(shape=[0, 0], dtype=np.uint8)
+
+    if rad:
+        rad = np.array(rad, dtype=np.uint8)
+        iniV = checkRadlist(G, iniV, C, rad)
+    else:
+        rad = np.empty(shape=[0], dtype=np.uint8)
+
+    Q = np.append(Q, iniV) # queue the starting vertex
+    return bfKekules(G, R, Q, DB, rad)
 
 
 def tests():
