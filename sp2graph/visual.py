@@ -229,17 +229,15 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
         allC = np.empty(shape=[0], dtype=np.uint8)
 
     # set colormap and colorbar
-    cmap = plt.get_cmap('RdBu')
+    #cmap = plt.get_cmap('RdBu')
+    cmap = plt.get_cmap('autumn')
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
     sm.set_array([])
     divider = make_axes_locatable(axs)
     cax = divider.append_axes("right", size="5%", pad=0.05)
     ticks = (1.00, 1.25, 1.5, 1.75, 2.00);
-    plt.colorbar(sm, label='averaged bond order', cax=cax, ticks=ticks)
+    plt.colorbar(sm, label='Pauling bond order', cax=cax, ticks=ticks)
 
-    if annotate:
-        for i in range(nA):
-            axs.annotate(i, (V[i, 0], V[i, 1]), color='w')
     # single bonds around all constrained vertices
     for i in range(len(allC)):
         ic = allC[i] # constrained vertex
@@ -274,6 +272,12 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
             idx = np.transpose(np.nonzero(A[rad[i]]))
             radmk = lau.ptOrtho(V[idx[0]][0], V[rad[i]], V[idx[1]][0])
             axs.scatter(radmk[0], radmk[1], s=30, c='y', marker='o')
+    if annotate:
+        # Write Pauling bond orders
+        for i in range(nA):
+            for j in np.where(A[i, :]==1)[0]:
+                axs.annotate('%.2f'%avg[i, j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
+
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
@@ -288,7 +292,7 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
         plt.show()
 
 
-def viewTBBondOrder(V, TB, figname=None,
+def viewTBBondOrder(V, BO, figname=None,
                     sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize the bond order estimated from tight-binding approach.
@@ -296,36 +300,33 @@ def viewTBBondOrder(V, TB, figname=None,
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
     fig, axs = plt.subplots(figsize=(sizex, sizey))
-    nTB = len(TB)
+    nBO = len(BO)
 
     # set colormap and colorbar
-    cmap = plt.get_cmap('RdBu')
+    #cmap = plt.get_cmap('RdBu')
+    cmap = plt.get_cmap('autumn')
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
     sm.set_array([])
     divider = make_axes_locatable(axs)
     cax = divider.append_axes("right", size="5%", pad=0.05)
     ticks = (1.00, 1.25, 1.5, 1.75, 2.00);
-    plt.colorbar(sm, label='tight-binding bond order', cax=cax, ticks=ticks)
+    plt.colorbar(sm, label='Huckel bond order', cax=cax, ticks=ticks)
 
-    # renormalize TB values to [1,2] interval
-    vmin = np.min(TB[np.nonzero(TB)])
-    vmax = np.max(TB)
-    coef = 1./(vmax - vmin)
-    TB *= coef
-    coef = (vmax - 2.*vmin)*coef
-    TB[np.nonzero(TB)] += coef
-
-    if annotate:
-        for i in range(nTB):
-            axs.annotate(i, (V[i, 0], V[i, 1]))
-    for i in range(nTB):
-        idx = np.transpose(np.nonzero(TB[i]))
+    for i in range(nBO):
+        idx = np.transpose(np.nonzero(BO[i]))
         for j in range(len(idx)):
-            color = cmap(float(TB[i, idx[j]]-1))
-            lrenorm = 9.*TB[i, idx[j]] - 8. # remormalize to [1,10]
+            color = cmap(float(BO[i, idx[j]]-1))
+            lrenorm = 9.*BO[i, idx[j]] - 8. # remormalize to [1,10]
             axs.plot((V[i, 0], V[idx[j], 0]),
                      (V[i, 1], V[idx[j], 1]),
                      c=color, ls='-', lw=lrenorm)
+    if annotate:
+        # Write Pauling bond orders
+        for i in range(len(BO)):
+            for j in np.where(BO[i, :] > 0)[0]:
+                if j > i:
+                    axs.annotate('%.2f'%BO[i, j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
+
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
