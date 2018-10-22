@@ -10,25 +10,26 @@ import sys
 #syscoord = 'geometries/anthracene.xyz'
 syscoord = sys.argv[1]
 
-# read geometry, move to xy plane and assign the vertex array V
+# read geometry, move to xy plane and assign the vertex
+# array `V` and lattice vectors `aij` (if provided).
 V, aij = sp2gge.readgeom(syscoord)
 nV = len(V)
-print(nV, '\n')
-print(V, '\n')
 
-# create a graph representation and print the adjacency matrix on screen
+# create a graph representation
 G = sp2ggr.adjacencyG(V)
 
-# initial visualization
-if nV < 100:
+# initial visualization of vertices and adjacency matrix
+if nV < 10:
+    print(nV, '\n')
+    print(V, '\n')
     #sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
 
-# apply band width reduction and print the adjacency matrix on screen
+# apply band width reduction
 sp2ggr.reduceBandWidth(G, V)
 
-# visualization after ordering
-if nV < 100:
+# vertices and adjacency matrix visualization
+if nV < 10:
     #sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
 
@@ -36,7 +37,8 @@ if nV < 100:
 Kek = sp2ggr.allKekules(G, 0)
 
 # visualization of all Kekule structures found
-sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6, figname='kekules.pdf')
+sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6,
+                      figname='kekules.pdf')
 #for i in range(len(Kek)):
 #    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5, annotate=True)
 

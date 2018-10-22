@@ -10,13 +10,14 @@ import sys
 #syscoord = 'geometries/anthracene.xyz'
 syscoord = sys.argv[1]
 
-# read geometry, move to xy plane and assign the vertex array V
+# read geometry, move to xy plane and assign the vertex
+# array `V` and lattice vectors `aij` (if provided).
 V, aij = sp2gge.readgeom(syscoord)
 
-# create a graph representation and print the adjacency matrix on screen
+# create a graph representation
 G = sp2ggr.adjacencyG(V)
 
-# apply band width reduction and print the adjacency matrix on screen
+# apply band width reduction
 sp2ggr.reduceBandWidth(G, V)
 
 # solve the tight-binding problem

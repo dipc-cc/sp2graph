@@ -3,3 +3,4 @@ build
 info.py
 doc/api-gen
 doc/latest
+examples/*.pdf
