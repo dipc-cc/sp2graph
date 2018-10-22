@@ -40,10 +40,13 @@ def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
         plt.show()
 
 
-def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+def viewKekule(V, A, DB, C=None, rad=None, figname=None,
+               sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
+    If provided, constrained bonds 'C' are shown with the usual Kekule
+    representation and radicals are marked with a dot next to the vertex.
     """
     fig, axs = plt.subplots(figsize=(sizex, sizey))
     nA = len(A)
@@ -57,6 +60,30 @@ def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False
         par = lau.parallel(V[DB[i, 0]], V[DB[i, 1]])
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+
+    # constrained double bonds
+    if C:
+        C = np.array(C, dtype=np.uint8)
+        allC = C.flatten()
+        # single bonds around all constrained vertices
+        for i in range(len(allC)):
+            ic = allC[i] # constrained vertex
+            idx = np.transpose(np.nonzero(A[ic]))
+            for j in range(len(idx)):
+                axs.plot((V[ic, 0], V[idx[j], 0]),
+                         (V[ic, 1], V[idx[j], 1]), c='#00FF37', ls='-', lw=1.5)
+        # double bonds
+        for i in range(len(C)):
+            par = lau.parallel(V[C[i, 0]], V[C[i, 1]])
+            axs.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+
+    # radicals
+    if rad:
+        for i in range(len(rad)):
+            idx = np.transpose(np.nonzero(A[rad[i]]))
+            radmk = lau.ptOrtho(V[idx[0]][0], V[rad[i]], V[idx[1]][0])
+            axs.scatter(radmk[0], radmk[1], s=15, c='k', marker='o')
     if annotate:
         for i in range(nA):
             axs.annotate(i, (V[i, 0], V[i, 1]))
@@ -73,10 +100,13 @@ def viewKekule(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False
         plt.show()
 
 
-def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
+                   sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
+    If provided, constrained bonds 'C' are shown with the usual Kekule
+    representation and radicals are marked with a dot next to the vertex.
     """
     nA = len(A)
     nKek = len(DB)
@@ -90,6 +120,23 @@ def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=F
 
     fig = plt.figure()
     fig.set_size_inches(sizex, sizey)
+
+    # set the radical markers (same for all Kekules)
+    if rad:
+        nrad = len(rad)
+        radmk = np.zeros(shape=[nrad, nrad], dtype=np.float16)
+        for i in range(len(rad)):
+            idx = np.transpose(np.nonzero(A[rad[i]]))
+            radmk[i] = lau.ptOrtho(V[idx[0]][0], V[rad[i]], V[idx[1]][0])
+
+    # set constrained double bonds (same for all Kekules)
+    if C:
+        C = np.array(C, dtype=np.uint8)
+        allC = C.flatten()
+    else:
+        C = np.empty(shape=[0, 0], dtype=np.uint8)
+        allC = np.empty(shape=[0], dtype=np.uint8)
+
     for idb in range(nKek):
 
         plt.subplot2grid((rows, cols), (idb/cols, idb%cols))
@@ -103,6 +150,23 @@ def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=F
             par = lau.parallel(V[kek[i, 0]], V[kek[i, 1]])
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+        # radicals
+        if rad:
+            plt.scatter(radmk[:, 0], radmk[:, 1], s=15, c='k', marker='o')
+
+        # single bonds around all constrained vertices
+        for i in range(len(allC)):
+            ic = allC[i] # constrained vertex
+            idx = np.transpose(np.nonzero(A[ic]))
+            for j in range(len(idx)):
+                plt.plot((V[ic, 0], V[idx[j], 0]),
+                         (V[ic, 1], V[idx[j], 1]), c='#00FF37', ls='-', lw=1.5)
+        # double bonds
+        for i in range(len(C)):
+            par = lau.parallel(V[C[i, 0]], V[C[i, 1]])
+            plt.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+
         if annotate:
             for i in range(nA):
                 plt.annotate(i, (V[i, 0], V[i, 1]))
@@ -129,11 +193,13 @@ def viewKekuleGrid(V, A, DB, figname=None, sizex=5, sizey=5, dpi=150, annotate=F
         plt.show()
 
 
-def viewBondOrderAverage(V, A, DB, C=None, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
+                         sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
-    Constrained bonds 'C' are shown with usual Kekule representation.
+    If provided, constrained bonds 'C' are shown with the usual Kekule
+    representation and radicals are marked with a dot next to the vertex.
     """
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -174,7 +240,7 @@ def viewBondOrderAverage(V, A, DB, C=None, figname=None, sizex=5, sizey=5, dpi=1
     if annotate:
         for i in range(nA):
             axs.annotate(i, (V[i, 0], V[i, 1]), color='w')
-    # single bond around all constrained vertices
+    # single bonds around all constrained vertices
     for i in range(len(allC)):
         ic = allC[i] # constrained vertex
         idx = np.transpose(np.nonzero(A[ic]))
@@ -202,6 +268,12 @@ def viewBondOrderAverage(V, A, DB, C=None, figname=None, sizex=5, sizey=5, dpi=1
             axs.plot((V[iunc, 0], V[idx[j], 0]),
                      (V[iunc, 1], V[idx[j], 1]),
                      c=color, ls='-', lw=lwidth)
+    # radicals
+    if rad:
+        for i in range(len(rad)):
+            idx = np.transpose(np.nonzero(A[rad[i]]))
+            radmk = lau.ptOrtho(V[idx[0]][0], V[rad[i]], V[idx[1]][0])
+            axs.scatter(radmk[0], radmk[1], s=30, c='y', marker='o')
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
@@ -216,7 +288,8 @@ def viewBondOrderAverage(V, A, DB, C=None, figname=None, sizex=5, sizey=5, dpi=1
         plt.show()
 
 
-def viewTBBondOrder(V, TB, figname=None, sizex=5, sizey=5, dpi=150, annotate=False):
+def viewTBBondOrder(V, TB, figname=None,
+                    sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize the bond order estimated from tight-binding approach.
     """

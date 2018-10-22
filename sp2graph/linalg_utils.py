@@ -11,7 +11,7 @@ Simple linear algebra functions.
 
 import numpy as np
 
-__all__ = ['unitA', 'closeV', 'parallel', 'findClosest']
+__all__ = ['unitA', 'closeV', 'parallel', 'ptOrtho', 'findClosest']
 
 
 def unitA(array):
@@ -50,6 +50,20 @@ def parallel(pt1, pt2):
     parpt1 = (parpt1[0] - 0.25*np.cos(theta), parpt1[1] - 0.25*np.sin(theta))
     parpt2 = (parpt2[0] - 0.25*np.cos(theta), parpt2[1] - 0.25*np.sin(theta))
     return parpt1, parpt2
+
+
+def ptOrtho(v1, v2, v3):
+    """
+    Return a point slightly distant from 'v2' and belonging
+    to the line orthogonal to (\vec{v2-v1}+\vec{v3-v2})
+    and that contains 'v2'.
+    """
+    v12 = v2 - v1
+    v23 = v3 - v2
+    theta = angleA(v12, v23)
+    ortho = (v12 - v23) * np.sin(0.5*theta)
+    ortho = unitA(ortho)
+    return (v2 + 0.35*ortho)
 
 
 def findClosest(array, value):

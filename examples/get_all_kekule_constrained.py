@@ -37,9 +37,10 @@ C = ((0, 1), (3, 5), (2, 4))
 Kek = sp2ggr.allKekules(G, 0, C=C)
 
 # visualization of all Kekule structures found
-#sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6, figname='kekules.pdf')
+sp2gvi.viewKekuleGrid(V, G, Kek, C=C,
+                      sizex=10, sizey=6)#, figname='kekules.pdf')
 #for i in range(len(Kek)):
-#    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5)
+#    sp2gvi.viewKekule(V, G, Kek[i], C=C, sizex=5, sizey=5)
 
 # visualization of the averaged bond order
 sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5)
