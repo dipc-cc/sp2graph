@@ -10,7 +10,7 @@ import sys
 syscoord = sys.argv[1]
 
 # read geometry, move to xy plane and assign the vertex array V
-V = sp2gge.readgeom(syscoord)
+V, aij = sp2gge.readgeom(syscoord)
 nV = len(V)
 print(nV, '\n')
 print(V, '\n')

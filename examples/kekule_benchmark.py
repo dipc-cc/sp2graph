@@ -12,7 +12,7 @@ from contextlib import redirect_stdout
 geoms = sorted(glob.glob('./geometries/graphene-flake_C*'))
 for g in geoms:
     # read geometry, move to xy plane and assign the vertex array V
-    V = sp2gge.readgeom(g)
+    V, aij = sp2gge.readgeom(g)
     nV = len(V)
 
     # create a graph representation and print the adjacency matrix on screen

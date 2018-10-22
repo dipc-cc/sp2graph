@@ -299,7 +299,9 @@ def checkRadlist(G, iniV, C, rad):
             sys.exit('ERROR: a vertex assigned as radical cannot belong to the constrained double bonds list!')
 
     # check if atoms assigned as radicals have only 2 neighbors
-
+    for i in rad:
+        if np.sum(G[i]) > 2:
+            sys.exit('ERROR: a radical can only be assigned to carbons having at most 2 neighbors!')
     if np.isin(iniV, rad):
         allV = np.arange(len(G))
         if C.size:

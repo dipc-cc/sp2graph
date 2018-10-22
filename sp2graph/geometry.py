@@ -12,7 +12,7 @@ Function for reading carbon sp2 geometries and project into xy plane.
 import numpy as np
 import sp2graph.linalg_utils as lau
 
-__all__ = ['readgeom']
+__all__ = ['readgeom', 'readLattice', 'readCs']
 
 
 def readgeom(ifile):
@@ -21,7 +21,40 @@ def readgeom(ifile):
     """
     V = readCs(ifile)
     V = xyprojA(V)
-    return V
+    aij = readLattice(ifile)
+    return V, aij
+
+
+def readLattice(ifile):
+    r"""
+    If present, reads the lattice vectors. For example, if the
+    xyz file contains the following line:
+
+    `Lattice="79.4 0.0 0.0 0.0 20.3 0.0 0.0 0.0 25.0"`
+
+    then the lattice vectors are assigned as:
+
+    .. math::
+
+        \begin{array}{crrrc}
+        \vec{a}_1 = [& 79.4 &  0.0 &  0.0 & ]\\
+        \vec{a}_2 = [&  0.0 & 20.3 &  0.0 & ]\\
+        \vec{a}_3 = [&  0.0 &  0.0 & 25.0 & ]
+        \end{array}
+
+    """
+    aij = None
+    f = open(ifile)
+    lines = f.readlines()
+    f.close()
+    for i, line in enumerate(lines):
+        if "attice" in line: # 'Lattice' or 'lattice'
+            l = lines[i].split('"')
+            aij = l[1].split()
+            aij = np.array(aij, dtype=np.float16)
+            aij = aij.reshape((3, 3))
+            break
+    return aij
 
 
 def readCs(ifile):
@@ -43,7 +76,7 @@ def readCs(ifile):
 
 
 def xyprojA(array):
-    """ Returns the an equiarrayalent 2D structure rotated to the xy plane """
+    """ Returns the an equivalent 2D structure rotated to the xy plane """
     u1 = lau.unitA(array[1]-array[0])
     u2 = array[2]-array[0]
     u3 = lau.unitA(np.cross(u1, u2))
