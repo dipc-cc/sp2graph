@@ -40,8 +40,8 @@ def closeV(iv, V, rad):
 
 def parallel(pt1, pt2):
     """
-    Returns a pair of points in R^2 belonging to a line
-    parallel to the one defined by the provided points.
+    Returns a pair of points in :math:`\mathbb{R}^2` belonging to
+    a line parallel to the one defined by the provided points.
     """
     theta = angleA(pt2-pt1, [1., 0.])
     parpt1 = (pt1[0] + 0.2*np.cos(theta), pt1[1] + 0.2*np.sin(theta))
@@ -54,8 +54,8 @@ def parallel(pt1, pt2):
 
 def ptOrtho(v1, v2, v3):
     """
-    Return a point slightly distant from 'v2' and belonging
-    to the line orthogonal to (\vec{v2-v1}+\vec{v3-v2})
+    Return a point slightly distant from 'v2' and belonging to the
+    line orthogonal to (:math:`\overline{v2-v1}+\overline{v3-v2}`)
     and that contains 'v2'.
     """
     v12 = v2 - v1
