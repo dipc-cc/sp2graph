@@ -229,7 +229,8 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
         allC = np.empty(shape=[0], dtype=np.uint8)
 
     # set colormap and colorbar
-    cmap = plt.get_cmap('RdBu')
+    #cmap = plt.get_cmap('RdBu')
+    cmap = plt.get_cmap('autumn')
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
     sm.set_array([])
     divider = make_axes_locatable(axs)
@@ -302,7 +303,8 @@ def viewTBBondOrder(V, BO, figname=None,
     nBO = len(BO)
 
     # set colormap and colorbar
-    cmap = plt.get_cmap('RdBu')
+    #cmap = plt.get_cmap('RdBu')
+    cmap = plt.get_cmap('autumn')
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
     sm.set_array([])
     divider = make_axes_locatable(axs)
