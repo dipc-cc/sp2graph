@@ -291,7 +291,7 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
         plt.show()
 
 
-def viewTBBondOrder(V, TB, figname=None,
+def viewTBBondOrder(V, BO, figname=None,
                     sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize the bond order estimated from tight-binding approach.
@@ -299,7 +299,7 @@ def viewTBBondOrder(V, TB, figname=None,
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
     fig, axs = plt.subplots(figsize=(sizex, sizey))
-    nTB = len(TB)
+    nBO = len(BO)
 
     # set colormap and colorbar
     cmap = plt.get_cmap('RdBu')
@@ -310,30 +310,20 @@ def viewTBBondOrder(V, TB, figname=None,
     ticks = (1.00, 1.25, 1.5, 1.75, 2.00);
     plt.colorbar(sm, label='Huckel bond order', cax=cax, ticks=ticks)
 
-    # Don't renormalize TB values to [1,2] interval
-    """
-    vmin = np.min(TB[np.nonzero(TB)])
-    vmax = np.max(TB)
-    coef = 1./(vmax - vmin)
-    TB *= coef
-    coef = (vmax - 2.*vmin)*coef
-    TB[np.nonzero(TB)] += coef
-    """
-
-    for i in range(nTB):
-        idx = np.transpose(np.nonzero(TB[i]))
+    for i in range(nBO):
+        idx = np.transpose(np.nonzero(BO[i]))
         for j in range(len(idx)):
-            color = cmap(float(TB[i, idx[j]]-1))
-            lrenorm = 9.*TB[i, idx[j]] - 8. # remormalize to [1,10]
+            color = cmap(float(BO[i, idx[j]]-1))
+            lrenorm = 9.*BO[i, idx[j]] - 8. # remormalize to [1,10]
             axs.plot((V[i, 0], V[idx[j], 0]),
                      (V[i, 1], V[idx[j], 1]),
                      c=color, ls='-', lw=lrenorm)
     if annotate:
         # Write Pauling bond orders
-        for i in range(len(TB)):
-            for j in np.where(TB[i, :]>0)[0]:
+        for i in range(len(BO)):
+            for j in np.where(BO[i, :] > 0)[0]:
                 if j > i:
-                    axs.annotate('%.2f'%TB[i, j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
+                    axs.annotate('%.2f'%BO[i, j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
