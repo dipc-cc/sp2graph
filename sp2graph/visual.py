@@ -307,13 +307,15 @@ def viewTBBondOrder(V, TB, figname=None,
     ticks = (1.00, 1.25, 1.5, 1.75, 2.00);
     plt.colorbar(sm, label='tight-binding bond order', cax=cax, ticks=ticks)
 
-    # renormalize TB values to [1,2] interval
+    # Don't renormalize TB values to [1,2] interval
+    """
     vmin = np.min(TB[np.nonzero(TB)])
     vmax = np.max(TB)
     coef = 1./(vmax - vmin)
     TB *= coef
     coef = (vmax - 2.*vmin)*coef
     TB[np.nonzero(TB)] += coef
+    """
 
     if annotate:
         for i in range(nTB):

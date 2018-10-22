@@ -17,18 +17,22 @@ __all__ = ['tbBondOrder']
 
 
 def tbBondOrder(A):
-    w, X = LA.eigh(A)
-
-    TB = np.zeros(A.shape, dtype=np.float32)
+    """ Computes the total bond order between pairs of neighboring atoms.
+    Note that the hopping matrix elements in the electronic Hamiltonian are
+    negative numbers as they represent the stabilization energy for electrons
+    that are allowed to delocalize, i.e., :math:`H_{ij} < 0`.
+    """
+    w, X = LA.eigh(-1.*A)
+    TB = 1.*A # Begin with the sigma bonds
     for i in range(len(w)):
         if w[i] > 0:
             break
         for j in range(len(A)):
+            # Find neighbor indices
             neig = np.where(A[j, :]==1)[0]
-            for k in range(len(neig)):
-                idx = neig[k]
-                # not sure why the sum is negative...
-                TB[j, idx] -= X[j, i]*X[idx, i]
+            for idx in neig:
+                # Add contribution from pi-orbital (factor 2 for spin):
+                TB[j, idx] += 2*X[j, i]*X[idx, i]
     return TB
 
 
