@@ -49,4 +49,5 @@ sp2gvi.viewKekuleGrid(V, G, Kek, C=C, rad=rad, sizex=10, sizey=6,
 #    sp2gvi.viewKekule(V, G, Kek[i], C=C, rad=rad, sizex=5, sizey=5)
 
 # visualization of the averaged bond order
-sp2gvi.viewBondOrderAverage(V, G, Kek, C=C, rad=rad, sizex=7, sizey=5)
+sp2gvi.viewBondOrderAverage(V, G, Kek, C=C, rad=rad, sizex=7, sizey=5,
+                            figname='bo_rad.pdf')

@@ -40,7 +40,7 @@ Kek = sp2ggr.allKekules(G, 0)
 sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6,
                       figname='kekules.pdf')
 #for i in range(len(Kek)):
-#    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5, annotate=True)
+#    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5)
 
 # visualization of the averaged bond order
 sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5, figname='bo.pdf', annotate=True)

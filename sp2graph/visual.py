@@ -50,14 +50,13 @@ def viewKekule(V, A, DB, C=None, rad=None, figname=None,
     """
     fig, axs = plt.subplots(figsize=(sizex, sizey))
     nA = len(A)
-    nDB = len(DB)
     for i in range(nA):
         idx = np.transpose(np.nonzero(A[i]))
-        for j in range(len(idx)):
-            axs.plot((V[i, 0], V[idx[j], 0]),
-                     (V[i, 1], V[idx[j], 1]), c='k', ls='-', lw=1.5)
-    for i in range(nDB):
-        par = lau.parallel(V[DB[i, 0]], V[DB[i, 1]])
+        for j in idx:
+            axs.plot((V[i, 0], V[j, 0]),
+                     (V[i, 1], V[j, 1]), c='k', ls='-', lw=1.5)
+    for idb in DB:
+        par = lau.parallel(V[idb[0]], V[idb[1]])
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
 
@@ -66,27 +65,26 @@ def viewKekule(V, A, DB, C=None, rad=None, figname=None,
         C = np.array(C, dtype=np.uint8)
         allC = C.flatten()
         # single bonds around all constrained vertices
-        for i in range(len(allC)):
-            ic = allC[i] # constrained vertex
+        for ic in allC:
             idx = np.transpose(np.nonzero(A[ic]))
-            for j in range(len(idx)):
-                axs.plot((V[ic, 0], V[idx[j], 0]),
-                         (V[ic, 1], V[idx[j], 1]), c='#00FF37', ls='-', lw=1.5)
+            for j in idx:
+                axs.plot((V[ic, 0], V[j, 0]),
+                         (V[ic, 1], V[j, 1]), c='#00FF37', ls='-', lw=1.5)
         # double bonds
-        for i in range(len(C)):
-            par = lau.parallel(V[C[i, 0]], V[C[i, 1]])
+        for icdb in C:
+            par = lau.parallel(V[icdb[0]], V[icdb[1]])
             axs.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
     # radicals
     if rad:
-        for i in range(len(rad)):
-            idx = np.transpose(np.nonzero(A[rad[i]]))
-            radmk = lau.ptOrtho(V[idx[0]][0], V[rad[i]], V[idx[1]][0])
+        for ir in rad:
+            idx = np.transpose(np.nonzero(A[ir]))
+            radmk = lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
             axs.scatter(radmk[0], radmk[1], s=15, c='k', marker='o')
     if annotate:
-        for i in range(nA):
-            axs.annotate(i, (V[i, 0], V[i, 1]))
+        for i, iv in enumerate(V):
+            axs.annotate(i, (iv[0], iv[1]))
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
@@ -111,7 +109,6 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
     nA = len(A)
     nKek = len(DB)
     DB = np.array(DB, dtype=np.uint8)
-    nDB = DB.shape[1]
 
     # define the grid for ploting the figures
     molsize = max(V[:, 0]) - min(V[:, 0]) + 4.
@@ -125,9 +122,9 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
     if rad:
         nrad = len(rad)
         radmk = np.zeros(shape=[nrad, nrad], dtype=np.float16)
-        for i in range(len(rad)):
-            idx = np.transpose(np.nonzero(A[rad[i]]))
-            radmk[i] = lau.ptOrtho(V[idx[0]][0], V[rad[i]], V[idx[1]][0])
+        for i, ir in enumerate(rad):
+            idx = np.transpose(np.nonzero(A[ir]))
+            radmk[i] = lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
 
     # set constrained double bonds (same for all Kekules)
     if C:
@@ -142,12 +139,12 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
         plt.subplot2grid((rows, cols), (idb/cols, idb%cols))
         for i in range(nA):
             idx = np.transpose(np.nonzero(A[i]))
-            for j in range(len(idx)):
-                plt.plot((V[i, 0], V[idx[j], 0]),
-                         (V[i, 1], V[idx[j], 1]), c='k', ls='-', lw=1.5)
+            for j in idx:
+                plt.plot((V[i, 0], V[j, 0]),
+                         (V[i, 1], V[j, 1]), c='k', ls='-', lw=1.5)
         kek = DB[idb]
-        for i in range(nDB):
-            par = lau.parallel(V[kek[i, 0]], V[kek[i, 1]])
+        for ik in kek:
+            par = lau.parallel(V[ik[0]], V[ik[1]])
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
         # radicals
@@ -155,21 +152,20 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
             plt.scatter(radmk[:, 0], radmk[:, 1], s=15, c='k', marker='o')
 
         # single bonds around all constrained vertices
-        for i in range(len(allC)):
-            ic = allC[i] # constrained vertex
+        for ic in allC:
             idx = np.transpose(np.nonzero(A[ic]))
-            for j in range(len(idx)):
-                plt.plot((V[ic, 0], V[idx[j], 0]),
-                         (V[ic, 1], V[idx[j], 1]), c='#00FF37', ls='-', lw=1.5)
+            for j in idx:
+                plt.plot((V[ic, 0], V[j, 0]),
+                         (V[ic, 1], V[j, 1]), c='#00FF37', ls='-', lw=1.5)
         # double bonds
-        for i in range(len(C)):
-            par = lau.parallel(V[C[i, 0]], V[C[i, 1]])
+        for icdb in C:
+            par = lau.parallel(V[icdb[0]], V[icdb[1]])
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
         if annotate:
-            for i in range(nA):
-                plt.annotate(i, (V[i, 0], V[i, 1]))
+            for i, iv in enumerate(V):
+                plt.annotate(i, (iv[0], iv[1]))
         """
         if idb%cols == 0:
             plt.ylabel('y [Ang]')
@@ -229,7 +225,6 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
         allC = np.empty(shape=[0], dtype=np.uint8)
 
     # set colormap and colorbar
-    #cmap = plt.get_cmap('RdBu')
     cmap = plt.get_cmap('autumn')
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
     sm.set_array([])
@@ -239,15 +234,14 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
     plt.colorbar(sm, label='Pauling bond order', cax=cax, ticks=ticks)
 
     # single bonds around all constrained vertices
-    for i in range(len(allC)):
-        ic = allC[i] # constrained vertex
+    for ic in allC:
         idx = np.transpose(np.nonzero(A[ic]))
-        for j in range(len(idx)):
-            axs.plot((V[ic, 0], V[idx[j], 0]),
-                     (V[ic, 1], V[idx[j], 1]), c='g', ls='-', lw=1.5)
+        for j in idx:
+            axs.plot((V[ic, 0], V[j, 0]),
+                     (V[ic, 1], V[j, 1]), c='g', ls='-', lw=1.5)
     # constrained double bonds
-    for i in range(len(C)):
-        par = lau.parallel(V[C[i, 0]], V[C[i, 1]])
+    for icbd in C:
+        par = lau.parallel(V[icbd[0]], V[icbd[1]])
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # plot averaged of unconstrained only
@@ -260,17 +254,17 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
     for i in range(len(Auc)):
         idx = np.transpose(np.nonzero(Auc[i]))
         iunc = unc[i] # unconstrained vertex
-        for j in range(len(idx)):
-            color = cmap(float(avg[iunc, idx[j]]-1.))
-            lwidth = 9.*avg[iunc, idx[j]] - 8. # remormalize to [1,10]
-            axs.plot((V[iunc, 0], V[idx[j], 0]),
-                     (V[iunc, 1], V[idx[j], 1]),
+        for j in idx:
+            color = cmap(float(avg[iunc, j]-1.))
+            lwidth = 9.*avg[iunc, j] - 8. # remormalize to [1,10]
+            axs.plot((V[iunc, 0], V[j, 0]),
+                     (V[iunc, 1], V[j, 1]),
                      c=color, ls='-', lw=lwidth)
     # radicals
     if rad:
-        for i in range(len(rad)):
-            idx = np.transpose(np.nonzero(A[rad[i]]))
-            radmk = lau.ptOrtho(V[idx[0]][0], V[rad[i]], V[idx[1]][0])
+        for ir in rad:
+            idx = np.transpose(np.nonzero(A[ir]))
+            radmk = lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
             axs.scatter(radmk[0], radmk[1], s=30, c='y', marker='o')
     if annotate:
         # Write Pauling bond orders
@@ -303,7 +297,6 @@ def viewTBBondOrder(V, BO, figname=None,
     nBO = len(BO)
 
     # set colormap and colorbar
-    #cmap = plt.get_cmap('RdBu')
     cmap = plt.get_cmap('autumn')
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=1, vmax=2))
     sm.set_array([])
@@ -312,20 +305,20 @@ def viewTBBondOrder(V, BO, figname=None,
     ticks = (1.00, 1.25, 1.5, 1.75, 2.00);
     plt.colorbar(sm, label='Huckel bond order', cax=cax, ticks=ticks)
 
-    for i in range(nBO):
-        idx = np.transpose(np.nonzero(BO[i]))
-        for j in range(len(idx)):
-            color = cmap(float(BO[i, idx[j]]-1))
-            lrenorm = 9.*BO[i, idx[j]] - 8. # remormalize to [1,10]
-            axs.plot((V[i, 0], V[idx[j], 0]),
-                     (V[i, 1], V[idx[j], 1]),
+    for i, ibo in enumerate(BO):
+        idx = np.transpose(np.nonzero(ibo))
+        for j in idx:
+            color = cmap(float(ibo[j]-1))
+            lrenorm = 9.*ibo[j] - 8. # remormalize to [1,10]
+            axs.plot((V[i, 0], V[j, 0]),
+                     (V[i, 1], V[j, 1]),
                      c=color, ls='-', lw=lrenorm)
     if annotate:
         # Write Pauling bond orders
-        for i in range(len(BO)):
-            for j in np.where(BO[i, :] > 0)[0]:
+        for i, ibo in enumerate(BO):
+            for j in np.where(ibo > 0)[0]:
                 if j > i:
-                    axs.annotate('%.2f'%BO[i, j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
+                    axs.annotate('%.2f'%ibo[j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
