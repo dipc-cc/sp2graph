@@ -17,19 +17,41 @@ import sys
 __all__ = ['adjacencyG', 'adjacencySelfIntG', 'revCMK', 'allKekules']
 
 
-def adjacencyG(V, radius=1.6):
+def adjacencyG(V, L=None, radius=1.6):
     """
     Returns the adjacency matrix (which indicates if there
     is an edge, 1, or not, 0, between two vertex) from the
     first neighbours analysis from the vertices in V
     """
     nV = len(V)
+    V = np.array(V)
     G = np.zeros(shape=[nV, nV], dtype=np.uint8)
+
+    # nearest neighbours (inside cell)
     for i in range(nV):
-        # list nearest neighbours
         idx = lau.closeV(i, V, radius)
-        # connect nearest neighbours
         G[i, idx] = 1
+    if np.any(L):
+        # neighbors from `V+L[0]` and `V-L[0]`
+        for i in range(nV):
+            idx = lau.closeV(i, V, radius, L[0])
+            G[i, idx] = 1
+            G[idx, i] = 1
+        # neighbors from `V+L[1]` and `V-L[1]`
+        for i in range(nV):
+            idx = lau.closeV(i, V, radius, L[1])
+            G[i, idx] = 1
+            G[idx, i] = 1
+        # neighbors from `V+(L[0]+L[1])` `V-(L[0]+L[1])`
+        for i in range(nV):
+            idx = lau.closeV(i, V, radius, L[0]+L[1])
+            G[i, idx] = 1
+            G[idx, i] = 1
+        # neighbors from `V+(L[0]-L[1])` `V-(L[0]-L[1])`
+        for i in range(nV):
+            idx = lau.closeV(i, V, radius, L[0]-L[1])
+            G[i, idx] = 1
+            G[idx, i] = 1
     return G
 
 
