@@ -11,12 +11,12 @@ import sys
 syscoord = sys.argv[1]
 
 # read geometry, move to xy plane and assign the vertex
-# array `V` and lattice vectors `aij` (if provided).
-V, aij = sp2gge.readgeom(syscoord)
+# array `V` and lattice vectors in `L` (if provided).
+V, L = sp2gge.readgeom(syscoord)
 nV = len(V)
 
 # create a graph representation
-G = sp2ggr.adjacencyG(V)
+G = sp2ggr.adjacencyG(V, L)
 
 # initial visualization of vertices and adjacency matrix
 if nV < 10:

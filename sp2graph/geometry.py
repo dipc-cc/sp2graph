@@ -19,10 +19,10 @@ def readgeom(ifile):
     """
     Read a carbon based sp2 geometry and rotate it to the xy plane.
     """
-    V = readCs(ifile)
-    V = xyprojA(V)
-    aij = readLattice(ifile)
-    return V, aij
+    Vxyz = readCs(ifile)
+    Lxyz = readLattice(ifile)
+    V, L = xyprojA(Vxyz, Lxyz)
+    return V, L
 
 
 def readLattice(ifile):
@@ -37,24 +37,24 @@ def readLattice(ifile):
     .. math::
 
         \begin{array}{crrrc}
-        \vec{a}_1 = [& 79.4 &  0.0 &  0.0 & ]\\
-        \vec{a}_2 = [&  0.0 & 20.3 &  0.0 & ]\\
-        \vec{a}_3 = [&  0.0 &  0.0 & 25.0 & ]
+        \vec{L}_1 = [& 79.4 &  0.0 &  0.0 & ]\\
+        \vec{L}_2 = [&  0.0 & 20.3 &  0.0 & ]\\
+        \vec{L}_3 = [&  0.0 &  0.0 & 25.0 & ]
         \end{array}
 
     """
-    aij = None
+    L = np.empty(shape=[0, 0], dtype=np.float16)
     f = open(ifile)
     lines = f.readlines()
     f.close()
     for i, line in enumerate(lines):
         if "attice" in line: # 'Lattice' or 'lattice'
-            l = lines[i].split('"')
-            aij = l[1].split()
-            aij = np.array(aij, dtype=np.float16)
-            aij = aij.reshape((3, 3))
+            li = lines[i].split('"')
+            L = li[1].split()
+            L = np.array(L, dtype=np.float16)
+            L = L.reshape((3, 3))
             break
-    return aij
+    return L
 
 
 def readCs(ifile):
@@ -75,17 +75,37 @@ def readCs(ifile):
     return V
 
 
-def xyprojA(array):
-    """ Returns the an equivalent 2D structure rotated to the xy plane """
-    u1 = lau.unitA(array[1]-array[0])
-    u2 = array[2]-array[0]
+def xyprojA(xyz, Lxyz):
+    """
+    Returns an equivalent 2D structure rotated to the `xy` plane.
+    If the lattice vectors are provided, apply the same rotation.
+    """
+    # define the rotation
+    u1 = lau.unitA(xyz[1]-xyz[0])
+    u2 = xyz[2]-xyz[0]
     u3 = lau.unitA(np.cross(u1, u2))
     u2 = lau.unitA(np.cross(u3, u1))
-    proj = np.linalg.inv([u1, u2, u3])
-    array = np.matmul(array, proj)
-    if np.max(array[:, 2])-np.min(array[:, 2]) > 0.01:
+    rot = np.linalg.inv([u1, u2, u3])
+
+    # rotate to the `xy` plane and discard `z` component
+    xyz = np.matmul(xyz, rot)
+    if np.max(xyz[:, 2])-np.min(xyz[:, 2]) > 0.01:
         raise ValueError('Structure is not planar!')
-    return np.delete(array, 2, axis=1)
+    xy = np.delete(xyz, 2, axis=1)
+
+    # lattice vectors
+    Lxy = None
+    if Lxyz.size:
+        print(Lxyz)
+        # apply the same rotation on the lattice parameters
+        for i, Li in enumerate(Lxyz):
+            Lxyz[i] = np.matmul(Li, rot)
+        # discard the lattice vector with larger component in `z`
+        Lxyz = Lxyz[Lxyz[:, 2].argsort()]
+        Lxyz = np.delete(Lxyz, 0, axis=0)
+        Lxy = Lxyz[0:2]
+
+    return xy, Lxy
 
 
 def tests():
