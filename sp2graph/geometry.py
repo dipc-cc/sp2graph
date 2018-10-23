@@ -96,14 +96,13 @@ def xyprojA(xyz, Lxyz):
     # lattice vectors
     Lxy = None
     if Lxyz.size:
-        print(Lxyz)
         # apply the same rotation on the lattice parameters
         for i, Li in enumerate(Lxyz):
             Lxyz[i] = np.matmul(Li, rot)
         # discard the lattice vector with larger component in `z`
         Lxyz = Lxyz[Lxyz[:, 2].argsort()]
         Lxyz = np.delete(Lxyz, 0, axis=0)
-        Lxy = Lxyz[0:2]
+        Lxy = Lxyz[:,0:2]
 
     return xy, Lxy
 
