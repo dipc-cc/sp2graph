@@ -24,17 +24,9 @@ if nV < 10:
     #sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
 
-# apply band width reduction
-sp2ggr.reduceBandWidth(G, V)
-
-# vertices and adjacency matrix visualization
-if nV < 10:
-    #sp2gvi.viewV(V, sizex=5, sizey=5)
-    sp2gvi.printAdj(G)
-
 # calculate all possible Kekule structures that contains
 # double bonds between the list of edges (tuples) in `C`
-C = ((0, 1), (3, 5), (2, 4))
+C = ((0, 1))
 Kek = sp2ggr.allKekules(G, 0, C=C)
 
 # visualization of all Kekule structures found
@@ -43,7 +35,7 @@ sp2gvi.viewKekuleGrid(V, G, Kek, C=C, sizex=10, sizey=6,
 #for i in range(len(Kek)):
 #    sp2gvi.viewKekule(V, G, Kek[i], C=C, sizex=5, sizey=5)
 
-# visualization of the averaged bond order
-sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5)
-# show constrained bonds as usual Kekule representation
-sp2gvi.viewBondOrderAverage(V, G, Kek, C=C, sizex=7, sizey=5)
+# visualization of the Pauling bond order (show constrained
+# bonds as usual Kekule representation)
+sp2gvi.viewBondOrderAverage(V, G, Kek, C=C, sizex=7, sizey=5,
+                            figname='Pbo_constrain.pdf')

@@ -24,21 +24,13 @@ if nV < 10:
     #sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
 
-# apply band width reduction
-sp2ggr.reduceBandWidth(G, V)
-
-# vertices and adjacency matrix visualization
-if nV < 10:
-    #sp2gvi.viewV(V, sizex=5, sizey=5)
-    sp2gvi.printAdj(G)
-
 # calculate all possible Kekule structures that contains
 # double bonds between the list of edges (tuples) in `C`
-C = ((0, 1), (3, 5), (2, 4)) # constrained double bonds
+C = ((0, 1)) # constrained double bonds
 #C = None
 # and radical at vertex list in `rad`
-#rad = (8, 22) # list of radicals (e.g. for meta-aryne)
-rad = (7, 20) # list of radicals (e.g. for triangulene)
+#rad = (25, 4) # list of radicals (e.g. for meta-aryne)
+rad = (14, 18) # list of radicals (e.g. for triangulene)
 
 Kek = sp2ggr.allKekules(G, 0, C=C, rad=rad)
 
@@ -48,6 +40,7 @@ sp2gvi.viewKekuleGrid(V, G, Kek, C=C, rad=rad, sizex=10, sizey=6,
 #for i in range(len(Kek)):
 #    sp2gvi.viewKekule(V, G, Kek[i], C=C, rad=rad, sizex=5, sizey=5)
 
-# visualization of the averaged bond order
+# visualization of the Pauling bond order (show constrained
+# bonds as usual Kekule representation and radicals as dots)
 sp2gvi.viewBondOrderAverage(V, G, Kek, C=C, rad=rad, sizex=7, sizey=5,
-                            figname='bo_rad.pdf')
+                            figname='Pbo_rad.pdf')

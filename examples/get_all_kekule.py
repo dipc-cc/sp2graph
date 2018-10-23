@@ -25,14 +25,6 @@ if nV < 10:
     #sp2gvi.viewV(V, sizex=5, sizey=5)
     sp2gvi.printAdj(G)
 
-# apply band width reduction
-sp2ggr.reduceBandWidth(G, V)
-
-# vertices and adjacency matrix visualization
-if nV < 10:
-    #sp2gvi.viewV(V, sizex=5, sizey=5)
-    sp2gvi.printAdj(G)
-
 # calculate all possible Kekule structures (in Kek)
 Kek = sp2ggr.allKekules(G, 0)
 
@@ -42,9 +34,11 @@ sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6,
 #for i in range(len(Kek)):
 #    sp2gvi.viewKekule(V, G, Kek[i], sizex=5, sizey=5)
 
-# visualization of the averaged bond order
-sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5, figname='bo.pdf', annotate=True)
+# visualization of the Pauling bond order
+sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5,
+                            figname='Pbo.pdf', annotate=True)
 
-
+# visualization of the Huckel bond order
 BO = sp2gtb.tbBondOrder(G)
-sp2gvi.viewTBBondOrder(V, BO, sizex=7, sizey=5, figname='bo2.pdf', annotate=True)
+sp2gvi.viewTBBondOrder(V, BO, sizex=7, sizey=5,
+                       figname='Hbo.pdf', annotate=True)
