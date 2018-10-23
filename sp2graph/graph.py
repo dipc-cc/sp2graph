@@ -281,12 +281,12 @@ def checkDBlist(G, iniV, DB):
                          %(DB[i, 0], DB[i, 1]))
             if np.any(np.isin(DB[i], DB[0:i])):
                 sys.exit('ERROR: double bonds at adjacent edges are not allowed!')
-        if np.isin(iniV, DB):
-            for i in range(len(G)):
-                if np.isin(i, DB) == False:
-                    iniV = i
-                    print ('WARNING: initial vertex changed to %d.'%(iniV))
-                    break
+    if np.isin(iniV, DB):
+        for i in range(len(G)):
+            if np.isin(i, DB) == False:
+                iniV = i
+                print ('WARNING: initial vertex changed to %d.'%(iniV))
+                break
     return iniV
 
 
