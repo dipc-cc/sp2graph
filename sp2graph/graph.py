@@ -17,7 +17,7 @@ import sys
 __all__ = ['adjacencyG', 'adjacencySelfIntG', 'revCMK', 'allKekules']
 
 
-def adjacencyG(V):
+def adjacencyG(V, radius=1.6):
     """
     Returns the adjacency matrix (which indicates if there
     is an edge, 1, or not, 0, between two vertex) from the
@@ -27,7 +27,7 @@ def adjacencyG(V):
     G = np.zeros(shape=[nV, nV], dtype=np.uint8)
     for i in range(nV):
         # list nearest neighbours
-        idx = lau.closeV(i, V, 1.43)
+        idx = lau.closeV(i, V, radius)
         # connect nearest neighbours
         G[i, idx] = 1
     return G
