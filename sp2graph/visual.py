@@ -246,14 +246,13 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
                  (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # plot averaged of unconstrained only
     Auc = np.delete(A, allC, axis=0)
-    for i in range(len(allC)):
-        Auc[:, i] = 0
+    for ic in allC:
+        Auc[:, ic] = 0
     # get indexes of unconstrained vertices
     allV = np.arange(len(A))
     unc = np.where(np.isin(allV, allC, invert=True))[0]
-    for i in range(len(Auc)):
+    for i, iunc in enumerate(unc):
         idx = np.transpose(np.nonzero(Auc[i]))
-        iunc = unc[i] # unconstrained vertex
         for j in idx:
             color = cmap(float(avg[iunc, j]-1.))
             lwidth = 9.*avg[iunc, j] - 8. # remormalize to [1,10]
