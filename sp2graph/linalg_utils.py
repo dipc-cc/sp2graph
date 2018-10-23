@@ -43,9 +43,16 @@ def parallel(pt1, pt2):
     Returns a pair of points in :math:`\mathbb{R}^2` belonging to
     a line parallel to the one defined by the provided points.
     """
-    theta = angleA(pt2-pt1, [1., 0.])
-    parpt1 = (pt1[0] + 0.2*np.cos(theta), pt1[1] + 0.2*np.sin(theta))
-    parpt2 = (pt2[0] - 0.2*np.cos(theta), pt2[1] - 0.2*np.sin(theta))
+    if pt2[1] >= pt1[1]:
+        v12 = pt2 - pt1
+        theta = angleA(v12, [1., 0.])
+        parpt1 = (pt1[0] + 0.2*np.cos(theta), pt1[1] + 0.2*np.sin(theta))
+        parpt2 = (pt2[0] - 0.2*np.cos(theta), pt2[1] - 0.2*np.sin(theta))
+    else:
+        v12 = pt1 - pt2
+        theta = angleA(v12, [1., 0.])
+        parpt1 = (pt1[0] - 0.2*np.cos(theta), pt1[1] - 0.2*np.sin(theta))
+        parpt2 = (pt2[0] + 0.2*np.cos(theta), pt2[1] + 0.2*np.sin(theta))
     theta = theta - np.pi/2
     parpt1 = (parpt1[0] - 0.25*np.cos(theta), parpt1[1] - 0.25*np.sin(theta))
     parpt2 = (parpt2[0] - 0.25*np.cos(theta), parpt2[1] - 0.25*np.sin(theta))
