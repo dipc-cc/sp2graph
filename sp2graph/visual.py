@@ -71,10 +71,15 @@ def viewKekule(V, A, DB, C=None, rad=None, figname=None,
                 axs.plot((V[ic, 0], V[j, 0]),
                          (V[ic, 1], V[j, 1]), c='#00FF37', ls='-', lw=1.5)
         # double bonds
-        for icdb in C:
-            par = lau.parallel(V[icdb[0]], V[icdb[1]])
+        if len(C.shape) == 1:
+            par = lau.parallel(V[C[0]], V[C[1]])
             axs.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+        else:
+            for icdb in C:
+                par = lau.parallel(V[icdb[0]], V[icdb[1]])
+                axs.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
     # radicals
     if rad:
@@ -158,10 +163,15 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
                 plt.plot((V[ic, 0], V[j, 0]),
                          (V[ic, 1], V[j, 1]), c='#00FF37', ls='-', lw=1.5)
         # double bonds
-        for icdb in C:
-            par = lau.parallel(V[icdb[0]], V[icdb[1]])
+        if len(C.shape) == 1:
+            par = lau.parallel(V[C[0]], V[C[1]])
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+        else:
+            for icdb in C:
+                par = lau.parallel(V[icdb[0]], V[icdb[1]])
+                plt.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
         if annotate:
             for i, iv in enumerate(V):
@@ -240,10 +250,15 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
             axs.plot((V[ic, 0], V[j, 0]),
                      (V[ic, 1], V[j, 1]), c='g', ls='-', lw=1.5)
     # constrained double bonds
-    for icbd in C:
-        par = lau.parallel(V[icbd[0]], V[icbd[1]])
+    if len(C.shape) == 1:
+        par = lau.parallel(V[C[0]], V[C[1]])
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+    else:
+        for icbd in C:
+            par = lau.parallel(V[icbd[0]], V[icbd[1]])
+            axs.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # plot averaged of unconstrained only
     Auc = np.delete(A, allC, axis=0)
     for ic in allC:
