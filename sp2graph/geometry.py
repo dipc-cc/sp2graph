@@ -10,6 +10,7 @@ Function for reading carbon sp2 geometries and project into xy plane.
 """
 
 import numpy as np
+from numpy import linalg as LA
 import sp2graph.linalg_utils as lau
 
 __all__ = ['readgeom', 'readLattice', 'readCs']
@@ -85,7 +86,7 @@ def xyprojA(xyz, Lxyz):
     u2 = xyz[2]-xyz[0]
     u3 = lau.unitA(np.cross(u1, u2))
     u2 = lau.unitA(np.cross(u3, u1))
-    rot = np.linalg.inv([u1, u2, u3])
+    rot = LA.inv([u1, u2, u3])
 
     # rotate to the `xy` plane and discard `z` component
     xyz = np.matmul(xyz, rot)
@@ -102,7 +103,7 @@ def xyprojA(xyz, Lxyz):
         # discard the lattice vector with larger component in `z`
         Lxyz = Lxyz[Lxyz[:, 2].argsort()]
         Lxyz = np.delete(Lxyz, 0, axis=0)
-        Lxy = Lxyz[:,0:2]
+        Lxy = Lxyz[:, 0:2]
 
     return xy, Lxy
 

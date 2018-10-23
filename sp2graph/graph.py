@@ -11,17 +11,21 @@ representation of carbon sp2 geometries.
 """
 
 import numpy as np
+from numpy import linalg as LA
 import sp2graph.linalg_utils as lau
 import sys
 
-__all__ = ['adjacencyG', 'adjacencySelfIntG', 'revCMK', 'allKekules']
+__all__ = ['adjacencyG', 'adjacencySelfIntG', 'checkPeriodic',
+           'revCMK', 'allKekules']
 
 
 def adjacencyG(V, L=None, radius=1.6):
     """
     Returns the adjacency matrix (which indicates if there
     is an edge, 1, or not, 0, between two vertex) from the
-    first neighbours analysis from the vertices in V
+    first neighbours analysis from the vertices in `V`. Case
+    the lattice vectors are provided in the matrix `L`,
+    analyses the neighbors from periodic cells.
     """
     nV = len(V)
     V = np.array(V)
@@ -31,6 +35,8 @@ def adjacencyG(V, L=None, radius=1.6):
     for i in range(nV):
         idx = lau.closeV(i, V, radius)
         G[i, idx] = 1
+
+    # check periodicity
     if np.any(L):
         # neighbors from `V+L[0]` and `V-L[0]`
         for i in range(nV):
@@ -53,6 +59,37 @@ def adjacencyG(V, L=None, radius=1.6):
             G[i, idx] = 1
             G[idx, i] = 1
     return G
+
+
+def checkPeriodic(v1, v2, L, radius=1.6):
+    """
+    Recieve two vertices `v1` and `v2` and check whether
+    they are connected via periodic cells. If so, returns
+    `v2` displaced by the corresponding lattice vectors.
+    To be used when ploting bonds across periodic cells.
+    """
+
+    if np.any(L):
+        if LA.norm(v2-v1) < radius:
+            return v2
+        elif LA.norm(v2+L[0]-v1) < radius:
+            return v2+L[0]
+        elif LA.norm(v2-L[0]-v1) < radius:
+            return v2-L[0]
+        elif LA.norm(v2+L[1]-v1) < radius:
+            return v2+L[1]
+        elif LA.norm(v2-L[1]-v1) < radius:
+            return v2-L[1]
+        elif LA.norm(v2+L[0]+L[1]-v1) < radius:
+            return v2+L[0]+L[1]
+        elif LA.norm(v2-L[0]-L[1]-v1) < radius:
+            return v2-L[0]-L[1]
+        elif LA.norm(v2+L[0]-L[1]-v1) < radius:
+            return v2+L[0]-L[1]
+        else:
+            return v2-L[0]+L[1]
+    else:
+        return v2
 
 
 def adjacencySelfIntG(V):

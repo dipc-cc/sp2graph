@@ -10,13 +10,14 @@ Simple linear algebra functions.
 """
 
 import numpy as np
+from numpy import linalg as LA
 
 __all__ = ['unitA', 'closeV', 'parallel', 'ptOrtho', 'findClosest']
 
 
 def unitA(array):
     """ Returns the unit array """
-    return array / np.linalg.norm(array)
+    return array / LA.norm(array)
 
 
 def angleA(a1, a2):
@@ -33,10 +34,10 @@ def closeV(iv, V, radius, displ=None):
     if np.any(displ):
         Vd = Vd + displ
     for i in range(iv):
-        if np.linalg.norm(Vd[i]-V[iv]) < radius:
+        if LA.norm(Vd[i]-V[iv]) < radius:
             idx = np.append(idx, [[i]])
     for i in range(iv+1, len(V)):
-        if np.linalg.norm(Vd[i]-V[iv]) < radius:
+        if LA.norm(Vd[i]-V[iv]) < radius:
             idx = np.append(idx, [[i]])
     return idx
 
@@ -96,7 +97,7 @@ def tests():
         while i < 10:
             a = np.random.rand(3)
             ua = unitA(a)
-            if not isclose(np.linalg.norm(ua), 1.0):
+            if not isclose(LA.norm(ua), 1.0):
                 raise ValueError('Error at \'tunitA\'!')
             i += 1
     tunitA()

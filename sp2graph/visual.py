@@ -12,7 +12,8 @@ Visualisation and ploting functions.
 from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
-import sp2graph.linalg_utils as lau
+import sp2graph.linalg_utils as sp2lau
+import sp2graph.graph as sp2ggr
 
 __all__ = ['viewV', 'viewKekule', 'viewKekuleGrid',
            'viewBondOrderAverage', 'viewTBBondOrder', 'printAdj']
@@ -40,7 +41,7 @@ def viewV(V, figname=None, sizex=5, sizey=5, dpi=150):
         plt.show()
 
 
-def viewKekule(V, A, DB, C=None, rad=None, figname=None,
+def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
                sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
@@ -53,10 +54,12 @@ def viewKekule(V, A, DB, C=None, rad=None, figname=None,
     for i in range(nA):
         idx = np.transpose(np.nonzero(A[i]))
         for j in idx:
-            axs.plot((V[i, 0], V[j, 0]),
-                     (V[i, 1], V[j, 1]), c='k', ls='-', lw=1.5)
+            Vj = sp2ggr.checkPeriodic(V[i], V[j], L)[0]
+            axs.plot((V[i, 0], Vj[0]),
+                     (V[i, 1], Vj[1]), c='k', ls='-', lw=1.5)
     for idb in DB:
-        par = lau.parallel(V[idb[0]], V[idb[1]])
+        Vdb1 = sp2ggr.checkPeriodic(V[idb[0]], V[idb[1]], L)
+        par = sp2lau.parallel(V[idb[0]], Vdb1)
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
 
@@ -68,16 +71,19 @@ def viewKekule(V, A, DB, C=None, rad=None, figname=None,
         for ic in allC:
             idx = np.transpose(np.nonzero(A[ic]))
             for j in idx:
-                axs.plot((V[ic, 0], V[j, 0]),
-                         (V[ic, 1], V[j, 1]), c='#00FF37', ls='-', lw=1.5)
+                Vj = sp2ggr.checkPeriodic(V[ic], V[j], L)[0]
+                axs.plot((V[ic, 0], Vj[0]),
+                         (V[ic, 1], Vj[1]), c='#00FF37', ls='-', lw=1.5)
         # double bonds
         if len(C.shape) == 1:
-            par = lau.parallel(V[C[0]], V[C[1]])
+            Vc1 = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
+            par = sp2lau.parallel(V[C[0]], Vc1)
             axs.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
         else:
             for icdb in C:
-                par = lau.parallel(V[icdb[0]], V[icdb[1]])
+                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)[0]
+                par = sp2lau.parallel(V[icdb[0]], Vcdb1)
                 axs.plot((par[0][0], par[1][0]),
                          (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
@@ -85,7 +91,7 @@ def viewKekule(V, A, DB, C=None, rad=None, figname=None,
     if rad:
         for ir in rad:
             idx = np.transpose(np.nonzero(A[ir]))
-            radmk = lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+            radmk = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
             axs.scatter(radmk[0], radmk[1], s=15, c='k', marker='o')
     if annotate:
         for i, iv in enumerate(V):
@@ -103,8 +109,8 @@ def viewKekule(V, A, DB, C=None, rad=None, figname=None,
         plt.show()
 
 
-def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
-                   sizex=5, sizey=5, dpi=150, annotate=False):
+def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
+                           sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
@@ -117,7 +123,7 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
 
     # define the grid for ploting the figures
     molsize = max(V[:, 0]) - min(V[:, 0]) + 4.
-    cols = int(40//molsize)
+    cols = int(35//molsize)
     rows = nKek/cols + nKek%cols
 
     fig = plt.figure()
@@ -129,7 +135,7 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
         radmk = np.zeros(shape=[nrad, nrad], dtype=np.float16)
         for i, ir in enumerate(rad):
             idx = np.transpose(np.nonzero(A[ir]))
-            radmk[i] = lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+            radmk[i] = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
 
     # set constrained double bonds (same for all Kekules)
     if C:
@@ -145,11 +151,13 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
         for i in range(nA):
             idx = np.transpose(np.nonzero(A[i]))
             for j in idx:
-                plt.plot((V[i, 0], V[j, 0]),
-                         (V[i, 1], V[j, 1]), c='k', ls='-', lw=1.5)
+                Vj = sp2ggr.checkPeriodic(V[i], V[j], L)[0]
+                plt.plot((V[i, 0], Vj[0]),
+                         (V[i, 1], Vj[1]), c='k', ls='-', lw=1.5)
         kek = DB[idb]
         for ik in kek:
-            par = lau.parallel(V[ik[0]], V[ik[1]])
+            Vk1 = sp2ggr.checkPeriodic(V[ik[0]], V[ik[1]], L)
+            par = sp2lau.parallel(V[ik[0]], Vk1)
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
         # radicals
@@ -160,16 +168,19 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
         for ic in allC:
             idx = np.transpose(np.nonzero(A[ic]))
             for j in idx:
-                plt.plot((V[ic, 0], V[j, 0]),
-                         (V[ic, 1], V[j, 1]), c='#00FF37', ls='-', lw=1.5)
+                Vj = sp2ggr.checkPeriodic(V[ic], V[j], L)[0]
+                plt.plot((V[ic, 0], Vj[0]),
+                         (V[ic, 1], Vj[1]), c='#00FF37', ls='-', lw=1.5)
         # double bonds
         if len(C.shape) == 1:
-            par = lau.parallel(V[C[0]], V[C[1]])
+            Vc1 = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
+            par = sp2lau.parallel(V[C[0]], Vc1)
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
         else:
             for icdb in C:
-                par = lau.parallel(V[icdb[0]], V[icdb[1]])
+                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)[0]
+                par = sp2lau.parallel(V[icdb[0]], Vcdb1)
                 plt.plot((par[0][0], par[1][0]),
                          (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
@@ -199,7 +210,7 @@ def viewKekuleGrid(V, A, DB, C=None, rad=None, figname=None,
         plt.show()
 
 
-def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
+def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
                          sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
@@ -247,16 +258,30 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
     for ic in allC:
         idx = np.transpose(np.nonzero(A[ic]))
         for j in idx:
-            axs.plot((V[ic, 0], V[j, 0]),
-                     (V[ic, 1], V[j, 1]), c='g', ls='-', lw=1.5)
+            Vj = sp2ggr.checkPeriodic(V[ic], V[j], L)[0]
+            axs.plot((V[ic, 0], Vj[0]),
+                     (V[ic, 1], Vj[1]), c='g', ls='-', lw=1.5)
+            Vic = sp2ggr.checkPeriodic(V[j], V[ic], L)
+            axs.plot((V[j, 0], Vic[0]),
+                     (V[j, 1], Vic[1]), c='g', ls='-', lw=1.5)
     # constrained double bonds
     if len(C.shape) == 1:
-        par = lau.parallel(V[C[0]], V[C[1]])
+        Vc1 = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
+        par = sp2lau.parallel(V[C[0]], Vc1)
+        axs.plot((par[0][0], par[1][0]),
+                 (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+        Vc0 = sp2ggr.checkPeriodic(V[C[1]], V[C[0]], L)
+        par = sp2lau.parallel(Vc0, V[C[1]])
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     else:
         for icbd in C:
-            par = lau.parallel(V[icbd[0]], V[icbd[1]])
+            Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)[0]
+            par = sp2lau.parallel(V[icbd[0]], Vcbd1)
+            axs.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+            Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)[0]
+            par = sp2lau.parallel(V[icbd[1]], Vcbd0)
             axs.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # plot averaged of unconstrained only
@@ -271,20 +296,22 @@ def viewBondOrderAverage(V, A, DB, C=None, rad=None, figname=None,
         for j in idx:
             color = cmap(float(avg[iunc, j]-1.))
             lwidth = 9.*avg[iunc, j] - 8. # remormalize to [1,10]
-            axs.plot((V[iunc, 0], V[j, 0]),
-                     (V[iunc, 1], V[j, 1]),
+            Vj = sp2ggr.checkPeriodic(V[iunc], V[j], L)[0]
+            axs.plot((V[iunc, 0], Vj[0]),
+                     (V[iunc, 1], Vj[1]),
                      c=color, ls='-', lw=lwidth)
     # radicals
     if rad:
         for ir in rad:
             idx = np.transpose(np.nonzero(A[ir]))
-            radmk = lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+            radmk = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
             axs.scatter(radmk[0], radmk[1], s=30, c='y', marker='o')
     if annotate:
         # Write Pauling bond orders
         for i in range(nA):
             for j in np.where(A[i, :]==1)[0]:
-                axs.annotate('%.2f'%avg[i, j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
+                Vj = sp2ggr.checkPeriodic(V[i], V[j], L)
+                axs.annotate('%.2f'%avg[i, j], ((V[i, 0]+Vj[0])/2, (V[i, 1]+Vj[1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
