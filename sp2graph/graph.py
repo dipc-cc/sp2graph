@@ -65,6 +65,11 @@ def periodicDirections(V, L, radius=1.6):
     """
     Check the periodicity and return an 2-dimensional array
     `rdir` with 1's at periodic directions and 0's otherwise.
+
+    Returns
+    -------
+    returns [1, 0] for periodicity in x, [0, 1] for periodicity in y,
+    and [1, 1] for periodicity in both x and y
     """
     rdir = np.zeros(shape=[2], dtype=np.uint8)
 
@@ -91,7 +96,7 @@ def checkPeriodic(v1, v2, L, radius=1.6):
     Recieve two vertices `v1` and `v2` and check whether
     they are connected via periodic cells. If so, returns
     `v2` displaced by the corresponding lattice vectors.
-    To be used when ploting bonds across periodic cells.
+    To be used when plotting bonds across periodic cells.
     """
 
     if np.any(L):

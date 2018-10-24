@@ -26,6 +26,23 @@ def tbBondOrder(V, A, L=None, radius=1.6):
     Currently the implementation handles periodic systems along a single
     dimension. It's just a temporary implementation and should be changed
     after the introduction of a proper graph class.
+
+    Parameters
+    ----------
+
+    V : array_like
+      List of vertices
+    A : array_like
+      Adjacency matrix
+    L : array_like, optional
+      Lattice vectors
+    radius : float, optional
+      Range of neighbor interactions in Angstrom
+
+    Returns
+    -------
+    numpy.array
+      Bond order :math:`\mathrm{BO}_{ij}` between all atom pairs `i` and `j`.
     """
     nV = len(V)
 
@@ -35,42 +52,46 @@ def tbBondOrder(V, A, L=None, radius=1.6):
     if np.any(L):
         rdir = sp2ggr.periodicDirections(V, L)
         BO = np.zeros(shape=[nV, nV], dtype=np.complex64)
-        for i, idir in enumerate(rdir):
+        for ri, idir in enumerate(rdir):
             if idir:
-                # buld adjacency cell matrices
+                # build adjacency cell matrices to neighboring cells
                 Ap1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
                 Am1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
                 for j in range(nV):
-                    idx = sp2lau.closeV(j, V, radius, L[0])
+                    idx = sp2lau.closeV(j, V, radius, L[0]) # NB: This assumes periodicity in x
                     Ap1[j, idx] = 1.
-                    Am1[idx, j] = 1.
-
-                l = LA.norm(L[i])
-                nk = 50 # k-sampling
-                dk = 1./nk # step size
-                ik = dk/2. # initial k-point
-                for k in range(nk):
+                    idx = sp2lau.closeV(j, V, radius, -L[0]) # NB: This assumes periodicity in x
+                    Am1[j, idx] = 1.
+                #k = np.arange(-0.5, 0.5, 0.02) # 1BZ
+                k = np.arange(0.0, 0.5, 0.02)+0.01 # half 1BZ, inv. symmetry for pairs (k, -k)
+                for ki in k:
                     Ak = -1.*np.array(A0, dtype=np.complex64)
-                    Ak -= Am1*np.exp(2.0j*np.pi*ik/l)
-                    Ak -= Ap1*np.exp(-2.0j*np.pi*ik/l)
+                    Ak -= Am1*np.exp(-2.0j*np.pi*ki)
+                    Ak -= Ap1*np.exp(2.0j*np.pi*ki)
                     w, X = LA.eigh(Ak)
                     for i in range(len(w)):
                         if w[i] > 0:
                             break
                         for j in range(nV):
                             # Find neighbor indices
-                            neig = np.where(A[j, :]==1)[0]
-                            for idx in neig:
-                                # Add contribution from pi-orbital:
+                            for idx in np.where(A0[j, :]==1)[0]:
+                                # within unit cell
                                 ibo = np.conj(X[j, i])*X[idx, i]
                                 BO[j, idx] += ibo + np.conj(ibo)
-                    ik += dk
-                BO /= nk
+                            for idx in np.where(Am1[j, :]==1)[0]:
+                                # to neg. side neighbor cell
+                                ibo = np.conj(X[j, i])*X[idx, i]*np.exp(-2.0j*np.pi*ki)
+                                BO[j, idx] += ibo + np.conj(ibo)
+                            for idx in np.where(Ap1[j, :]==1)[0]:
+                                ibo = np.conj(X[j, i])*X[idx, i]*np.exp(2.0j*np.pi*ki)
+                                BO[j, idx] += ibo + np.conj(ibo)
+                BO /= len(k)
 
         # include the sigma bonds
         BO += 1.*A
 
         if np.any(rdir):
+            assert np.allclose(BO.imag, 0*BO)
             return BO.real
 
     # only gamma point
