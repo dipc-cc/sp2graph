@@ -52,15 +52,16 @@ def tbBondOrder(V, A, L=None, radius=1.6):
     if np.any(L):
         rdir = sp2ggr.periodicDirections(V, L)
         BO = np.zeros(shape=[nV, nV], dtype=np.complex64)
+        BOk = np.zeros(shape=[nV, nV], dtype=np.complex64)
         for ri, idir in enumerate(rdir):
             if idir:
                 # build adjacency cell matrices to neighboring cells
                 Ap1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
                 Am1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
                 for j in range(nV):
-                    idx = sp2lau.closeV(j, V, radius, L[0]) # NB: This assumes periodicity in x
+                    idx = sp2lau.closeV(j, V, radius, L[ri])
                     Ap1[j, idx] = 1.
-                    idx = sp2lau.closeV(j, V, radius, -L[0]) # NB: This assumes periodicity in x
+                    idx = sp2lau.closeV(j, V, radius, -L[ri])
                     Am1[j, idx] = 1.
                 #k = np.arange(-0.5, 0.5, 0.02) # 1BZ
                 k = np.arange(0.0, 0.5, 0.02)+0.01 # half 1BZ, inv. symmetry for pairs (k, -k)
@@ -77,15 +78,15 @@ def tbBondOrder(V, A, L=None, radius=1.6):
                             for idx in np.where(A0[j, :]==1)[0]:
                                 # within unit cell
                                 ibo = np.conj(X[j, i])*X[idx, i]
-                                BO[j, idx] += ibo + np.conj(ibo)
+                                BOk[j, idx] += ibo + np.conj(ibo)
                             for idx in np.where(Am1[j, :]==1)[0]:
                                 # to neg. side neighbor cell
                                 ibo = np.conj(X[j, i])*X[idx, i]*np.exp(-2.0j*np.pi*ki)
-                                BO[j, idx] += ibo + np.conj(ibo)
+                                BOk[j, idx] += ibo + np.conj(ibo)
                             for idx in np.where(Ap1[j, :]==1)[0]:
                                 ibo = np.conj(X[j, i])*X[idx, i]*np.exp(2.0j*np.pi*ki)
-                                BO[j, idx] += ibo + np.conj(ibo)
-                BO /= len(k)
+                                BOk[j, idx] += ibo + np.conj(ibo)
+                BO += BOk/len(k)
 
         # include the sigma bonds
         BO += 1.*A
