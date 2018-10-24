@@ -4,6 +4,7 @@ from __future__ import print_function
 import sp2graph.geometry as sp2gge
 import sp2graph.visual as sp2gvi
 import sp2graph.graph as sp2ggr
+import sp2graph.tb as sp2gtb
 import sys
 
 #syscoord = 'geometries/anthracene.xyz'
@@ -26,8 +27,8 @@ if nV < 10:
 
 # calculate all possible Kekule structures that contains
 # double bonds between the list of edges (tuples) in `C`
-C = ((0, 11))
-#C = None
+#C = ((0, 11))
+C = None
 Kek = sp2ggr.allKekules(G, 0, C=C)
 
 # visualization of all Kekule structures found
@@ -39,4 +40,9 @@ sp2gvi.viewKekuleGrid(V, G, Kek, L=L, C=C,
 # visualization of the Pauling bond order (show constrained
 # bonds as usual Kekule representation)
 sp2gvi.viewBondOrderAverage(V, G, Kek, L=L, C=C, sizex=7, sizey=5,
-                            figname='Pbo_constrain.pdf', annotate=True)
+                            figname='Pbo_periodic.pdf', annotate=True)
+
+# visualization of the Huckel bond order
+BO = sp2gtb.tbBondOrder(V, G, L)
+sp2gvi.viewTBBondOrder(V, BO, L=L, sizex=7, sizey=5,
+                       figname='Hbo_periodic.pdf', annotate=True)

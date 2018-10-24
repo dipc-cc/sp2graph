@@ -16,7 +16,7 @@ import sp2graph.linalg_utils as sp2lau
 import sys
 
 __all__ = ['adjacencyG', 'adjacencySelfIntG', 'checkPeriodic',
-           'revCMK', 'allKekules']
+           'periodicDirections', 'revCMK', 'allKekules']
 
 
 def adjacencyG(V, L=None, radius=1.6):
@@ -59,6 +59,31 @@ def adjacencyG(V, L=None, radius=1.6):
             G[i, idx] = 1
             G[idx, i] = 1
     return G
+
+
+def periodicDirections(V, L, radius=1.6):
+    """
+    Check the periodicity and return an 2-dimensional array
+    `rdir` with 1's at periodic directions and 0's otherwise.
+    """
+    rdir = np.zeros(shape=[2], dtype=np.uint8)
+
+    # check periodicity
+    if np.any(L):
+        nV = len(V)
+        # check neighbors at `V+L[0]`
+        for i in range(nV):
+            idx = sp2lau.closeV(i, V, radius, L[0])
+            if np.any(idx):
+                rdir[0] = 1
+                break
+        # check neighbors at `V+L[1]`
+        for i in range(nV):
+            idx = sp2lau.closeV(i, V, radius, L[1])
+            if np.any(idx):
+                rdir[1] = 1
+                break
+    return rdir
 
 
 def checkPeriodic(v1, v2, L, radius=1.6):

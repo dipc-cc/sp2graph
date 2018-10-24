@@ -21,5 +21,5 @@ G = sp2ggr.adjacencyG(V)
 sp2ggr.reduceBandWidth(G, V)
 
 # solve the tight-binding problem
-TB = sp2gtb.tbBondOrder(G)
+TB = sp2gtb.tbBondOrder(V, G)
 sp2gvi.viewTBBondOrder(V, TB, sizex=6, sizey=5)

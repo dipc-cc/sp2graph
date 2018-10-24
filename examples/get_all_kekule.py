@@ -39,6 +39,6 @@ sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5,
                             figname='Pbo.pdf', annotate=True)
 
 # visualization of the Huckel bond order
-BO = sp2gtb.tbBondOrder(G)
+BO = sp2gtb.tbBondOrder(V, G)
 sp2gvi.viewTBBondOrder(V, BO, sizex=7, sizey=5,
                        figname='Hbo.pdf', annotate=True)

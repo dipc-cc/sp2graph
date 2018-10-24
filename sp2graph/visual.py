@@ -327,7 +327,7 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
         plt.show()
 
 
-def viewTBBondOrder(V, BO, figname=None,
+def viewTBBondOrder(V, BO, L=None, figname=None,
                     sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize the bond order estimated from tight-binding approach.
@@ -351,15 +351,16 @@ def viewTBBondOrder(V, BO, figname=None,
         for j in idx:
             color = cmap(float(ibo[j]-1))
             lrenorm = 9.*ibo[j] - 8. # remormalize to [1,10]
-            axs.plot((V[i, 0], V[j, 0]),
-                     (V[i, 1], V[j, 1]),
+            Vj = sp2ggr.checkPeriodic(V[i], V[j], L)[0]
+            axs.plot((V[i, 0], Vj[0]),
+                     (V[i, 1], Vj[1]),
                      c=color, ls='-', lw=lrenorm)
     if annotate:
         # Write Pauling bond orders
         for i, ibo in enumerate(BO):
             for j in np.where(ibo > 0)[0]:
-                if j > i:
-                    axs.annotate('%.2f'%ibo[j], ((V[i, 0]+V[j, 0])/2, (V[i, 1]+V[j, 1])/2), color='w')
+                Vj = sp2ggr.checkPeriodic(V[i], V[j], L)
+                axs.annotate('%.2f'%ibo[j], ((V[i, 0]+Vj[0])/2, (V[i, 1]+Vj[1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
