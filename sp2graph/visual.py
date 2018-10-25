@@ -62,6 +62,10 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
         par = sp2lau.parallel(V[idb[0]], Vdb1)
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+        Vdb0 = sp2ggr.checkPeriodic(V[idb[1]], V[idb[0]], L)
+        par = sp2lau.parallel(Vdb0, V[idb[1]])
+        axs.plot((par[0][0], par[1][0]),
+                 (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
 
     # constrained double bonds
     if C:
@@ -80,10 +84,18 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
             par = sp2lau.parallel(V[C[0]], Vc1)
             axs.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+            Vc0 = sp2ggr.checkPeriodic(V[C[1]], V[C[0]], L)
+            par = sp2lau.parallel(Vc0, V[C[1]])
+            axs.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
         else:
             for icdb in C:
-                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)[0]
+                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
                 par = sp2lau.parallel(V[icdb[0]], Vcdb1)
+                axs.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+                Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)
+                par = sp2lau.parallel(Vcdb0, V[icdb[1]])
                 axs.plot((par[0][0], par[1][0]),
                          (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
@@ -160,6 +172,10 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
             par = sp2lau.parallel(V[ik[0]], Vk1)
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+            Vk0 = sp2ggr.checkPeriodic(V[ik[1]], V[ik[0]], L)
+            par = sp2lau.parallel(V[ik[1]], Vk0)
+            plt.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
         # radicals
         if rad:
             plt.scatter(radmk[:, 0], radmk[:, 1], s=15, c='k', marker='o')
@@ -177,10 +193,18 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
             par = sp2lau.parallel(V[C[0]], Vc1)
             plt.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+            Vc0 = sp2ggr.checkPeriodic(V[C[1]], V[C[0]], L)
+            par = sp2lau.parallel(V[C[1]], Vc0)
+            plt.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
         else:
             for icdb in C:
-                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)[0]
+                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
                 par = sp2lau.parallel(V[icdb[0]], Vcdb1)
+                plt.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+                Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)
+                par = sp2lau.parallel(V[icdb[1]], Vcdb0)
                 plt.plot((par[0][0], par[1][0]),
                          (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
@@ -275,13 +299,13 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
         axs.plot((par[0][0], par[1][0]),
                  (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     else:
-        for icbd in C:
-            Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)[0]
-            par = sp2lau.parallel(V[icbd[0]], Vcbd1)
+        for icdb in C:
+            Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
+            par = sp2lau.parallel(V[icdb[0]], Vcdb1)
             axs.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-            Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)[0]
-            par = sp2lau.parallel(V[icbd[1]], Vcbd0)
+            Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)
+            par = sp2lau.parallel(V[icdb[1]], Vcdb0)
             axs.plot((par[0][0], par[1][0]),
                      (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # plot averaged of unconstrained only
