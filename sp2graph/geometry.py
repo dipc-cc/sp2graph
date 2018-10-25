@@ -49,8 +49,9 @@ def readLattice(ifile):
     lines = f.readlines()
     f.close()
     for i, line in enumerate(lines):
-        if "attice" in line: # 'Lattice' or 'lattice'
-            li = lines[i].split('"')
+        ll  = line.lower()
+        if "lattice" in ll or "cell" in ll:
+            li = lines[i].split('"') # NB: sisl not using ""
             L = li[1].split()
             L = np.array(L, dtype=np.float16)
             L = L.reshape((3, 3))
@@ -69,8 +70,9 @@ def readCs(ifile):
     V = np.empty(shape=[0, 3])
     for l in f:
         row = l.split()
-        if row[0] == 'C':
-            V = np.append(V, [[row[1], row[2], row[3]]], axis=0)
+        if len(row) > 0: # ignore empty lines
+            if row[0] == 'C':
+                V = np.append(V, [[row[1], row[2], row[3]]], axis=0)
     f.close()
     V = V.astype(np.float32)
     return V
