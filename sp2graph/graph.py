@@ -303,8 +303,9 @@ def bfKekules(G, R, Q, DB, rad=None):
             return DB
         else:
             allV = np.arange(len(G))
-            aux = np.where(np.isin(allV, R, invert=True))
-            Q = np.append(Q, aux[0])
+            aux = np.where(np.isin(allV, R, invert=True))[0]
+            idx = np.where(np.isin(aux, rad, invert=True))[0]
+            Q = np.append(Q, aux[idx[0]])
             return bfKekules(G, R, Q, DB, rad)
     elif Q[0] == -1:
         if 'gdb' in globals():

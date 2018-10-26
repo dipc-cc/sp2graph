@@ -143,7 +143,7 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
     if rad:
         rad = np.array(rad, dtype=np.uint8)
         nrad = rad.size
-        radmk = np.zeros(shape=[nrad, nrad], dtype=np.float16)
+        radmk = np.zeros(shape=[nrad, 2], dtype=np.float16)
         if nrad == 1:
             idx = np.transpose(np.nonzero(A[rad]))
             radmk = sp2lau.ptOrtho(V[idx[0]][0], V[rad], V[idx[1]][0])
@@ -178,7 +178,7 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
                 plt.plot((par[0][0], par[1][0]),
                          (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
         # radicals
-        if rad:
+        if np.any(rad):
             if nrad == 1:
                 plt.scatter(radmk[0], radmk[1], s=15, c='k', marker='o')
             else:
