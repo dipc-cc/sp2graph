@@ -54,18 +54,16 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
     for i in range(nA):
         idx = np.transpose(np.nonzero(A[i]))
         for j in idx:
-            Vj = sp2ggr.checkPeriodic(V[i], V[j], L)[0]
-            axs.plot((V[i, 0], Vj[0]),
-                     (V[i, 1], Vj[1]), c='k', ls='-', lw=1.5)
+            Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
+            for p in range(0, len(Vp), 2):
+                plt.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
+                         c='k', ls='-', lw=1.5)
     for idb in DB:
-        Vdb1 = sp2ggr.checkPeriodic(V[idb[0]], V[idb[1]], L)
-        par = sp2lau.parallel(V[idb[0]], Vdb1)
-        axs.plot((par[0][0], par[1][0]),
-                 (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
-        Vdb0 = sp2ggr.checkPeriodic(V[idb[1]], V[idb[0]], L)
-        par = sp2lau.parallel(Vdb0, V[idb[1]])
-        axs.plot((par[0][0], par[1][0]),
-                 (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+        Vp = sp2ggr.checkPeriodic(V[idb[0]], V[idb[1]], L)
+        for p in range(0, len(Vp), 2):
+            par = sp2lau.parallel(Vp[p], Vp[p+1])
+            axs.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
 
     # constrained double bonds
     if C:
@@ -75,30 +73,24 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
         for ic in allC:
             idx = np.transpose(np.nonzero(A[ic]))
             for j in idx:
-                Vj = sp2ggr.checkPeriodic(V[ic], V[j], L)[0]
-                axs.plot((V[ic, 0], Vj[0]),
-                         (V[ic, 1], Vj[1]), c='#00FF37', ls='-', lw=1.5)
+                Vp = sp2ggr.checkPeriodic(V[ic], V[j], L)
+                for p in range(0, len(Vp), 2):
+                    plt.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
+                             c='#00FF37', ls='-', lw=1.5)
         # double bonds
         if len(C.shape) == 1:
-            Vc1 = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
-            par = sp2lau.parallel(V[C[0]], Vc1)
-            axs.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-            Vc0 = sp2ggr.checkPeriodic(V[C[1]], V[C[0]], L)
-            par = sp2lau.parallel(Vc0, V[C[1]])
-            axs.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+            Vp = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
+            for p in range(0, len(Vp), 2):
+                par = sp2lau.parallel(Vp[p], Vp[p+1])
+                axs.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
         else:
             for icdb in C:
-                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
-                par = sp2lau.parallel(V[icdb[0]], Vcdb1)
-                axs.plot((par[0][0], par[1][0]),
-                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-                Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)
-                par = sp2lau.parallel(Vcdb0, V[icdb[1]])
-                axs.plot((par[0][0], par[1][0]),
-                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-
+                Vp = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
+                for p in range(0, len(Vp), 2):
+                    par = sp2lau.parallel(Vp[p], Vp[p+1])
+                    axs.plot((par[0][0], par[1][0]),
+                             (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # radicals
     if rad:
         for ir in rad:
@@ -163,19 +155,17 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
         for i in range(nA):
             idx = np.transpose(np.nonzero(A[i]))
             for j in idx:
-                Vj = sp2ggr.checkPeriodic(V[i], V[j], L)[0]
-                plt.plot((V[i, 0], Vj[0]),
-                         (V[i, 1], Vj[1]), c='k', ls='-', lw=1.5)
+                Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
+                for p in range(0, len(Vp), 2):
+                    plt.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
+                             c='k', ls='-', lw=1.5)
         kek = DB[idb]
         for ik in kek:
-            Vk1 = sp2ggr.checkPeriodic(V[ik[0]], V[ik[1]], L)
-            par = sp2lau.parallel(V[ik[0]], Vk1)
-            plt.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
-            Vk0 = sp2ggr.checkPeriodic(V[ik[1]], V[ik[0]], L)
-            par = sp2lau.parallel(V[ik[1]], Vk0)
-            plt.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
+            Vp = sp2ggr.checkPeriodic(V[ik[0]], V[ik[1]], L)
+            for p in range(0, len(Vp), 2):
+                par = sp2lau.parallel(Vp[p], Vp[p+1])
+                plt.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
         # radicals
         if rad:
             plt.scatter(radmk[:, 0], radmk[:, 1], s=15, c='k', marker='o')
@@ -184,29 +174,24 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
         for ic in allC:
             idx = np.transpose(np.nonzero(A[ic]))
             for j in idx:
-                Vj = sp2ggr.checkPeriodic(V[ic], V[j], L)[0]
-                plt.plot((V[ic, 0], Vj[0]),
-                         (V[ic, 1], Vj[1]), c='#00FF37', ls='-', lw=1.5)
+                Vp = sp2ggr.checkPeriodic(V[ic], V[j], L)
+                for p in range(0, len(Vp), 2):
+                    plt.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
+                             c='#00FF37', ls='-', lw=1.5)
         # double bonds
         if len(C.shape) == 1:
-            Vc1 = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
-            par = sp2lau.parallel(V[C[0]], Vc1)
-            plt.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-            Vc0 = sp2ggr.checkPeriodic(V[C[1]], V[C[0]], L)
-            par = sp2lau.parallel(V[C[1]], Vc0)
-            plt.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+            Vp = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
+            for p in range(0, len(Vp), 2):
+                par = sp2lau.parallel(Vp[p], Vp[p+1])
+                plt.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
         else:
             for icdb in C:
-                Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
-                par = sp2lau.parallel(V[icdb[0]], Vcdb1)
-                plt.plot((par[0][0], par[1][0]),
-                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-                Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)
-                par = sp2lau.parallel(V[icdb[1]], Vcdb0)
-                plt.plot((par[0][0], par[1][0]),
-                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+                Vp = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
+                for p in range(0, len(Vp), 2):
+                    par = sp2lau.parallel(Vp[p], Vp[p+1])
+                    plt.plot((par[0][0], par[1][0]),
+                             (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
 
         if annotate:
             for i, iv in enumerate(V):
@@ -282,32 +267,23 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
     for ic in allC:
         idx = np.transpose(np.nonzero(A[ic]))
         for j in idx:
-            Vj = sp2ggr.checkPeriodic(V[ic], V[j], L)[0]
-            axs.plot((V[ic, 0], Vj[0]),
-                     (V[ic, 1], Vj[1]), c='g', ls='-', lw=1.5)
-            Vic = sp2ggr.checkPeriodic(V[j], V[ic], L)
-            axs.plot((V[j, 0], Vic[0]),
-                     (V[j, 1], Vic[1]), c='g', ls='-', lw=1.5)
+            Vp = sp2ggr.checkPeriodic(V[ic], V[j], L)
+            for p in range(0, len(Vp), 2):
+                axs.plot(Vp[p:p+2, 0], Vp[p:p+2, 1], c='g', ls='-', lw=1.5)
     # constrained double bonds
     if len(C.shape) == 1:
-        Vc1 = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
-        par = sp2lau.parallel(V[C[0]], Vc1)
-        axs.plot((par[0][0], par[1][0]),
-                 (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-        Vc0 = sp2ggr.checkPeriodic(V[C[1]], V[C[0]], L)
-        par = sp2lau.parallel(Vc0, V[C[1]])
-        axs.plot((par[0][0], par[1][0]),
-                 (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+        Vp = sp2ggr.checkPeriodic(V[C[0]], V[C[1]], L)
+        for p in range(0, len(Vp), 2):
+            par = sp2lau.parallel(Vp[p], Vp[p+1])
+            axs.plot((par[0][0], par[1][0]),
+                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     else:
         for icdb in C:
-            Vcdb1 = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
-            par = sp2lau.parallel(V[icdb[0]], Vcdb1)
-            axs.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
-            Vcdb0 = sp2ggr.checkPeriodic(V[icdb[1]], V[icdb[0]], L)
-            par = sp2lau.parallel(V[icdb[1]], Vcdb0)
-            axs.plot((par[0][0], par[1][0]),
-                     (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
+            Vp = sp2ggr.checkPeriodic(V[icdb[0]], V[icdb[1]], L)
+            for p in range(0, len(Vp), 2):
+                par = sp2lau.parallel(Vp[p], Vp[p+1])
+                axs.plot((par[0][0], par[1][0]),
+                         (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # plot averaged of unconstrained only
     Auc = np.delete(A, allC, axis=0)
     for ic in allC:
@@ -320,10 +296,10 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
         for j in idx:
             color = cmap(float(avg[iunc, j]-1.))
             lwidth = 9.*avg[iunc, j] - 8. # remormalize to [1,10]
-            Vj = sp2ggr.checkPeriodic(V[iunc], V[j], L)[0]
-            axs.plot((V[iunc, 0], Vj[0]),
-                     (V[iunc, 1], Vj[1]),
-                     c=color, ls='-', lw=lwidth)
+            Vp = sp2ggr.checkPeriodic(V[iunc], V[j], L)
+            for p in range(0, len(Vp), 2):
+                axs.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
+                         c=color, ls='-', lw=lwidth)
     # radicals
     if rad:
         for ir in rad:
@@ -334,8 +310,11 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
         # Write Pauling bond orders
         for i in range(nA):
             for j in np.where(A[i, :]==1)[0]:
-                Vj = sp2ggr.checkPeriodic(V[i], V[j], L)
-                axs.annotate('%.2f'%avg[i, j], ((V[i, 0]+Vj[0])/2, (V[i, 1]+Vj[1])/2), color='w')
+                Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
+                for p in range(0, len(Vp), 2):
+                    axs.annotate('%.2f'%avg[i, j],
+                                 ((Vp[p, 0]+Vp[p+1,0])/2,
+                                  (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
@@ -375,16 +354,19 @@ def viewTBBondOrder(V, BO, L=None, figname=None,
         for j in idx:
             color = cmap(float(ibo[j]-1))
             lrenorm = 9.*ibo[j] - 8. # remormalize to [1,10]
-            Vj = sp2ggr.checkPeriodic(V[i], V[j], L)[0]
-            axs.plot((V[i, 0], Vj[0]),
-                     (V[i, 1], Vj[1]),
-                     c=color, ls='-', lw=lrenorm)
+            Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
+            for p in range(0, len(Vp), 2):
+                axs.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
+                         c=color, ls='-', lw=lrenorm)
     if annotate:
         # Write Pauling bond orders
         for i, ibo in enumerate(BO):
             for j in np.where(ibo > 0)[0]:
-                Vj = sp2ggr.checkPeriodic(V[i], V[j], L)
-                axs.annotate('%.2f'%ibo[j], ((V[i, 0]+Vj[0])/2, (V[i, 1]+Vj[1])/2), color='w')
+                Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
+                for p in range(0, len(Vp), 2):
+                    axs.annotate('%.2f'%ibo[j],
+                                 ((Vp[p, 0]+Vp[p+1,0])/2,
+                                  (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
