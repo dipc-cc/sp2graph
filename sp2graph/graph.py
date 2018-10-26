@@ -253,7 +253,7 @@ def reorderResult(R):
     comparison among other(s) double-bonds lists.
     """
     DB = np.empty(shape=[0, 0], dtype=np.uint8)
-    for i in range(0, len(R), 2):
+    for i in range(0, len(R)-1, 2):
         if R[i] > R[i+1]:
             foo = R[i]
             R[i] = R[i+1]
@@ -292,7 +292,7 @@ def bfKekules(G, R, Q, DB, rad=None):
     idx = len(Q)-1
     if idx < 0:
         # a validy solution has the dimension of the graph
-        if len(R) == len(G)-len(rad):
+        if len(R) == len(G)-rad.size:
             # append solution to DB if not already there
             idb = reorderResult(R)
             if 'gdb' in globals():
@@ -396,9 +396,13 @@ def checkRadlist(G, iniV, C, rad):
             sys.exit('ERROR: a vertex assigned as radical cannot belong to the constrained double bonds list!')
 
     # check if atoms assigned as radicals have only 2 neighbors
-    for i in rad:
-        if np.sum(G[i]) > 2:
+    if rad.size == 1:
+        if np.sum(G[rad]) > 2:
             sys.exit('ERROR: a radical can only be assigned to carbons having at most 2 neighbors!')
+    else:
+        for i in rad:
+            if np.sum(G[i]) > 2:
+                sys.exit('ERROR: a radical can only be assigned to carbons having at most 2 neighbors!')
     if np.isin(iniV, rad):
         allV = np.arange(len(G))
         if C.size:

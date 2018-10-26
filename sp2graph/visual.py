@@ -93,10 +93,16 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
                              (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # radicals
     if rad:
-        for ir in rad:
-            idx = np.transpose(np.nonzero(A[ir]))
-            radmk = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+        rad = np.array(rad, dtype=np.uint8)
+        if rad.size == 1:
+            idx = np.transpose(np.nonzero(A[rad]))
+            radmk = sp2lau.ptOrtho(V[idx[0]][0], V[rad], V[idx[1]][0])
             axs.scatter(radmk[0], radmk[1], s=15, c='k', marker='o')
+        else:
+            for ir in rad:
+                idx = np.transpose(np.nonzero(A[ir]))
+                radmk = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+                axs.scatter(radmk[0], radmk[1], s=15, c='k', marker='o')
     if annotate:
         for i, iv in enumerate(V):
             axs.annotate(i, (iv[0], iv[1]))
@@ -135,11 +141,16 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
 
     # set the radical markers (same for all Kekules)
     if rad:
-        nrad = len(rad)
+        rad = np.array(rad, dtype=np.uint8)
+        nrad = rad.size
         radmk = np.zeros(shape=[nrad, nrad], dtype=np.float16)
-        for i, ir in enumerate(rad):
-            idx = np.transpose(np.nonzero(A[ir]))
-            radmk[i] = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+        if nrad == 1:
+            idx = np.transpose(np.nonzero(A[rad]))
+            radmk = sp2lau.ptOrtho(V[idx[0]][0], V[rad], V[idx[1]][0])
+        else:
+            for i, ir in enumerate(rad):
+                idx = np.transpose(np.nonzero(A[ir]))
+                radmk[i] = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
 
     # set constrained double bonds (same for all Kekules)
     if C:
@@ -168,7 +179,10 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
                          (par[0][1], par[1][1]), c='r', ls='-', lw=1.5)
         # radicals
         if rad:
-            plt.scatter(radmk[:, 0], radmk[:, 1], s=15, c='k', marker='o')
+            if nrad == 1:
+                plt.scatter(radmk[0], radmk[1], s=15, c='k', marker='o')
+            else:
+                plt.scatter(radmk[:, 0], radmk[:, 1], s=15, c='k', marker='o')
 
         # single bonds around all constrained vertices
         for ic in allC:
@@ -302,10 +316,16 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
                          c=color, ls='-', lw=lwidth)
     # radicals
     if rad:
-        for ir in rad:
-            idx = np.transpose(np.nonzero(A[ir]))
-            radmk = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+        rad = np.array(rad, dtype=np.uint8)
+        if rad.size == 1:
+            idx = np.transpose(np.nonzero(A[rad]))
+            radmk = sp2lau.ptOrtho(V[idx[0]][0], V[rad], V[idx[1]][0])
             axs.scatter(radmk[0], radmk[1], s=30, c='y', marker='o')
+        else:
+            for ir in rad:
+                idx = np.transpose(np.nonzero(A[ir]))
+                radmk = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
+                axs.scatter(radmk[0], radmk[1], s=30, c='y', marker='o')
     if annotate:
         # Write Pauling bond orders
         for i in range(nA):
@@ -313,7 +333,7 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
                 Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
                 for p in range(0, len(Vp), 2):
                     axs.annotate('%.2f'%avg[i, j],
-                                 ((Vp[p, 0]+Vp[p+1,0])/2,
+                                 ((Vp[p, 0]+Vp[p+1, 0])/2,
                                   (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
@@ -365,7 +385,7 @@ def viewTBBondOrder(V, BO, L=None, figname=None,
                 Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
                 for p in range(0, len(Vp), 2):
                     axs.annotate('%.2f'%ibo[j],
-                                 ((Vp[p, 0]+Vp[p+1,0])/2,
+                                 ((Vp[p, 0]+Vp[p+1, 0])/2,
                                   (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
