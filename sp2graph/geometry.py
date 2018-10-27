@@ -29,7 +29,7 @@ def readgeom(ifile):
 def readLattice(ifile):
     r"""
     If present, reads the lattice vectors. For example, if the
-    xyz file contains the following line:
+    xyz file contains the following second line:
 
     `Lattice="79.4 0.0 0.0 0.0 20.3 0.0 0.0 0.0 25.0"`
 
@@ -46,18 +46,19 @@ def readLattice(ifile):
     """
     L = np.empty(shape=[0, 0], dtype=np.float16)
     f = open(ifile)
-    lines = f.readlines()
+    line = f.readline()
+    line = f.readline() # analyze second line
     f.close()
-    for i, line in enumerate(lines):
-        ll  = line.lower()
-        if "lattice" in ll or "cell" in ll:
-            li = lines[i].split('"') # NB: sisl not using ""
-            L = li[1].split()
+    line = line.lower()
+    line = line.replace('"', ' ')
+    splitline = line.split()
+    for i, s in enumerate(splitline):
+        if "lattice" in s or "cell" in s:
+            L = splitline[i+1:i+10]
             L = np.array(L, dtype=np.float16)
             L = L.reshape((3, 3))
             break
     return L
-
 
 def readCs(ifile):
     """
