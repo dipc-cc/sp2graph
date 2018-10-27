@@ -319,7 +319,7 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
             Vp = sp2ggr.checkPeriodic(V[iunc], V[j], L)
             for p in range(0, len(Vp), 2):
                 axs.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
-                         c=color, ls='-', lw=lwidth)
+                         c=color, ls='-', lw=lwidth, solid_capstyle='round')
     # radicals
     if rad:
         rad = np.array(rad, dtype=np.uint8)
@@ -393,7 +393,7 @@ def viewTBBondOrder(V, BO, L=None, figname=None,
             Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
             for p in range(0, len(Vp), 2):
                 axs.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
-                         c=color, ls='-', lw=lrenorm)
+                         c=color, ls='-', lw=lrenorm, solid_capstyle='round')
     if annotate:
         bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.9)
         # Write Pauling bond orders
