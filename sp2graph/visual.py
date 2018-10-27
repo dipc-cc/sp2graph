@@ -234,12 +234,18 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
 
 
 def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
-                         sizex=5, sizey=5, dpi=150, annotate=False):
+                         sizex=5, sizey=5, dpi=150, annotate=False, astyle='white'):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
     If provided, constrained bonds 'C' are shown with the usual Kekule
     representation and radicals are marked with a dot next to the vertex.
+
+    Parameters
+    ----------
+
+    astyle: {'white', 'boxed'}
+       Annotation style
     """
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -327,15 +333,19 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
                 radmk = sp2lau.ptOrtho(V[idx[0]][0], V[ir], V[idx[1]][0])
                 axs.scatter(radmk[0], radmk[1], s=30, c='y', marker='o')
     if annotate:
+        bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.9)
         # Write Pauling bond orders
         for i in range(nA):
             for j in np.where(A[i, :]==1)[0]:
                 Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
                 for p in range(0, len(Vp), 2):
-                    axs.annotate('%.2f'%avg[i, j],
-                                 ((Vp[p, 0]+Vp[p+1, 0])/2,
-                                  (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
-
+                    if astyle.lower() == 'white':
+                        axs.annotate('%.2f'%avg[i, j],
+                                     ((Vp[p, 0]+Vp[p+1, 0])/2,
+                                      (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
+                    elif astyle.lower() == 'boxed':
+                        axs.text((Vp[p, 0]+Vp[p+1, 0])/2, (Vp[p, 1]+Vp[p+1, 1])/2,
+                                 r'%.3f'%avg[i, j], ha="center", va="center", rotation=15, size=6, bbox=bbox_props)
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)
     axs.set_xlabel('x [Ang]')
@@ -351,9 +361,15 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
 
 
 def viewTBBondOrder(V, BO, L=None, figname=None,
-                    sizex=5, sizey=5, dpi=150, annotate=False):
+                    sizex=5, sizey=5, dpi=150, annotate=False, astyle='white'):
     """
     Visualize the bond order estimated from tight-binding approach.
+
+    Parameters
+    ----------
+
+    astyle: {'white', 'boxed'}
+       Annotation style
     """
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -379,14 +395,19 @@ def viewTBBondOrder(V, BO, L=None, figname=None,
                 axs.plot(Vp[p:p+2, 0], Vp[p:p+2, 1],
                          c=color, ls='-', lw=lrenorm)
     if annotate:
+        bbox_props = dict(boxstyle="round", fc="w", ec="0.5", alpha=0.9)
         # Write Pauling bond orders
         for i, ibo in enumerate(BO):
             for j in np.where(ibo > 0)[0]:
                 Vp = sp2ggr.checkPeriodic(V[i], V[j], L)
                 for p in range(0, len(Vp), 2):
-                    axs.annotate('%.2f'%ibo[j],
-                                 ((Vp[p, 0]+Vp[p+1, 0])/2,
-                                  (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
+                    if astyle.lower() == 'white':
+                        axs.annotate('%.2f'%ibo[j],
+                                     ((Vp[p, 0]+Vp[p+1, 0])/2,
+                                      (Vp[p, 1]+Vp[p+1, 1])/2), color='w')
+                    elif astyle.lower() == 'boxed':
+                        axs.text((Vp[p, 0]+Vp[p+1, 0])/2, (Vp[p, 1]+Vp[p+1, 1])/2,
+                                 r'%.3f'%ibo[j], ha="center", va="center", rotation=15, size=6, bbox=bbox_props)
 
     axs.set_xlim(min(V[:, 0])-2., max(V[:, 0])+2.)
     axs.set_ylim(min(V[:, 1])-2., max(V[:, 1])+2.)

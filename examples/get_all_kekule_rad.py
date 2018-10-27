@@ -43,4 +43,5 @@ sp2gvi.viewKekuleGrid(V, G, Kek, C=C, rad=rad, sizex=10, sizey=6,
 # visualization of the Pauling bond order (show constrained
 # bonds as usual Kekule representation and radicals as dots)
 sp2gvi.viewBondOrderAverage(V, G, Kek, C=C, rad=rad, sizex=7, sizey=5,
+                            annotate=True, astyle='white',
                             figname='Pbo_rad.pdf')

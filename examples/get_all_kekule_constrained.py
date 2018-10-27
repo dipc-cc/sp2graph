@@ -38,4 +38,5 @@ sp2gvi.viewKekuleGrid(V, G, Kek, C=C, sizex=10, sizey=6,
 # visualization of the Pauling bond order (show constrained
 # bonds as usual Kekule representation)
 sp2gvi.viewBondOrderAverage(V, G, Kek, C=C, sizex=7, sizey=5,
+                            annotate=True, astyle='boxed',
                             figname='Pbo_constrain.pdf')

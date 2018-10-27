@@ -36,9 +36,11 @@ sp2gvi.viewKekuleGrid(V, G, Kek, sizex=10, sizey=6,
 
 # visualization of the Pauling bond order
 sp2gvi.viewBondOrderAverage(V, G, Kek, sizex=7, sizey=5,
-                            figname='Pbo.pdf', annotate=True)
+                            annotate=True, astyle='white',
+                            figname='Pbo.pdf')
 
 # visualization of the Huckel bond order
 BO = sp2gtb.tbBondOrder(V, G)
 sp2gvi.viewTBBondOrder(V, BO, sizex=7, sizey=5,
-                       figname='Hbo.pdf', annotate=True)
+                       annotate=True, astyle='boxed',
+                       figname='Hbo.pdf')
