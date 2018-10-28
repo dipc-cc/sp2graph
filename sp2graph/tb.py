@@ -50,48 +50,18 @@ def tbBondOrder(V, A, L=None, radius=1.6):
     A0 = sp2ggr.adjacencyG(V)
 
     if np.any(L):
-        rdir = sp2ggr.periodicDirections(V, L)
+        pdir = sp2ggr.periodicDirections(V, L)
         BO = np.zeros(shape=[nV, nV], dtype=np.complex64)
-        BOk = np.zeros(shape=[nV, nV], dtype=np.complex64)
-        for ri, idir in enumerate(rdir):
-            if idir:
-                # build adjacency cell matrices to neighboring cells
-                Ap1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
-                Am1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
-                for j in range(nV):
-                    idx = sp2lau.closeV(j, V, radius, L[ri])
-                    Ap1[j, idx] = 1.
-                    idx = sp2lau.closeV(j, V, radius, -L[ri])
-                    Am1[j, idx] = 1.
-                #k = np.arange(-0.5, 0.5, 0.02) # 1BZ
-                k = np.arange(0.0, 0.5, 0.02)+0.01 # half 1BZ, inv. symmetry for pairs (k, -k)
-                for ki in k:
-                    Ak = -1.*np.array(A0, dtype=np.complex64)
-                    Ak -= Am1*np.exp(-2.0j*np.pi*ki)
-                    Ak -= Ap1*np.exp(2.0j*np.pi*ki)
-                    w, X = LA.eigh(Ak)
-                    for i in range(len(w)):
-                        if w[i] > 0:
-                            break
-                        for j in range(nV):
-                            # Find neighbor indices
-                            for idx in np.where(A0[j, :]==1)[0]:
-                                # within unit cell
-                                ibo = np.conj(X[j, i])*X[idx, i]
-                                BOk[j, idx] += ibo + np.conj(ibo)
-                            for idx in np.where(Am1[j, :]==1)[0]:
-                                # to neg. side neighbor cell
-                                ibo = np.conj(X[j, i])*X[idx, i]*np.exp(-2.0j*np.pi*ki)
-                                BOk[j, idx] += ibo + np.conj(ibo)
-                            for idx in np.where(Ap1[j, :]==1)[0]:
-                                ibo = np.conj(X[j, i])*X[idx, i]*np.exp(2.0j*np.pi*ki)
-                                BOk[j, idx] += ibo + np.conj(ibo)
-                BO += BOk/len(k)
+        if np.any(pdir):
+            if len(pdir.shape) == 1:
+                BO += tbBOperiodic(A0, V, pdir, radius)
+            else:
+                for ipdir in pdir:
+                    BO += tbBOperiodic(A0, V, ipdir, radius)
 
-        # include the sigma bonds
-        BO += 1.*A
+            # include the sigma bonds
+            BO += 1.*A
 
-        if np.any(rdir):
             assert np.allclose(BO.imag, 0*BO)
             return BO.real
 
@@ -108,6 +78,49 @@ def tbBondOrder(V, A, L=None, radius=1.6):
                 # Add contribution from pi-orbital (factor 2 for spin):
                 BO[j, idx] += 2*X[j, i]*X[idx, i]
     return BO
+
+
+def tbBOperiodic(A0, V, pdir, radius):
+    """
+    Eveluate the Bond Order at a periodic direction.
+    """
+
+    nV = len(V)
+    BOk = np.zeros(shape=[nV, nV], dtype=np.complex64)
+
+    # build adjacency cell matrices to neighboring cells
+    Ap1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
+    Am1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
+    for j in range(nV):
+        idx = sp2lau.closeV(j, V, radius, pdir)
+        Ap1[j, idx] = 1.
+        idx = sp2lau.closeV(j, V, radius, -pdir)
+        Am1[j, idx] = 1.
+    #k = np.arange(-0.5, 0.5, 0.02) # 1BZ
+    k = np.arange(0.0, 0.5, 0.02)+0.01 # half 1BZ, inv. symmetry for pairs (k, -k)
+    for ki in k:
+        Ak = -1.*np.array(A0, dtype=np.complex64)
+        Ak -= Am1*np.exp(-2.0j*np.pi*ki)
+        Ak -= Ap1*np.exp(2.0j*np.pi*ki)
+        w, X = LA.eigh(Ak)
+        for i in range(len(w)):
+            if w[i] > 0:
+                break
+            for j in range(nV):
+                # Find neighbor indices
+                for idx in np.where(A0[j, :]==1)[0]:
+                    # within unit cell
+                    ibo = np.conj(X[j, i])*X[idx, i]
+                    BOk[j, idx] += ibo + np.conj(ibo)
+                for idx in np.where(Am1[j, :]==1)[0]:
+                    # to neg. side neighbor cell
+                    ibo = np.conj(X[j, i])*X[idx, i]*np.exp(-2.0j*np.pi*ki)
+                    BOk[j, idx] += ibo + np.conj(ibo)
+                for idx in np.where(Ap1[j, :]==1)[0]:
+                    ibo = np.conj(X[j, i])*X[idx, i]*np.exp(2.0j*np.pi*ki)
+                    BOk[j, idx] += ibo + np.conj(ibo)
+
+    return BOk/len(k)
 
 
 def tests():

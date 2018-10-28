@@ -60,6 +60,7 @@ def readLattice(ifile):
             break
     return L
 
+
 def readCs(ifile):
     """
     Read the 'n' carbon atoms from a xyz file and return

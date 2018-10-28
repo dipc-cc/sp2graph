@@ -63,32 +63,53 @@ def adjacencyG(V, L=None, radius=1.6):
 
 def periodicDirections(V, L, radius=1.6):
     """
-    Check the periodicity and return an 2-dimensional array
-    `rdir` with 1's at periodic directions and 0's otherwise.
+    Check the periodicity and return an `n` by 3 array array like
+    `pdir` with the `n` periodic directions. Note that we assume
+    inversion symmetry, so if the system is periodic in `L[0]` then
+    we do not need to include/check `-L[0]`.
 
     Returns
     -------
-    returns [1, 0] for periodicity in x, [0, 1] for periodicity in y,
-    and [1, 1] for periodicity in both x and y
+    returns in `pdir` the periodic directions (inversion symmetry assumed)
     """
-    rdir = np.zeros(shape=[2], dtype=np.uint8)
-
+    pdir = None
     # check periodicity
     if np.any(L):
         nV = len(V)
         # check neighbors at `V+L[0]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0])
-            if np.any(idx):
-                rdir[0] = 1
+            if len(idx):
+                pdir = L[0]
                 break
         # check neighbors at `V+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[1])
-            if np.any(idx):
-                rdir[1] = 1
+            if len(idx):
+                if np.any(pdir) == None:
+                    pdir = L[1]
+                else:
+                    pdir = np.vstack((pdir, L[1]))
                 break
-    return rdir
+        # check neighbors at `V+L[0]+L[1]`
+        for i in range(nV):
+            idx = sp2lau.closeV(i, V, radius, L[0]+L[1])
+            if len(idx):
+                if np.any(pdir) == None:
+                    pdir = L[0]+L[1]
+                else:
+                    pdir = np.vstack((pdir, L[0]+L[1]))
+                break
+        # check neighbors at `V+L[0]-L[1]`
+        for i in range(nV):
+            idx = sp2lau.closeV(i, V, radius, L[0]-L[1])
+            if len(idx):
+                if np.any(pdir) == None:
+                    pdir = L[0]-L[1]
+                else:
+                    pdir = np.vstack((pdir, L[0]-L[1]))
+                break
+    return pdir
 
 
 def checkPeriodic(v1, v2, L, radius=1.6):
