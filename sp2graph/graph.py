@@ -127,32 +127,77 @@ def checkPeriodic(v1, v2, L, radius=1.6):
     """
 
     if np.any(L):
+        vp = None
         if LA.norm((v2-v1)) < radius:
-            return np.vstack((v1, v2))
-        elif LA.norm(v2+L[0]-v1) < radius:
-            return np.vstack((np.vstack((v1, v2+L[0])),
-                              np.vstack((v1-L[0], v2))))
-        elif LA.norm(v2-L[0]-v1) < radius:
-            return np.vstack((np.vstack((v1, v2-L[0])),
-                              np.vstack((v1+L[0], v2))))
-        elif LA.norm(v2+L[1]-v1) < radius:
-            return np.vstack((np.vstack((v1, v2+L[1])),
-                              np.vstack((v1-L[1], v2))))
-        elif LA.norm(v2-L[1]-v1) < radius:
-            return np.vstack((np.vstack((v1, v2-L[1])),
-                              np.vstack((v1+L[1], v2))))
-        elif LA.norm(v2+L[0]+L[1]-v1) < radius:
-            return np.vstack((np.vstack((v1, v2+L[0]+L[1])),
-                              np.vstack((v1-L[0]-L[1], v2))))
-        elif LA.norm(v2-L[0]-L[1]-v1) < radius:
-            return np.vstack((np.vstack((v1, v2-L[0]-L[1])),
-                              np.vstack((v1+L[0]+L[1], v2))))
-        elif LA.norm(v2+L[0]-L[1]-v1) < radius:
-            return np.vstack((np.vstack((v1, v2+L[0]-L[1])),
-                              np.vstack((v1-L[0]+L[1], v2))))
-        else:
-            return np.vstack((np.vstack((v1, v2-L[0]+L[1])),
-                              np.vstack((v1+L[0]-L[1], v2))))
+            if np.any(vp) == None:
+                vp = np.vstack((v1, v2))
+            else:
+                vp = np.vstack((vp, np.vstack((v1, v2))))
+        if LA.norm(v2+L[0]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2+L[0])),
+                                np.vstack((v1-L[0], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2+L[0])),
+                                           np.vstack((v1-L[0], v2))))))
+        if LA.norm(v2-L[0]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2-L[0])),
+                                np.vstack((v1+L[0], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2-L[0])),
+                                           np.vstack((v1+L[0], v2))))))
+        if LA.norm(v2+L[1]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2+L[1])),
+                                np.vstack((v1-L[1], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2+L[1])),
+                                           np.vstack((v1-L[1], v2))))))
+        if LA.norm(v2-L[1]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2-L[1])),
+                                np.vstack((v1+L[1], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2-L[1])),
+                                           np.vstack((v1+L[1], v2))))))
+        if LA.norm(v2+L[0]+L[1]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2+L[0]+L[1])),
+                                np.vstack((v1-L[0]-L[1], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2+L[0]+L[1])),
+                                           np.vstack((v1-L[0]-L[1], v2))))))
+        if LA.norm(v2-L[0]-L[1]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2-L[0]-L[1])),
+                                np.vstack((v1+L[0]+L[1], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2-L[0]-L[1])),
+                                           np.vstack((v1+L[0]+L[1], v2))))))
+        if LA.norm(v2+L[0]-L[1]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2+L[0]-L[1])),
+                                np.vstack((v1-L[0]+L[1], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2+L[0]-L[1])),
+                                           np.vstack((v1-L[0]+L[1], v2))))))
+        if LA.norm(v2-L[0]+L[1]-v1) < radius:
+            if np.any(vp) == None:
+                vp = np.vstack((np.vstack((v1, v2-L[0]+L[1])),
+                                np.vstack((v1+L[0]-L[1], v2))))
+            else:
+                vp = np.vstack((vp,
+                                np.vstack((np.vstack((v1, v2-L[0]+L[1])),
+                                           np.vstack((v1+L[0]-L[1], v2))))))
+        return vp
     else:
         return np.vstack((v1, v2))
 
