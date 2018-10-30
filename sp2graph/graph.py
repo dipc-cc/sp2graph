@@ -86,14 +86,14 @@ def periodicDirections(V, L, radius=1.6):
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0])
             if len(idx):
-                pdir = [1, 0]
+                pdir = np.array([1, 0])
                 break
         # check neighbors at `V+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[1])
             if len(idx):
                 if np.any(pdir) == None:
-                    pdir = [0, 1]
+                    pdir = np.array([0, 1])
                 else:
                     pdir = np.vstack((pdir, [0, 1]))
                 break
@@ -102,7 +102,7 @@ def periodicDirections(V, L, radius=1.6):
             idx = sp2lau.closeV(i, V, radius, L[0]+L[1])
             if len(idx):
                 if np.any(pdir) == None:
-                    pdir = [1, 1]
+                    pdir = np.array([1, 1])
                 else:
                     pdir = np.vstack((pdir, [1, 1]))
                 break
@@ -111,7 +111,7 @@ def periodicDirections(V, L, radius=1.6):
             idx = sp2lau.closeV(i, V, radius, L[0]-L[1])
             if len(idx):
                 if np.any(pdir) == None:
-                    pdir = [1, -1]
+                    pdir = np.array([1, -1])
                 else:
                     pdir = np.vstack((pdir, [1, -1]))
                 break

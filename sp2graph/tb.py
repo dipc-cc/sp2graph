@@ -51,7 +51,6 @@ def tbBondOrder(V, A, L=None, radius=1.6):
 
     if np.any(L):
         pdir = sp2ggr.periodicDirections(V, L)
-        print(pdir)
         BO = np.zeros(shape=[nV, nV], dtype=np.complex64)
         if np.any(pdir):
             if len(pdir.shape) == 1:
