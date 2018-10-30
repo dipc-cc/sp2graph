@@ -99,6 +99,7 @@ def tbBOperiodic(A0, V, L, pdir, radius):
         Ap1[j, idx] = 1.
         idx = sp2lau.closeV(j, V, radius, -Ldir)
         Am1[j, idx] = 1.
+
     # half 1BZ, inv. symmetry for pairs (k, -k)
     if pdir[0] == 0:
         kx = (pdir[0], )
@@ -109,9 +110,9 @@ def tbBOperiodic(A0, V, L, pdir, radius):
     else:
         ky = pdir[1]*(np.arange(0.0, 0.5, 0.02)+0.01)
 
-    for xi in kx:
-        for yi in ky:
-            pi2Jnk = 2.0j*np.pi*(xi + yi)
+    for ikx in kx:
+        for iky in ky:
+            pi2Jnk = 2.0j*np.pi*(ikx + iky)
             Ak = -1.*np.array(A0, dtype=np.complex64)
             Ak -= Am1*np.exp(-pi2Jnk)
             Ak -= Ap1*np.exp(pi2Jnk)
