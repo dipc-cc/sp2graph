@@ -63,14 +63,20 @@ def adjacencyG(V, L=None, radius=1.6):
 
 def periodicDirections(V, L, radius=1.6):
     """
-    Check the periodicity and return an `n` by 3 array array like
-    `pdir` with the `n` periodic directions. Note that we assume
+    Check the periodicity and return an `n` by 2 array like `pdir`
+    that indicates the `n` periodic directions. Note that we assume
     inversion symmetry, so if the system is periodic in `L[0]` then
     we do not need to include/check `-L[0]`.
 
     Returns
     -------
-    returns in `pdir` the periodic directions (inversion symmetry assumed)
+    If the system is periodic, for each periodic direction stack
+       [1, 0] for periodicity in x,
+       [0, 1] for periodicity in y,
+       [1, 1] for periodicity in both x and y,
+       [1, -1] for periodicity in x and -y
+    (note that inversion symmetry is assumed).
+    If the system is NOT periodic returns None.
     """
     pdir = None
     # check periodicity
@@ -80,34 +86,34 @@ def periodicDirections(V, L, radius=1.6):
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0])
             if len(idx):
-                pdir = L[0]
+                pdir = [1, 0]
                 break
         # check neighbors at `V+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[1])
             if len(idx):
                 if np.any(pdir) == None:
-                    pdir = L[1]
+                    pdir = [0, 1]
                 else:
-                    pdir = np.vstack((pdir, L[1]))
+                    pdir = np.vstack((pdir, [0, 1]))
                 break
         # check neighbors at `V+L[0]+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0]+L[1])
             if len(idx):
                 if np.any(pdir) == None:
-                    pdir = L[0]+L[1]
+                    pdir = [1, 1]
                 else:
-                    pdir = np.vstack((pdir, L[0]+L[1]))
+                    pdir = np.vstack((pdir, [1, 1]))
                 break
         # check neighbors at `V+L[0]-L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0]-L[1])
             if len(idx):
                 if np.any(pdir) == None:
-                    pdir = L[0]-L[1]
+                    pdir = [1, -1]
                 else:
-                    pdir = np.vstack((pdir, L[0]-L[1]))
+                    pdir = np.vstack((pdir, [1, -1]))
                 break
     return pdir
 
