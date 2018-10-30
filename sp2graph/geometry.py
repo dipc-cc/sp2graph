@@ -44,7 +44,6 @@ def readLattice(ifile):
         \end{array}
 
     """
-    L = np.empty(shape=[0, 0], dtype=np.float16)
     f = open(ifile)
     line = f.readline()
     line = f.readline() # analyze second line
@@ -58,6 +57,7 @@ def readLattice(ifile):
             L = np.array(L, dtype=np.float16)
             L = L.reshape((3, 3))
             break
+
     return L
 
 
@@ -104,10 +104,7 @@ def xyprojA(xyz, Lxyz):
         # apply the same rotation on the lattice parameters
         for i, Li in enumerate(Lxyz):
             Lxyz[i] = np.matmul(Li, rot)
-        # discard the lattice vector with larger component in `z`
-        Lxyz = Lxyz[Lxyz[:, 2].argsort()]
-        Lxyz = np.delete(Lxyz, 0, axis=0)
-        Lxy = Lxyz[:, 0:2]
+        Lxy = np.delete(Lxyz, 2, axis=1)[:2]
 
     return xy, Lxy
 
