@@ -16,13 +16,14 @@ import sp2graph.linalg_utils as lau
 __all__ = ['readgeom', 'readLattice', 'readCs']
 
 
-def readgeom(ifile):
+def readgeom(ifile, rotate=True):
     """
     Read a carbon based sp2 geometry and rotate it to the xy plane.
     """
-    Vxyz = readCs(ifile)
-    Lxyz = readLattice(ifile)
-    V, L = xyprojA(Vxyz, Lxyz)
+    V = readCs(ifile)
+    L = readLattice(ifile)
+    if rotate:
+        return xyprojA(V, L)
     return V, L
 
 
@@ -86,6 +87,10 @@ def xyprojA(xyz, Lxyz):
     Returns an equivalent 2D structure rotated to the `xy` plane.
     If the lattice vectors are provided, apply the same rotation.
     """
+    if len(xyz) < 3:
+        print ('WARNING: I don\'t know how to rotate it, sorry!\n')
+        return xyz, Lxyz
+
     # define the rotation
     u1 = lau.unitA(xyz[1]-xyz[0])
     u2 = xyz[2]-xyz[0]
@@ -94,20 +99,18 @@ def xyprojA(xyz, Lxyz):
     rot = LA.inv([u1, u2, u3])
 
     # rotate to the `xy` plane and discard `z` component
-    xyz = np.matmul(xyz, rot)
-    if np.max(xyz[:, 2])-np.min(xyz[:, 2]) > 0.01:
+    rxyz = np.matmul(xyz, rot)
+    if np.max(rxyz[:, 2])-np.min(rxyz[:, 2]) > 0.01:
         raise ValueError('Structure is not planar!')
-    xy = np.delete(xyz, 2, axis=1)
 
     # lattice vectors
-    Lxy = None
+    rLxyz = Lxyz
     if np.any(Lxyz):
         # apply the same rotation on the lattice parameters
         for i, Li in enumerate(Lxyz):
-            Lxyz[i] = np.matmul(Li, rot)
-        Lxy = np.delete(Lxyz, 2, axis=1)[:2]
+            rLxyz[i] = np.matmul(Li, rot)
 
-    return xy, Lxy
+    return rxyz, rLxyz
 
 
 def tests():

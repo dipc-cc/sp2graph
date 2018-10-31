@@ -71,10 +71,10 @@ def periodicDirections(V, L, radius=1.6):
     Returns
     -------
     If the system is periodic, for each periodic direction stack
-       [1, 0] for periodicity in x,
-       [0, 1] for periodicity in y,
-       [1, 1] for periodicity in both x and y,
-       [1, -1] for periodicity in x and -y
+       [1, 0, 0] for periodicity in L[0],
+       [0, 1, 0] for periodicity in L[1],
+       [1, 1, 0] for periodicity in L[0]+L[1],
+       [1, -1, 0] for periodicity in L[0]-L[1]
     (note that inversion symmetry is assumed).
     If the system is NOT periodic returns None.
     """
@@ -86,25 +86,25 @@ def periodicDirections(V, L, radius=1.6):
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0])
             if len(idx):
-                pdir.append([1, 0])
+                pdir.append([1, 0, 0])
                 break
         # check neighbors at `V+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[1])
             if len(idx):
-                pdir.append([0, 1])
+                pdir.append([0, 1, 0])
                 break
         # check neighbors at `V+L[0]+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0]+L[1])
             if len(idx):
-                pdir.append([1, 1])
+                pdir.append([1, 1, 0])
                 break
         # check neighbors at `V+L[0]-L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0]-L[1])
             if len(idx):
-                pdir.append([1, -1])
+                pdir.append([1, -1, 0])
                 break
     return pdir
 
@@ -325,6 +325,7 @@ def reorderResult(R):
             DB = [[R[i], R[i+1]]]
         else:
             DB = np.append(DB, [[R[i], R[i+1]]], axis=0)
+    DB = np.array(DB)
     DB = DB[DB[:, 0].argsort()]
     return DB
 
