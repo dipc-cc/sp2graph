@@ -78,7 +78,7 @@ def periodicDirections(V, L, radius=1.6):
     (note that inversion symmetry is assumed).
     If the system is NOT periodic returns None.
     """
-    pdir = None
+    pdir = []
     # check periodicity
     if np.any(L):
         nV = len(V)
@@ -86,34 +86,25 @@ def periodicDirections(V, L, radius=1.6):
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0])
             if len(idx):
-                pdir = np.array([1, 0])
+                pdir.append([1, 0])
                 break
         # check neighbors at `V+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[1])
             if len(idx):
-                if np.any(pdir) == None:
-                    pdir = np.array([0, 1])
-                else:
-                    pdir = np.vstack((pdir, [0, 1]))
+                pdir.append([0, 1])
                 break
         # check neighbors at `V+L[0]+L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0]+L[1])
             if len(idx):
-                if np.any(pdir) == None:
-                    pdir = np.array([1, 1])
-                else:
-                    pdir = np.vstack((pdir, [1, 1]))
+                pdir.append([1, 1])
                 break
         # check neighbors at `V+L[0]-L[1]`
         for i in range(nV):
             idx = sp2lau.closeV(i, V, radius, L[0]-L[1])
             if len(idx):
-                if np.any(pdir) == None:
-                    pdir = np.array([1, -1])
-                else:
-                    pdir = np.vstack((pdir, [1, -1]))
+                pdir.append([1, -1])
                 break
     return pdir
 

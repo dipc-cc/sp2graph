@@ -46,18 +46,10 @@ def tbBondOrder(V, A, L=None, radius=1.6):
     """
     nV = len(V)
 
-    # nearest neighbours (inside cell)
-    A0 = sp2ggr.adjacencyG(V)
-
     if np.any(L):
         pdir = sp2ggr.periodicDirections(V, L)
-        BO = np.zeros(shape=[nV, nV], dtype=np.complex64)
         if np.any(pdir):
-            if len(pdir.shape) == 1:
-                BO += tbBOperiodic(A0, V, L, pdir, radius)
-            else:
-                for ipdir in pdir:
-                    BO += tbBOperiodic(A0, V, L, ipdir, radius)
+            BO = tbBOperiodic(V, L, pdir, radius)
 
             # include the sigma bonds
             BO += 1.*A
@@ -67,20 +59,20 @@ def tbBondOrder(V, A, L=None, radius=1.6):
 
     # only gamma point
     w, X = LA.eigh(-1.*A0)
-    BO = 1.*A0 # Begin with the sigma bonds
+    BO = 1.*A # Begin with the sigma bonds
     for i in range(len(w)):
         if w[i] > 0:
             break
         for j in range(nV):
             # Find neighbor indices
-            neig = np.where(A0[j, :]==1)[0]
+            neig = np.where(A[j, :]==1)[0]
             for idx in neig:
                 # Add contribution from pi-orbital (factor 2 for spin):
                 BO[j, idx] += 2*X[j, i]*X[idx, i]
     return BO
 
 
-def tbBOperiodic(A0, V, L, pdir, radius):
+def tbBOperiodic(V, L, pdir, radius):
     """
     Eveluate the Bond Order at a periodic direction.
     """
@@ -88,34 +80,41 @@ def tbBOperiodic(A0, V, L, pdir, radius):
     nV = len(V)
     BOk = np.zeros(shape=[nV, nV], dtype=np.complex64)
 
-    # periodic direction
-    Ldir = np.dot(pdir, L)
+    # nearest neighbours (inside cell)
+    A0 = sp2ggr.adjacencyG(V)
 
     # build adjacency cell matrices to neighboring cells
-    Ap1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
-    Am1 = np.zeros(shape=[nV, nV], dtype=np.complex64)
-    for j in range(nV):
-        idx = sp2lau.closeV(j, V, radius, Ldir)
-        Ap1[j, idx] = 1.
-        idx = sp2lau.closeV(j, V, radius, -Ldir)
-        Am1[j, idx] = 1.
+    npdir = len(pdir)
+    Ap1 = np.zeros(shape=[nV, nV, npdir], dtype=np.complex64)
+    Am1 = np.zeros(shape=[nV, nV, npdir], dtype=np.complex64)
+    for ip, ipdir in enumerate(pdir):
+        Ldir = np.dot(ipdir, L)
+        for j in range(nV):
+            idx = sp2lau.closeV(j, V, radius, Ldir)
+            Ap1[j, idx, ip] = 1.
+            idx = sp2lau.closeV(j, V, radius, -Ldir)
+            Am1[j, idx, ip] = 1.
 
     # half 1BZ, inv. symmetry for pairs (k, -k)
-    if pdir[0] == 0:
-        kx = (pdir[0], )
-    else:
-        kx = pdir[0]*(np.arange(0.0, 0.5, 0.02)+0.01)
-    if pdir[1] == 0:
-        ky = (pdir[1], )
-    else:
-        ky = pdir[1]*(np.arange(0.0, 0.5, 0.02)+0.01)
+    kx = (0,)
+    for ipdir in pdir:
+        if ipdir[0] != 0:
+            kx = (np.arange(0.0, 0.5, 0.02)+0.01)
+            break
+    ky = (0,)
+    for ipdir in pdir:
+        if ipdir[1] != 0:
+            ky = (np.arange(0.0, 0.5, 0.02)+0.01)
+            break
 
     for ikx in kx:
         for iky in ky:
-            pi2Jnk = 2.0j*np.pi*(ikx + iky)
             Ak = -1.*np.array(A0, dtype=np.complex64)
-            Ak -= Am1*np.exp(-pi2Jnk)
-            Ak -= Ap1*np.exp(pi2Jnk)
+            for ip, ipdir in enumerate(pdir):
+                pi2Jnk = 2.0j*np.pi*(ipdir[0]*ikx + ipdir[1]*iky)
+                Ak -= Am1[:, :, ip]*np.exp(-pi2Jnk)
+                Ak -= Ap1[:, :, ip]*np.exp(pi2Jnk)
+
             w, X = LA.eigh(Ak)
             for i in range(len(w)):
                 if w[i] > 0:
@@ -126,13 +125,16 @@ def tbBOperiodic(A0, V, L, pdir, radius):
                         # within unit cell
                         ibo = np.conj(X[j, i])*X[idx, i]
                         BOk[j, idx] += ibo + np.conj(ibo)
-                    for idx in np.where(Am1[j, :]==1)[0]:
-                        # to neg. side neighbor cell
-                        ibo = np.conj(X[j, i])*X[idx, i]*np.exp(-pi2Jnk)
-                        BOk[j, idx] += ibo + np.conj(ibo)
-                    for idx in np.where(Ap1[j, :]==1)[0]:
-                        ibo = np.conj(X[j, i])*X[idx, i]*np.exp(pi2Jnk)
-                        BOk[j, idx] += ibo + np.conj(ibo)
+
+                    for ip, ipdir in enumerate(pdir):
+                        pi2Jnk = 2.0j*np.pi*(ipdir[0]*ikx + ipdir[1]*iky)
+                        for idx in np.where(Am1[j, :, ip]==1)[0]:
+                            # to neg. side neighbor cell
+                            ibo = np.conj(X[j, i])*X[idx, i]*np.exp(-pi2Jnk)
+                            BOk[j, idx] += ibo + np.conj(ibo)
+                        for idx in np.where(Ap1[j, :, ip]==1)[0]:
+                            ibo = np.conj(X[j, i])*X[idx, i]*np.exp(pi2Jnk)
+                            BOk[j, idx] += ibo + np.conj(ibo)
 
     return BOk/(len(kx)*len(ky))
 
