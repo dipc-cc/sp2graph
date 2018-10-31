@@ -58,7 +58,7 @@ def tbBondOrder(V, A, L=None, radius=1.6):
             return BO.real
 
     # only gamma point
-    w, X = LA.eigh(-1.*A0)
+    w, X = LA.eigh(-1.*A)
     BO = 1.*A # Begin with the sigma bonds
     for i in range(len(w)):
         if w[i] > 0:
