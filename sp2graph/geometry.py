@@ -88,7 +88,7 @@ def xyprojA(xyz, Lxyz):
     If the lattice vectors are provided, apply the same rotation.
     """
     if len(xyz) < 3:
-        print ('WARNING: I don\'t know how to rotate it, sorry!\n')
+        print('WARNING: I don\'t know how to rotate it, sorry!\n')
         return xyz, Lxyz
 
     # define the rotation
@@ -101,7 +101,7 @@ def xyprojA(xyz, Lxyz):
     # rotate to the `xy` plane and discard `z` component
     rxyz = np.matmul(xyz, rot)
     if np.max(rxyz[:, 2])-np.min(rxyz[:, 2]) > 0.01:
-        raise ValueError('Structure is not planar!')
+        print('WARNING: Structure is not planar!\n')
 
     # lattice vectors
     rLxyz = Lxyz
