@@ -18,7 +18,7 @@ import sp2graph.graph as sp2ggr
 __all__ = ['tbBondOrder']
 
 
-def tbBondOrder(V, A, L=None, radius=1.6):
+def tbBondOrder(V, L=None, radius=1.6):
     """ Computes the total bond order (BO) between pairs of neighboring atoms.
     Note that the hopping matrix elements in the electronic Hamiltonian are
     negative numbers as they represent the stabilization energy for electrons
@@ -32,8 +32,6 @@ def tbBondOrder(V, A, L=None, radius=1.6):
 
     V : array_like
       List of vertices
-    A : array_like
-      Adjacency matrix
     L : array_like, optional
       Lattice vectors
     radius : float, optional
@@ -45,6 +43,9 @@ def tbBondOrder(V, A, L=None, radius=1.6):
       Bond order :math:`\mathrm{BO}_{ij}` between all atom pairs `i` and `j`.
     """
     nV = len(V)
+
+    # adjacency matrix
+    A = sp2ggr.adjacencyG(V, L)
 
     if np.any(L):
         pdir = sp2ggr.periodicDirections(V, L)
