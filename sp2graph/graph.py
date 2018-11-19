@@ -17,7 +17,7 @@ import sys
 
 __all__ = ['adjacencyG', 'adjacencySelfIntG', 'checkPeriodic',
            'periodicDirections', 'revCMK', 'allKekules',
-           'basisCyclesPaton', 'basisCyclesNetworkX']
+           'basisCyclesGibbs', 'basisCyclesPaton', 'basisCyclesNetworkX']
 
 
 def adjacencyG(V, L=None, radius=1.6):
@@ -311,6 +311,15 @@ def reduceBandWidth(G, V):
             idx[i], idx[j] = idx[j], idx[i]
 
 
+def basisCyclesGibbs(G, iniV=0):
+    """
+    Returns a set of fundamental cycles from the graph `G`.
+    The root of the spanning tree to be created can be provided as `iniV`.
+
+    Based on N. Gibbs, Commun. ACM 18(5), 275-276 (1975).
+    """
+
+
 def basisCyclesPaton(G, iniV=0):
     """
     Returns a set of fundamental cycles from the graph `G`.
@@ -333,23 +342,17 @@ def basisCyclesPaton(G, iniV=0):
     zneig = np.where(A[z, :]==1)[0] # neighbors
 
     while zneig.size:
-        print("onde ", z)
         for zn in zneig:
-            print('T = ', T)
             if np.any(np.isin(T, zn)):
                 # new cicle!
                 # include the edges from `zn` and walk back through `path`
                 c = [path[zn], zn, z]
                 ci = path[z]
-                print(c, ci, path)
-                print("oi", path[c[0]])
                 while ci != c[0]:
                     c.append(ci)
                     if ci == path[c[0]] or path[ci] == -1:
                         break
-                    print('antes', ci, path[ci])
                     ci = path[ci]
-                print('c = ', c)
                 cycles.append(c)
             else:
                 T = np.append(T, zn) # include in the spanning tree
