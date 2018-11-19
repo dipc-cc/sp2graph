@@ -25,7 +25,9 @@ if nV < 100:
     sp2gvi.printAdj(G)
 
 sp2gvi.viewV(V, sizex=5, sizey=5, figname='test_cycles.pdf')
-#cycles = sp2ggr.basisCyclesPaton(G)
-cycles = sp2ggr.basisCyclesNetworkX(G)
+cycles = sp2ggr.basisCyclesPaton(G)
+#cycles = sp2ggr.basisCyclesNetworkX(G)
 
-print(cycles)
+print(len(cycles))
+for i, c in enumerate(cycles):
+    print(i+1, len(c), c)

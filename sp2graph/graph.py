@@ -333,17 +333,23 @@ def basisCyclesPaton(G, iniV=0):
     zneig = np.where(A[z, :]==1)[0] # neighbors
 
     while zneig.size:
+        print("onde ", z)
         for zn in zneig:
+            print('T = ', T)
             if np.any(np.isin(T, zn)):
                 # new cicle!
                 # include the edges from `zn` and walk back through `path`
                 c = [path[zn], zn, z]
                 ci = path[z]
+                print(c, ci, path)
+                print("oi", path[c[0]])
                 while ci != c[0]:
                     c.append(ci)
                     if ci == path[c[0]] or path[ci] == -1:
                         break
+                    print('antes', ci, path[ci])
                     ci = path[ci]
+                print('c = ', c)
                 cycles.append(c)
             else:
                 T = np.append(T, zn) # include in the spanning tree
@@ -365,7 +371,7 @@ def basisCyclesPaton(G, iniV=0):
             # remove vertex from `X`
             xzidx = np.where(np.isin(X, z))
             X = np.delete(X, xzidx, 0)
-            for t in T:
+            for t in T[::-1]:
                 if np.any(np.where(A[t, :]==1)) and np.any(np.isin(X, t)):
                     z = t
                     zneig = np.where(A[z, :]==1)[0] # neighbors
