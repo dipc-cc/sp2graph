@@ -67,7 +67,7 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
 
     # constrained double bonds
     if C:
-        C = np.array(C, dtype=np.uint8)
+        C = np.array(C, dtype=np.uint16)
         allC = C.flatten()
         # single bonds around all constrained vertices
         for ic in allC:
@@ -93,7 +93,7 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
                              (par[0][1], par[1][1]), c='y', ls='-', lw=1.5)
     # radicals
     if rad:
-        rad = np.array(rad, dtype=np.uint8)
+        rad = np.array(rad, dtype=np.uint16)
         if rad.size == 1:
             idx = np.transpose(np.nonzero(A[rad]))
             radmk = sp2lau.ptOrtho(V[idx[0]][0], V[rad], V[idx[1]][0])
@@ -129,7 +129,7 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
     """
     nA = len(A)
     nKek = len(DB)
-    DB = np.array(DB, dtype=np.uint8)
+    DB = np.array(DB, dtype=np.uint16)
 
     # define the grid for ploting the figures
     molsize = max(V[:, 0]) - min(V[:, 0]) + 4.
@@ -141,7 +141,7 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
 
     # set the radical markers (same for all Kekules)
     if rad:
-        rad = np.array(rad, dtype=np.uint8)
+        rad = np.array(rad, dtype=np.uint16)
         nrad = rad.size
         radmk = np.zeros(shape=[nrad, 2], dtype=np.float16)
         if nrad == 1:
@@ -154,11 +154,11 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
 
     # set constrained double bonds (same for all Kekules)
     if C:
-        C = np.array(C, dtype=np.uint8)
+        C = np.array(C, dtype=np.uint16)
         allC = C.flatten()
     else:
-        C = np.empty(shape=[0, 0], dtype=np.uint8)
-        allC = np.empty(shape=[0], dtype=np.uint8)
+        C = np.empty(shape=[0, 0], dtype=np.uint16)
+        allC = np.empty(shape=[0], dtype=np.uint16)
 
     for idb in range(nKek):
 
@@ -253,7 +253,7 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
     nA = len(A)
     nDB = len(DB)
     avg = nDB*A.astype(dtype=np.float16)
-    DB = np.array(DB, dtype=np.uint8)
+    DB = np.array(DB, dtype=np.uint16)
 
     if len(DB.flatten()) == 0:
         print('WARNING: no Kekule strucutre to average!')
@@ -268,11 +268,11 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
 
     # constrained double bonds
     if C:
-        C = np.array(C, dtype=np.uint8)
+        C = np.array(C, dtype=np.uint16)
         allC = C.flatten()
     else:
-        C = np.empty(shape=[0, 0], dtype=np.uint8)
-        allC = np.empty(shape=[0], dtype=np.uint8)
+        C = np.empty(shape=[0, 0], dtype=np.uint16)
+        allC = np.empty(shape=[0], dtype=np.uint16)
 
     # set colormap and colorbar
     cmap = plt.get_cmap('autumn')
@@ -322,7 +322,7 @@ def viewBondOrderAverage(V, A, DB, L=None, C=None, rad=None, figname=None,
                          c=color, ls='-', lw=lwidth, solid_capstyle='round')
     # radicals
     if rad:
-        rad = np.array(rad, dtype=np.uint8)
+        rad = np.array(rad, dtype=np.uint16)
         if rad.size == 1:
             idx = np.transpose(np.nonzero(A[rad]))
             radmk = sp2lau.ptOrtho(V[idx[0]][0], V[rad], V[idx[1]][0])

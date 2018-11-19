@@ -16,7 +16,8 @@ import sp2graph.linalg_utils as sp2lau
 import sys
 
 __all__ = ['adjacencyG', 'adjacencySelfIntG', 'checkPeriodic',
-           'periodicDirections', 'revCMK', 'allKekules']
+           'periodicDirections', 'revCMK', 'allKekules',
+           'basisCyclesPaton', 'basisCyclesNetworkX']
 
 
 def adjacencyG(V, L=None, radius=1.6):
@@ -29,7 +30,7 @@ def adjacencyG(V, L=None, radius=1.6):
     """
     nV = len(V)
     V = np.array(V)
-    G = np.zeros(shape=[nV, nV], dtype=np.uint8)
+    G = np.zeros(shape=[nV, nV], dtype=np.uint16)
 
     # nearest neighbours (inside cell)
     for i in range(nV):
@@ -216,7 +217,7 @@ def degreeV(V):
     """
     nV = len(V)
     G = adjacencyG(V)
-    degV = np.zeros(shape=[nV], dtype=np.uint8)
+    degV = np.zeros(shape=[nV], dtype=np.uint16)
     for i in range(nV):
         degV[i] = np.sum(G[i])
     return degV
@@ -276,8 +277,8 @@ def revCMK(G, V):
     sdegV = np.argsort(degV)
 
     # result and queue arrays
-    labell = np.empty(shape=[0], dtype=np.uint8)
-    queue = np.empty(shape=[0], dtype=np.uint8)
+    labell = np.empty(shape=[0], dtype=np.uint16)
+    queue = np.empty(shape=[0], dtype=np.uint16)
     while len(labell) < nV:
         # remove elements already in labell
         mask = np.in1d(sdegV, labell, invert=True)
@@ -302,7 +303,7 @@ def reduceBandWidth(G, V):
     """
     labell = revCMK(G, V)
     nV = len(V)
-    idx = np.array(range(nV), dtype=np.uint8)
+    idx = np.array(range(nV), dtype=np.int32)
     for i in range(nV):
         if idx[i] != labell[nV-1-i]:
             j = np.where(idx == labell[nV-1-i])[0]
@@ -310,12 +311,115 @@ def reduceBandWidth(G, V):
             idx[i], idx[j] = idx[j], idx[i]
 
 
+def basisCyclesPaton(G, iniV=0):
+    """
+    Returns a set of fundamental cycles from the graph `G`.
+    The root of the spanning tree to be created can be provided as `iniV`.
+
+    Based on K. Paton, Commun. ACM 12(9), 514-518 (1969).
+    """
+    nV = len(G)
+    A = G.copy() # copy of the adjcency where edges will be removed
+    X = np.arange(nV) # vertices not in the spanning tree `T`
+    T = [iniV] # spanning tree
+    cycles = []
+
+    # to keep track of the path trought the spanning tree, in the array
+    # like `path`, the i-th element contains the arriving from vertex
+    path = np.zeros(shape=[nV], dtype=np.int16)
+    path[:] = -1
+
+    z = iniV # root of the tree
+    zneig = np.where(A[z, :]==1)[0] # neighbors
+
+    while zneig.size:
+        for zn in zneig:
+            if np.any(np.isin(T, zn)):
+                # new cicle!
+                # include the edges from `zn` and walk back through `path`
+                c = [path[zn], zn, z]
+                ci = path[z]
+                while ci != c[0]:
+                    c.append(ci)
+                    if ci == path[c[0]] or path[ci] == -1:
+                        break
+                    ci = path[ci]
+                cycles.append(c)
+            else:
+                T = np.append(T, zn) # include in the spanning tree
+            path[zn] = z # update path
+
+            # remove edge
+            A[z, zn] = 0
+            A[zn, z] = 0
+
+        # remove vertex from `X`
+        xzidx = np.where(np.isin(X, z))
+        X = np.delete(X, xzidx, 0)
+
+        # update `z` with last element in `T` (this leads
+        # to a more efficient algorithm according to Paton)
+        z = T[-1]
+        zneig = np.where(A[z, :]==1)[0] # neighbors
+        if zneig.size == 0 and np.any(np.where(A[T, :]==1)):
+            # remove vertex from `X`
+            xzidx = np.where(np.isin(X, z))
+            X = np.delete(X, xzidx, 0)
+            for t in T:
+                if np.any(np.where(A[t, :]==1)) and np.any(np.isin(X, t)):
+                    z = t
+                    zneig = np.where(A[z, :]==1)[0] # neighbors
+                    break
+    return cycles
+
+
+def basisCyclesNetworkX(G, root=None):
+    """
+    Returns a set of fundamental cycles from the graph `G`.
+    The root of the spanning tree to be created can be provided as `root`.
+
+    Adapted from `NetworkX` python package.
+    """
+    nV = len(G)
+    gnodes=set(range(nV))
+    cycles=[]
+    while gnodes:  # loop over connected components
+        if root is None:
+            root=gnodes.pop()
+        stack=[root]
+        pred={root: root}
+        used={root: set()}
+        while stack:  # walk the spanning tree finding cycles
+            z=stack.pop()  # use last-in so cycles easier to find
+            zused=used[z]
+            for nbr in np.where(G[z, :]==1)[0]:
+                if nbr not in used:   # new node
+                    pred[nbr]=z
+                    stack.append(nbr)
+                    used[nbr]=set([z])
+                elif nbr == z:        # self loops
+                    cycles.append([z])
+                elif nbr not in zused:# found a cycle
+                    pn=used[nbr]
+                    cycle=[nbr, z]
+                    p=pred[z]
+                    while p not in pn:
+                        cycle.append(p)
+                        p=pred[p]
+                    cycle.append(p)
+                    cycles.append(cycle)
+                    used[nbr].add(z)
+        gnodes-=set(pred)
+        root=None
+    return cycles
+
+
 def reorderResult(R):
     """
     Order a double-bonds list to allow for straight
     comparison among other(s) double-bonds lists.
     """
-    DB = np.empty(shape=[0, 0], dtype=np.uint8)
+    DB = np.empty(shape=[0, 0], dtype=np.uint16)
     for i in range(0, len(R)-1, 2):
         if R[i] > R[i+1]:
             foo = R[i]
@@ -493,22 +597,22 @@ def allKekules(G, iniV, C=None, rad=None):
     if 'gdb' in globals():
         del globals()['gdb']
 
-    R = np.empty(shape=[0], dtype=np.uint8)
-    Q = np.empty(shape=[0], dtype=np.uint8)
-    DB = np.empty(shape=[0, 0], dtype=np.uint8)
+    R = np.empty(shape=[0], dtype=np.uint16)
+    Q = np.empty(shape=[0], dtype=np.uint16)
+    DB = np.empty(shape=[0, 0], dtype=np.uint16)
 
     if C: # constrained search
-        C = np.array(C, dtype=np.uint8)
+        C = np.array(C, dtype=np.uint16)
         iniV = checkDBlist(G, iniV, C)
         R = C.flatten()
     else:
-        C = np.empty(shape=[0, 0], dtype=np.uint8)
+        C = np.empty(shape=[0, 0], dtype=np.uint16)
 
     if rad:
-        rad = np.array(rad, dtype=np.uint8)
+        rad = np.array(rad, dtype=np.uint16)
         iniV = checkRadlist(G, iniV, C, rad)
     else:
-        rad = np.empty(shape=[0], dtype=np.uint8)
+        rad = np.empty(shape=[0], dtype=np.uint16)
 
     Q = np.append(Q, iniV) # queue the starting vertex
     return bfKekules(G, R, Q, DB, rad)
