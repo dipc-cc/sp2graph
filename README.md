@@ -124,6 +124,9 @@ If you find any bug please form a [bug report/issue][issues].
 
 If you have a fix please consider adding a [pull request][pulls].
 
+## Funding ##
+Financial support from Spanish AEI (FIS2017-83780-P "GRANAS") is acknowledged.
+
 ## License ##
 The [__sp2graph__][docs] license is [GPLv3][gpl], please see the LICENSE file.
 
