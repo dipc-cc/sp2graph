@@ -8,8 +8,9 @@ Dependencies
 
 These packages are required:
 
- * `NumPy`_
- * `Matplotlib`_
+ * `Python`_ >= 3.6
+ * `NumPy`_ >= 1.13
+ * `Matplotlib`_ >= 2.2.2
 
 Manual installation
 -------------------

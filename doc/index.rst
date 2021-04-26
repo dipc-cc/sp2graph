@@ -47,6 +47,11 @@ If you find any bugs please form a `bug report/issue <issue_>`_.
 If you have a fix please consider adding a `pull request <pr_>`_.
 
 
+Funding
+-------
+Financial support from Spanish AEI (FIS2017-83780-P "GRANAS") is acknowledged.
+
+
 Indices
 -------
 
