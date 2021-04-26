@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sp2graph.graph &mdash; sp2graph v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="sp2graph.info.html" />
+    <link rel="prev" title="sp2graph.geometry" href="sp2graph.geometry.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> sp2graph
+          
+
+          
+            
+            <img src="../_static/sp2graph_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="sp2graph.html">sp2graph package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="sp2graph.html#sp2graph"><code class="docutils literal notranslate"><span class="pre">sp2graph</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="sp2graph.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="sp2graph.geometry.html"><code class="docutils literal notranslate"><span class="pre">sp2graph.geometry</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">sp2graph.graph</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sp2graph.linalg_utils.html"><code class="docutils literal notranslate"><span class="pre">sp2graph.linalg_utils</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sp2graph.tb.html"><code class="docutils literal notranslate"><span class="pre">sp2graph.tb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sp2graph.visual.html"><code class="docutils literal notranslate"><span class="pre">sp2graph.visual</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">sp2graph</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="sp2graph.html">sp2graph package</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">sp2graph.graph</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api-gen/sp2graph.graph.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-sp2graph.graph"></span><div class="section" id="sp2graph-graph">
+<h1><a class="reference internal" href="#module-sp2graph.graph" title="sp2graph.graph"><code class="xref py py-mod docutils literal notranslate"><span class="pre">sp2graph.graph</span></code></a><a class="headerlink" href="#sp2graph-graph" title="Permalink to this headline">¶</a></h1>
+<p>This module contains functions for dealing with the graph
+representation of carbon sp2 geometries.</p>
+<dl class="function">
+<dt id="sp2graph.graph.adjacencyG">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">adjacencyG</code><span class="sig-paren">(</span><em>V</em>, <em>L=None</em>, <em>radius=1.6</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#adjacencyG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.adjacencyG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the adjacency matrix (which indicates if there
+is an edge, 1, or not, 0, between two vertex) from the
+first neighbours analysis from the vertices in <cite>V</cite>. Case
+the lattice vectors are provided in the matrix <cite>L</cite>,
+analyses the neighbors from periodic cells.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.adjacencySelfIntG">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">adjacencySelfIntG</code><span class="sig-paren">(</span><em>V</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#adjacencySelfIntG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.adjacencySelfIntG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the adjacency matrix (which indicates if there
+is an edge, 1, or not, 0, between two vertex) from the
+first neighbours analysis from the vertices in V and
+include “self-interaction” diagonal term (on elements
+with only two neighbours)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.checkPeriodic">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">checkPeriodic</code><span class="sig-paren">(</span><em>v1</em>, <em>v2</em>, <em>L</em>, <em>radius=1.6</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#checkPeriodic"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.checkPeriodic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recieve two vertices <cite>v1</cite> and <cite>v2</cite> and check whether
+they are connected via periodic cells. If so, returns
+<cite>v2</cite> displaced by the corresponding lattice vectors.
+To be used when plotting bonds across periodic cells.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.periodicDirections">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">periodicDirections</code><span class="sig-paren">(</span><em>V</em>, <em>L</em>, <em>radius=1.6</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#periodicDirections"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.periodicDirections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the periodicity and return an <cite>n</cite> by 2 array like <cite>pdir</cite>
+that indicates the <cite>n</cite> periodic directions. Note that we assume
+inversion symmetry, so if the system is periodic in <cite>L[0]</cite> then
+we do not need to include/check <cite>-L[0]</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If the system is periodic, for each periodic direction stack</p>
+<blockquote>
+<div><p>[1, 0, 0] for periodicity in L[0],
+[0, 1, 0] for periodicity in L[1],
+[1, 1, 0] for periodicity in L[0]+L[1],
+[1, -1, 0] for periodicity in L[0]-L[1]</p>
+</div></blockquote>
+<p>(note that inversion symmetry is assumed).</p>
+<p class="last">If the system is NOT periodic returns None.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.revCMK">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">revCMK</code><span class="sig-paren">(</span><em>G</em>, <em>V</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#revCMK"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.revCMK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse Cuthill-McKee algorithm implementation.
+Returns an array with the labell order.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.allKekules">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">allKekules</code><span class="sig-paren">(</span><em>G</em>, <em>iniV</em>, <em>C=None</em>, <em>rad=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#allKekules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.allKekules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for calling recursive function returning
+all Kekule structures</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.basisCyclesGibbs">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">basisCyclesGibbs</code><span class="sig-paren">(</span><em>G</em>, <em>iniV=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#basisCyclesGibbs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.basisCyclesGibbs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of fundamental cycles from the graph <cite>G</cite>.
+The root of the spanning tree to be created can be provided as <cite>iniV</cite>.</p>
+<p>Based on N. Gibbs, Commun. ACM 18(5), 275-276 (1975).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.basisCyclesPaton">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">basisCyclesPaton</code><span class="sig-paren">(</span><em>G</em>, <em>iniV=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#basisCyclesPaton"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.basisCyclesPaton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of fundamental cycles from the graph <cite>G</cite>.
+The root of the spanning tree to be created can be provided as <cite>iniV</cite>.</p>
+<p>Based on K. Paton, Commun. ACM 12(9), 514-518 (1969).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="sp2graph.graph.basisCyclesNetworkX">
+<code class="descclassname">sp2graph.graph.</code><code class="descname">basisCyclesNetworkX</code><span class="sig-paren">(</span><em>G</em>, <em>root=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sp2graph/graph.html#basisCyclesNetworkX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sp2graph.graph.basisCyclesNetworkX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of fundamental cycles from the graph <cite>G</cite>.
+The root of the spanning tree to be created can be provided as <cite>root</cite>.</p>
+<p>Adapted from <cite>NetworkX</cite> python package.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sp2graph.info.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="sp2graph.geometry.html" class="btn btn-neutral float-left" title="sp2graph.geometry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Pedro Brandimarte and Thomas Frederiksen, 2018
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

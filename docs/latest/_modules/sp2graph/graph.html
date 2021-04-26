@@ -1,0 +1,836 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sp2graph.graph &mdash; sp2graph v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> sp2graph
+          
+
+          
+            
+            <img src="../../_static/sp2graph_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api-gen/sp2graph.html">sp2graph package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sp2graph</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>sp2graph.graph</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sp2graph.graph</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">:mod:`sp2graph.graph`</span>
+<span class="sd">===================================</span>
+
+<span class="sd">This module contains functions for dealing with the graph</span>
+<span class="sd">representation of carbon sp2 geometries.</span>
+
+<span class="sd">.. currentmodule:: sp2graph.graph</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+<span class="kn">import</span> <span class="nn">sp2graph.linalg_utils</span> <span class="kn">as</span> <span class="nn">sp2lau</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;adjacencyG&#39;</span><span class="p">,</span> <span class="s1">&#39;adjacencySelfIntG&#39;</span><span class="p">,</span> <span class="s1">&#39;checkPeriodic&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;periodicDirections&#39;</span><span class="p">,</span> <span class="s1">&#39;revCMK&#39;</span><span class="p">,</span> <span class="s1">&#39;allKekules&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;basisCyclesGibbs&#39;</span><span class="p">,</span> <span class="s1">&#39;basisCyclesPaton&#39;</span><span class="p">,</span> <span class="s1">&#39;basisCyclesNetworkX&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="adjacencyG"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.adjacencyG">[docs]</a><span class="k">def</span> <span class="nf">adjacencyG</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the adjacency matrix (which indicates if there</span>
+<span class="sd">    is an edge, 1, or not, 0, between two vertex) from the</span>
+<span class="sd">    first neighbours analysis from the vertices in `V`. Case</span>
+<span class="sd">    the lattice vectors are provided in the matrix `L`,</span>
+<span class="sd">    analyses the neighbors from periodic cells.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">nV</span><span class="p">,</span> <span class="n">nV</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+
+    <span class="c1"># nearest neighbours (inside cell)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
+        <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c1"># check periodicity</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+        <span class="c1"># neighbors from `V+L[0]` and `V-L[0]`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># neighbors from `V+L[1]` and `V-L[1]`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># neighbors from `V+(L[0]+L[1])` `V-(L[0]+L[1])`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># neighbors from `V+(L[0]-L[1])` `V-(L[0]-L[1])`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">G</span></div>
+
+
+<div class="viewcode-block" id="periodicDirections"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.periodicDirections">[docs]</a><span class="k">def</span> <span class="nf">periodicDirections</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check the periodicity and return an `n` by 2 array like `pdir`</span>
+<span class="sd">    that indicates the `n` periodic directions. Note that we assume</span>
+<span class="sd">    inversion symmetry, so if the system is periodic in `L[0]` then</span>
+<span class="sd">    we do not need to include/check `-L[0]`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    If the system is periodic, for each periodic direction stack</span>
+<span class="sd">       [1, 0, 0] for periodicity in L[0],</span>
+<span class="sd">       [0, 1, 0] for periodicity in L[1],</span>
+<span class="sd">       [1, 1, 0] for periodicity in L[0]+L[1],</span>
+<span class="sd">       [1, -1, 0] for periodicity in L[0]-L[1]</span>
+<span class="sd">    (note that inversion symmetry is assumed).</span>
+<span class="sd">    If the system is NOT periodic returns None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pdir</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># check periodicity</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+        <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+        <span class="c1"># check neighbors at `V+L[0]`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+                <span class="n">pdir</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="k">break</span>
+        <span class="c1"># check neighbors at `V+L[1]`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+                <span class="n">pdir</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="k">break</span>
+        <span class="c1"># check neighbors at `V+L[0]+L[1]`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+                <span class="n">pdir</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="k">break</span>
+        <span class="c1"># check neighbors at `V+L[0]-L[1]`</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">):</span>
+                <span class="n">pdir</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+                <span class="k">break</span>
+    <span class="k">return</span> <span class="n">pdir</span></div>
+
+
+<div class="viewcode-block" id="checkPeriodic"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.checkPeriodic">[docs]</a><span class="k">def</span> <span class="nf">checkPeriodic</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recieve two vertices `v1` and `v2` and check whether</span>
+<span class="sd">    they are connected via periodic cells. If so, returns</span>
+<span class="sd">    `v2` displaced by the corresponding lattice vectors.</span>
+<span class="sd">    To be used when plotting bonds across periodic cells.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+        <span class="n">vp</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">((</span><span class="n">v2</span><span class="o">-</span><span class="n">v1</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">if</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">v1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">radius</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">vp</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">vp</span><span class="p">,</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="o">+</span><span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v2</span><span class="p">))))))</span>
+        <span class="k">return</span> <span class="n">vp</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="adjacencySelfIntG"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.adjacencySelfIntG">[docs]</a><span class="k">def</span> <span class="nf">adjacencySelfIntG</span><span class="p">(</span><span class="n">V</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the adjacency matrix (which indicates if there</span>
+<span class="sd">    is an edge, 1, or not, 0, between two vertex) from the</span>
+<span class="sd">    first neighbours analysis from the vertices in V and</span>
+<span class="sd">    include &quot;self-interaction&quot; diagonal term (on elements</span>
+<span class="sd">    with only two neighbours)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">adjacencyG</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+        <span class="c1"># put 1 in the diagonal when necessary</span>
+        <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">G</span></div>
+
+
+<span class="k">def</span> <span class="nf">degreeV</span><span class="p">(</span><span class="n">V</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns an array with the vertices degree</span>
+<span class="sd">    (2 or 3 in sp2 carbon structures)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">adjacencyG</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">degV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">nV</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+        <span class="n">degV</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">degV</span>
+
+
+<span class="k">def</span> <span class="nf">swapV</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Swap vertices &quot;&quot;&quot;</span>
+    <span class="c1"># swap vertices coordinates</span>
+    <span class="n">V</span><span class="p">[[</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">V</span><span class="p">[[</span><span class="n">i2</span><span class="p">,</span> <span class="n">i1</span><span class="p">],</span> <span class="p">:]</span>
+    <span class="c1"># swap columns</span>
+    <span class="n">G</span><span class="p">[:,</span> <span class="p">[</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[:,</span> <span class="p">[</span><span class="n">i2</span><span class="p">,</span> <span class="n">i1</span><span class="p">]]</span>
+    <span class="c1"># swap rows</span>
+    <span class="n">G</span><span class="p">[[</span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span><span class="p">],</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[[</span><span class="n">i2</span><span class="p">,</span> <span class="n">i1</span><span class="p">],</span> <span class="p">:]</span>
+
+
+<span class="k">def</span> <span class="nf">naiveReduceBandWidth</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Naive implementation of band reduction algorithm &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="o">-</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">2</span>
+                <span class="k">while</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">idx</span><span class="p">]:</span>
+                    <span class="n">idx</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                <span class="n">swapV</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">revCMKinsert</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">degV</span><span class="p">,</span> <span class="n">labell</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Auxilliary function for revCMK algorithm &quot;&quot;&quot;</span>
+    <span class="n">labell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labell</span><span class="p">,</span> <span class="n">queue</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="c1"># get neighbours</span>
+    <span class="n">ngbr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">queue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># order with increasing degree</span>
+    <span class="n">ngbrdeg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">degV</span><span class="p">,</span> <span class="n">ngbr</span><span class="p">)</span>
+    <span class="n">sortidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">ngbrdeg</span><span class="p">),</span> <span class="n">ngbrdeg</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">ngbr</span> <span class="o">=</span> <span class="n">ngbr</span><span class="p">[</span><span class="n">sortidx</span><span class="p">]</span>
+    <span class="c1"># remove those already in labell</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">ngbr</span><span class="p">,</span> <span class="n">labell</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ngbr</span> <span class="o">=</span> <span class="n">ngbr</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="c1"># insert neighbours in the queue</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">ngbr</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">labell</span><span class="p">,</span> <span class="n">queue</span>
+
+
+<div class="viewcode-block" id="revCMK"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.revCMK">[docs]</a><span class="k">def</span> <span class="nf">revCMK</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reverse Cuthill-McKee algorithm implementation.</span>
+<span class="sd">    Returns an array with the labell order.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+    <span class="c1"># vertices degrees</span>
+    <span class="n">degV</span> <span class="o">=</span> <span class="n">degreeV</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="c1"># sorted with increasing degree</span>
+    <span class="n">sdegV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">degV</span><span class="p">)</span>
+
+    <span class="c1"># result and queue arrays</span>
+    <span class="n">labell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+    <span class="n">queue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">labell</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">nV</span><span class="p">:</span>
+        <span class="c1"># remove elements already in labell</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">in1d</span><span class="p">(</span><span class="n">sdegV</span><span class="p">,</span> <span class="n">labell</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">sdegV</span> <span class="o">=</span> <span class="n">sdegV</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">sdegV</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">labell</span><span class="p">,</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">revCMKinsert</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">degV</span><span class="p">,</span> <span class="n">labell</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">queue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">labell</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">assume_unique</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+                <span class="n">labell</span><span class="p">,</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">revCMKinsert</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">degV</span><span class="p">,</span> <span class="n">labell</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
+            <span class="c1"># remove the unqueued</span>
+            <span class="n">queue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># reverse</span>
+    <span class="k">return</span> <span class="n">labell</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">reduceBandWidth</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">V</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply the labell order given by a band-width</span>
+<span class="sd">    reduction algorithm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">labell</span> <span class="o">=</span> <span class="n">revCMK</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">labell</span><span class="p">[</span><span class="n">nV</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">idx</span> <span class="o">==</span> <span class="n">labell</span><span class="p">[</span><span class="n">nV</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">swapV</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+            <span class="n">idx</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">idx</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">idx</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="basisCyclesGibbs"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.basisCyclesGibbs">[docs]</a><span class="k">def</span> <span class="nf">basisCyclesGibbs</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">iniV</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a set of fundamental cycles from the graph `G`.</span>
+<span class="sd">    The root of the spanning tree to be created can be provided as `iniV`.</span>
+
+<span class="sd">    Based on N. Gibbs, Commun. ACM 18(5), 275-276 (1975).</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="basisCyclesPaton"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.basisCyclesPaton">[docs]</a><span class="k">def</span> <span class="nf">basisCyclesPaton</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">iniV</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a set of fundamental cycles from the graph `G`.</span>
+<span class="sd">    The root of the spanning tree to be created can be provided as `iniV`.</span>
+
+<span class="sd">    Based on K. Paton, Commun. ACM 12(9), 514-518 (1969).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># copy of the adjcency where edges will be removed</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nV</span><span class="p">)</span> <span class="c1"># vertices not in the spanning tree `T`</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="p">[</span><span class="n">iniV</span><span class="p">]</span> <span class="c1"># spanning tree</span>
+    <span class="n">cycles</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># to keep track of the path trought the spanning tree, in the array</span>
+    <span class="c1"># like `path`, the i-th element contains the arriving from vertex</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">nV</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+    <span class="n">path</span><span class="p">[:]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">iniV</span> <span class="c1"># root of the tree</span>
+    <span class="n">zneig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># neighbors</span>
+
+    <span class="k">while</span> <span class="n">zneig</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">zn</span> <span class="ow">in</span> <span class="n">zneig</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">zn</span><span class="p">)):</span>
+                <span class="c1"># new cicle!</span>
+                <span class="c1"># include the edges from `zn` and walk back through `path`</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">[</span><span class="n">zn</span><span class="p">],</span> <span class="n">zn</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
+                <span class="n">ci</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+                <span class="k">while</span> <span class="n">ci</span> <span class="o">!=</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">ci</span> <span class="o">==</span> <span class="n">path</span><span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="ow">or</span> <span class="n">path</span><span class="p">[</span><span class="n">ci</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">ci</span> <span class="o">=</span> <span class="n">path</span><span class="p">[</span><span class="n">ci</span><span class="p">]</span>
+                <span class="n">cycles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">zn</span><span class="p">)</span> <span class="c1"># include in the spanning tree</span>
+            <span class="n">path</span><span class="p">[</span><span class="n">zn</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span> <span class="c1"># update path</span>
+
+            <span class="c1"># remove edge</span>
+            <span class="n">A</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="n">zn</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">A</span><span class="p">[</span><span class="n">zn</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># remove vertex from `X`</span>
+        <span class="n">xzidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">xzidx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># update `z` with last element in `T` (this leads</span>
+        <span class="c1"># to a more efficient algorithm according to Paton)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">zneig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># neighbors</span>
+        <span class="k">if</span> <span class="n">zneig</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)):</span>
+            <span class="c1"># remove vertex from `X`</span>
+            <span class="n">xzidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">xzidx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">T</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">))</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">)):</span>
+                    <span class="n">z</span> <span class="o">=</span> <span class="n">t</span>
+                    <span class="n">zneig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># neighbors</span>
+                    <span class="k">break</span>
+    <span class="k">return</span> <span class="n">cycles</span></div>
+
+
+<div class="viewcode-block" id="basisCyclesNetworkX"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.basisCyclesNetworkX">[docs]</a><span class="k">def</span> <span class="nf">basisCyclesNetworkX</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a set of fundamental cycles from the graph `G`.</span>
+<span class="sd">    The root of the spanning tree to be created can be provided as `root`.</span>
+
+<span class="sd">    Adapted from `NetworkX` python package.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">gnodes</span><span class="o">=</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">))</span>
+    <span class="n">cycles</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">while</span> <span class="n">gnodes</span><span class="p">:</span>  <span class="c1"># loop over connected components</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">root</span><span class="o">=</span><span class="n">gnodes</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">stack</span><span class="o">=</span><span class="p">[</span><span class="n">root</span><span class="p">]</span>
+        <span class="n">pred</span><span class="o">=</span><span class="p">{</span><span class="n">root</span><span class="p">:</span> <span class="n">root</span><span class="p">}</span>
+        <span class="n">used</span><span class="o">=</span><span class="p">{</span><span class="n">root</span><span class="p">:</span> <span class="nb">set</span><span class="p">()}</span>
+        <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>  <span class="c1"># walk the spanning tree finding cycles</span>
+            <span class="n">z</span><span class="o">=</span><span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>  <span class="c1"># use last-in so cycles easier to find</span>
+            <span class="n">zused</span><span class="o">=</span><span class="n">used</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">z</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">nbr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used</span><span class="p">:</span>   <span class="c1"># new node</span>
+                    <span class="n">pred</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span><span class="o">=</span><span class="n">z</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
+                    <span class="n">used</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span><span class="o">=</span><span class="nb">set</span><span class="p">([</span><span class="n">z</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">nbr</span> <span class="o">==</span> <span class="n">z</span><span class="p">:</span>        <span class="c1"># self loops</span>
+                    <span class="n">cycles</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">z</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">nbr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">zused</span><span class="p">:</span><span class="c1"># found a cycle</span>
+                    <span class="n">pn</span><span class="o">=</span><span class="n">used</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span>
+                    <span class="n">cycle</span><span class="o">=</span><span class="p">[</span><span class="n">nbr</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span>
+                    <span class="n">p</span><span class="o">=</span><span class="n">pred</span><span class="p">[</span><span class="n">z</span><span class="p">]</span>
+                    <span class="k">while</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pn</span><span class="p">:</span>
+                        <span class="n">cycle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                        <span class="n">p</span><span class="o">=</span><span class="n">pred</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+                    <span class="n">cycle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="n">cycles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
+                    <span class="n">used</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">gnodes</span><span class="o">-=</span><span class="nb">set</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+        <span class="n">root</span><span class="o">=</span><span class="bp">None</span>
+    <span class="k">return</span> <span class="n">cycles</span></div>
+
+
+<span class="k">def</span> <span class="nf">reorderResult</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Order a double-bonds list to allow for straight</span>
+<span class="sd">    comparison among other(s) double-bonds lists.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">foo</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">foo</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">DB</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+            <span class="n">DB</span> <span class="o">=</span> <span class="p">[[</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">DB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DB</span><span class="p">,</span> <span class="p">[[</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">DB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">DB</span><span class="p">)</span>
+    <span class="n">DB</span> <span class="o">=</span> <span class="n">DB</span><span class="p">[</span><span class="n">DB</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">argsort</span><span class="p">()]</span>
+    <span class="k">return</span> <span class="n">DB</span>
+
+
+<span class="k">def</span> <span class="nf">insertResult</span><span class="p">(</span><span class="n">idb</span><span class="p">,</span> <span class="n">gdb</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Insert a double-bonds list to the final</span>
+<span class="sd">    list if not already there.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gdb</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">gdb</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">idb</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">gdb</span>
+    <span class="n">gdb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gdb</span><span class="p">,</span> <span class="p">[</span><span class="n">idb</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">gdb</span>
+
+
+<span class="k">def</span> <span class="nf">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Brute force algorithm that returns in DB all possible Kekule</span>
+<span class="sd">    structures (i.e., edges with double bonds) from a given adjacency</span>
+<span class="sd">    matrix G. Vertices with radicals can be provided at &#39;rad&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TO DO: get rid off this global variable</span>
+    <span class="k">global</span> <span class="n">gdb</span>
+
+    <span class="c1"># Recursion base: when the queue is empty a search has finished</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># a validy solution has the dimension of the graph</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)</span><span class="o">-</span><span class="n">rad</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="c1"># append solution to DB if not already there</span>
+            <span class="n">idb</span> <span class="o">=</span> <span class="n">reorderResult</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;gdb&#39;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+                <span class="n">gdb</span> <span class="o">=</span> <span class="n">insertResult</span><span class="p">(</span><span class="n">idb</span><span class="p">,</span> <span class="n">gdb</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">gdb</span> <span class="o">=</span> <span class="p">[</span><span class="n">idb</span><span class="p">]</span>
+            <span class="n">DB</span> <span class="o">=</span> <span class="n">gdb</span>
+            <span class="k">return</span> <span class="n">DB</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">allV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+            <span class="n">aux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">allV</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">aux</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">aux</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+            <span class="k">return</span> <span class="n">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">Q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;gdb&#39;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+            <span class="n">DB</span> <span class="o">=</span> <span class="n">gdb</span>
+        <span class="k">return</span> <span class="n">DB</span>
+
+    <span class="c1"># unqueue the last element (LIFO)</span>
+    <span class="n">qval</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># when the result array &#39;R&#39; contains an even number of</span>
+    <span class="c1"># elements, check whether the unqueued vertex in &#39;qval&#39;</span>
+    <span class="c1"># is a valid neigbohr from the the last element on &#39;R&#39;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">R</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">qval</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">R</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># this will stop the search on this branch</span>
+        <span class="k">return</span> <span class="n">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+
+    <span class="c1"># append unqueued vertex and analyse its neighbors</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">qval</span><span class="p">)</span>
+    <span class="n">neig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">qval</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># remove from neig those already in R</span>
+    <span class="n">dup</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">neig</span><span class="p">,</span> <span class="n">R</span><span class="p">))</span>
+    <span class="n">neig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">neig</span><span class="p">,</span> <span class="n">dup</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">rad</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="c1"># remove from neig vertices with radicals</span>
+        <span class="n">dup</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">neig</span><span class="p">,</span> <span class="n">rad</span><span class="p">))</span>
+        <span class="n">neig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">neig</span><span class="p">,</span> <span class="n">dup</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">n_neig</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neig</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n_neig</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># remove from Q those that are also in neig</span>
+        <span class="n">dup</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">neig</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dup</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">qdup</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">dup</span><span class="p">]</span>
+            <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">dup</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">dup</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">neig</span><span class="p">,</span> <span class="n">qdup</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">n_neig</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">neig</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># we have a bifurcation</span>
+            <span class="n">cpQ</span> <span class="o">=</span> <span class="n">Q</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_neig</span><span class="p">):</span>
+                <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cpQ</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">neig</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">n_neig</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">foo</span> <span class="o">=</span> <span class="n">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">checkDBlist</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">iniV</span><span class="p">,</span> <span class="n">DB</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check consistency of double bond list</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nDB</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DB</span><span class="p">)</span>
+    <span class="n">DBt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">DB</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">DBt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: constrained double bonds list has to be tuples!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">DB</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">DB</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">neig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">DB</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">neig</span><span class="p">)</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: vertices </span><span class="si">%d</span><span class="s1"> and </span><span class="si">%d</span><span class="s1"> are not neighbors!&#39;</span>\
+                     <span class="o">%</span><span class="p">(</span><span class="n">DB</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">DB</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nDB</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">DB</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">neig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">DB</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">neig</span><span class="p">)</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: vertices </span><span class="si">%d</span><span class="s1"> and </span><span class="si">%d</span><span class="s1"> are not neighbors!&#39;</span>\
+                         <span class="o">%</span><span class="p">(</span><span class="n">DB</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">DB</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">DB</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">DB</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">])):</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: double bonds at adjacent edges are not allowed!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">iniV</span><span class="p">,</span> <span class="n">DB</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">DB</span><span class="p">)</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                <span class="n">iniV</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">print</span> <span class="p">(</span><span class="s1">&#39;WARNING: initial vertex changed to </span><span class="si">%d</span><span class="s1">.&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">iniV</span><span class="p">))</span>
+                <span class="k">break</span>
+    <span class="k">return</span> <span class="n">iniV</span>
+
+
+<span class="k">def</span> <span class="nf">checkRadlist</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">iniV</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">rad</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check consistency of radicals list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">C</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">rad</span><span class="p">,</span> <span class="n">C</span><span class="p">)):</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: a vertex assigned as radical cannot belong to the constrained double bonds list!&#39;</span><span class="p">)</span>
+
+    <span class="c1"># check if atoms assigned as radicals have only 2 neighbors</span>
+    <span class="k">if</span> <span class="n">rad</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">rad</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: a radical can only be assigned to carbons having at most 2 neighbors!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">rad</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;ERROR: a radical can only be assigned to carbons having at most 2 neighbors!&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">iniV</span><span class="p">,</span> <span class="n">rad</span><span class="p">):</span>
+        <span class="n">allV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">C</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="n">allC</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="n">unc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">allV</span><span class="p">,</span> <span class="n">allC</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">unc</span><span class="p">,</span> <span class="n">rad</span><span class="p">)):</span>
+                <span class="n">nonrad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">unc</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">iniV</span> <span class="o">=</span> <span class="n">nonrad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">print</span> <span class="p">(</span><span class="s1">&#39;WARNING: initial vertex changed to </span><span class="si">%d</span><span class="s1">.&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">iniV</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nonrad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">allV</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="bp">True</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">iniV</span> <span class="o">=</span> <span class="n">nonrad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">print</span> <span class="p">(</span><span class="s1">&#39;WARNING: initial vertex changed to </span><span class="si">%d</span><span class="s1">.&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">iniV</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">iniV</span>
+
+
+<div class="viewcode-block" id="allKekules"><a class="viewcode-back" href="../../api-gen/sp2graph.graph.html#sp2graph.graph.allKekules">[docs]</a><span class="k">def</span> <span class="nf">allKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">iniV</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">rad</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interface for calling recursive function returning</span>
+<span class="sd">    all Kekule structures</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;gdb&#39;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+        <span class="k">del</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;gdb&#39;</span><span class="p">]</span>
+
+    <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+    <span class="n">DB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">C</span><span class="p">:</span> <span class="c1"># constrained search</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+        <span class="n">iniV</span> <span class="o">=</span> <span class="n">checkDBlist</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">iniV</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rad</span><span class="p">:</span>
+        <span class="n">rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">rad</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+        <span class="n">iniV</span> <span class="o">=</span> <span class="n">checkRadlist</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">iniV</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">iniV</span><span class="p">)</span> <span class="c1"># queue the starting vertex</span>
+    <span class="k">return</span> <span class="n">bfKekules</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">DB</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">tests</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; tests &quot;&quot;&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">tests</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Pedro Brandimarte and Thomas Frederiksen, 2018
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

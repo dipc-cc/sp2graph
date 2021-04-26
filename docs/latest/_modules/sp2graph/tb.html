@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sp2graph.tb &mdash; sp2graph v0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> sp2graph
+          
+
+          
+            
+            <img src="../../_static/sp2graph_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api-gen/sp2graph.html">sp2graph package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">sp2graph</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>sp2graph.tb</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sp2graph.tb</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">:mod:`sp2graph.tb`</span>
+<span class="sd">===================================</span>
+
+<span class="sd">Functions for solving a simple nearest neighbors tight-binding</span>
+<span class="sd">problem given by the hopping matrix (adjacency matrix).</span>
+
+<span class="sd">.. currentmodule:: sp2graph.tb</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+<span class="kn">import</span> <span class="nn">sp2graph.linalg_utils</span> <span class="kn">as</span> <span class="nn">sp2lau</span>
+<span class="kn">import</span> <span class="nn">sp2graph.graph</span> <span class="kn">as</span> <span class="nn">sp2ggr</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tbBondOrder&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="tbBondOrder"><a class="viewcode-back" href="../../api-gen/sp2graph.tb.html#sp2graph.tb.tbBondOrder">[docs]</a><span class="k">def</span> <span class="nf">tbBondOrder</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Computes the total bond order (BO) between pairs of neighboring atoms.</span>
+<span class="sd">    Note that the hopping matrix elements in the electronic Hamiltonian are</span>
+<span class="sd">    negative numbers as they represent the stabilization energy for electrons</span>
+<span class="sd">    that are allowed to delocalize, i.e., :math:`H_{ij} &lt; 0`.</span>
+<span class="sd">    Currently the implementation handles periodic systems along a single</span>
+<span class="sd">    dimension. It&#39;s just a temporary implementation and should be changed</span>
+<span class="sd">    after the introduction of a proper graph class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    V : array_like</span>
+<span class="sd">      List of vertices</span>
+<span class="sd">    L : array_like, optional</span>
+<span class="sd">      Lattice vectors</span>
+<span class="sd">    radius : float, optional</span>
+<span class="sd">      Range of neighbor interactions in Angstrom</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.array</span>
+<span class="sd">      Bond order :math:`\mathrm{BO}_{ij}` between all atom pairs `i` and `j`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+    <span class="c1"># adjacency matrix</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">sp2ggr</span><span class="o">.</span><span class="n">adjacencyG</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+        <span class="n">pdir</span> <span class="o">=</span> <span class="n">sp2ggr</span><span class="o">.</span><span class="n">periodicDirections</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pdir</span><span class="p">):</span>
+            <span class="n">BO</span> <span class="o">=</span> <span class="n">tbBOperiodic</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">pdir</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
+
+            <span class="c1"># include the sigma bonds</span>
+            <span class="n">BO</span> <span class="o">+=</span> <span class="mf">1.</span><span class="o">*</span><span class="n">A</span>
+
+            <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">BO</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="mi">0</span><span class="o">*</span><span class="n">BO</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">BO</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="c1"># only gamma point</span>
+    <span class="n">w</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="o">*</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">BO</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">*</span><span class="n">A</span> <span class="c1"># Begin with the sigma bonds</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="c1"># Find neighbor indices</span>
+            <span class="n">neig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">neig</span><span class="p">:</span>
+                <span class="c1"># Add contribution from pi-orbital (factor 2 for spin):</span>
+                <span class="n">BO</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">BO</span></div>
+
+
+<span class="k">def</span> <span class="nf">tbBOperiodic</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">pdir</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Eveluate the Bond Order at a periodic direction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nV</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">BOk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">nV</span><span class="p">,</span> <span class="n">nV</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+
+    <span class="c1"># nearest neighbours (inside cell)</span>
+    <span class="n">A0</span> <span class="o">=</span> <span class="n">sp2ggr</span><span class="o">.</span><span class="n">adjacencyG</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+    <span class="c1"># build adjacency cell matrices to neighboring cells</span>
+    <span class="n">npdir</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdir</span><span class="p">)</span>
+    <span class="n">Ap1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">nV</span><span class="p">,</span> <span class="n">nV</span><span class="p">,</span> <span class="n">npdir</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+    <span class="n">Am1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">nV</span><span class="p">,</span> <span class="n">nV</span><span class="p">,</span> <span class="n">npdir</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ipdir</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pdir</span><span class="p">):</span>
+        <span class="n">Ldir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">ipdir</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">Ldir</span><span class="p">)</span>
+            <span class="n">Ap1</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ip</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">sp2lau</span><span class="o">.</span><span class="n">closeV</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="o">-</span><span class="n">Ldir</span><span class="p">)</span>
+            <span class="n">Am1</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ip</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="c1"># half 1BZ, inv. symmetry for pairs (k, -k)</span>
+    <span class="n">kx</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+    <span class="k">for</span> <span class="n">ipdir</span> <span class="ow">in</span> <span class="n">pdir</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ipdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">kx</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)</span><span class="o">+</span><span class="mf">0.01</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="n">ky</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+    <span class="k">for</span> <span class="n">ipdir</span> <span class="ow">in</span> <span class="n">pdir</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ipdir</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ky</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)</span><span class="o">+</span><span class="mf">0.01</span><span class="p">)</span>
+            <span class="k">break</span>
+
+    <span class="k">for</span> <span class="n">ikx</span> <span class="ow">in</span> <span class="n">kx</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">iky</span> <span class="ow">in</span> <span class="n">ky</span><span class="p">:</span>
+            <span class="n">Ak</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">A0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ipdir</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pdir</span><span class="p">):</span>
+                <span class="n">pi2Jnk</span> <span class="o">=</span> <span class="mf">2.0j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">ipdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ikx</span> <span class="o">+</span> <span class="n">ipdir</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">iky</span><span class="p">)</span>
+                <span class="n">Ak</span> <span class="o">-=</span> <span class="n">Am1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">ip</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">pi2Jnk</span><span class="p">)</span>
+                <span class="n">Ak</span> <span class="o">-=</span> <span class="n">Ap1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">ip</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">pi2Jnk</span><span class="p">)</span>
+
+            <span class="n">w</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">Ak</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nV</span><span class="p">):</span>
+                    <span class="c1"># Find neighbor indices</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">A0</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="c1"># within unit cell</span>
+                        <span class="n">ibo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                        <span class="n">BOk</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ibo</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">ibo</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">ipdir</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pdir</span><span class="p">):</span>
+                        <span class="n">pi2Jnk</span> <span class="o">=</span> <span class="mf">2.0j</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">ipdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ikx</span> <span class="o">+</span> <span class="n">ipdir</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">iky</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Am1</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="n">ip</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                            <span class="c1"># to neg. side neighbor cell</span>
+                            <span class="n">ibo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">pi2Jnk</span><span class="p">)</span>
+                            <span class="n">BOk</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ibo</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">ibo</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Ap1</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:,</span> <span class="n">ip</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]:</span>
+                            <span class="n">ibo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">pi2Jnk</span><span class="p">)</span>
+                            <span class="n">BOk</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ibo</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">ibo</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">BOk</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kx</span><span class="p">)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ky</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">tests</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; tests &quot;&quot;&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">tests</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright Pedro Brandimarte and Thomas Frederiksen, 2018
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
