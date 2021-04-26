@@ -107,4 +107,5 @@ setup(name='sp2graph',
       description='Bond-order graph analysis of sp2 carbon nanostructures',
       url='https://github.com/dipc-cc/sp2graph',
       license='GPL-3.0',
+      requires=['python (>=3.6)', 'numpy (>=1.13.3)', 'matplotlib (>=2.2.2)'],
       packages=packages)

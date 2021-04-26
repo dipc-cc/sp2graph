@@ -9,7 +9,6 @@ Visualisation and ploting functions.
 
 """
 
-from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
 import sp2graph.linalg_utils as sp2lau
@@ -120,7 +119,7 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
 
 
 def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
-                           sizex=5, sizey=5, dpi=150, annotate=False):
+                   sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
@@ -134,7 +133,7 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
     # define the grid for ploting the figures
     molsize = max(V[:, 0]) - min(V[:, 0]) + 4.
     cols = int(35//molsize)
-    rows = nKek/cols + nKek%cols
+    rows = nKek // cols + nKek % cols
 
     fig = plt.figure()
     fig.set_size_inches(sizex, sizey)
@@ -162,7 +161,7 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
 
     for idb in range(nKek):
 
-        plt.subplot2grid((rows, cols), (idb/cols, idb%cols))
+        plt.subplot2grid((rows, cols), (idb // cols, idb % cols))
         for i in range(nA):
             idx = np.transpose(np.nonzero(A[i]))
             for j in idx:

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
 import sp2graph.geometry as sp2gge
 import sp2graph.visual as sp2gvi
 import sp2graph.graph as sp2ggr

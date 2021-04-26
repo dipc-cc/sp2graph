@@ -100,8 +100,9 @@ However, there are several problems with this approach. First that the same Keku
 ## Dependencies ##
 To install [__sp2graph__][docs] the following packages are required:
 
-   - NumPy
-   - Matplotlib
+   - Python >=3.6
+   - NumPy >= 1.13
+   - Matplotlib >= 2.2.2
 
 ## Installation ##
 
