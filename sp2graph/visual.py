@@ -119,7 +119,7 @@ def viewKekule(V, A, DB, L=None, C=None, rad=None, figname=None,
 
 
 def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
-                   sizex=5, sizey=5, dpi=150, annotate=False):
+                   cols=None, sizex=5, sizey=5, dpi=150, annotate=False):
     """
     Visualize a single Kekule representation with vertices
     coordinates 'V', adjacency matrix 'A' and double-bonds 'DB'.
@@ -132,7 +132,8 @@ def viewKekuleGrid(V, A, DB, L=None, C=None, rad=None, figname=None,
 
     # define the grid for ploting the figures
     molsize = max(V[:, 0]) - min(V[:, 0]) + 4.
-    cols = int(35//molsize)
+    if cols is None:
+        cols = int(35 // molsize)
     rows = nKek // cols + nKek % cols
 
     fig = plt.figure()
